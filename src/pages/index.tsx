@@ -12,7 +12,7 @@ const sections = [
   {
     name: 'Administrar archivos',
     description: '',
-    href: '#',
+    href: '/files',
   },
   {
     name: 'Control manual y calibración',
