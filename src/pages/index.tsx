@@ -27,7 +27,7 @@ const sections = [
   {
     name: 'Administrar usuarios',
     description: '',
-    href: '#',
+    href: '/users',
   },
   {
     name: 'Administrar herramientas',
