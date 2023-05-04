@@ -22,7 +22,7 @@ const sections = [
   {
     name: 'Administrar tareas',
     description: '',
-    href: '#',
+    href: '/tasks',
   },
   {
     name: 'Administrar usuarios',
@@ -32,7 +32,7 @@ const sections = [
   {
     name: 'Administrar herramientas',
     description: '',
-    href: '#',
+    href: '/tools',
   },
 ]
 

@@ -1,8 +1,18 @@
+export const BUTTON_DOWNLOAD = 'descargar';
+export const BUTTON_EDIT = 'editar';
+export const BUTTON_REMOVE = 'eliminar';
+export const BUTTON_APPROVE = 'aprobar';
+export const BUTTON_REJECT = 'rechazar';
+export const BUTTON_CANCEL = 'cancelar';
+
 const HOVER_COLOR_MAP: any = {
     'descargar': 'bg-sky-200',
     'editar': 'bg-green-200',
     'eliminar': 'bg-red-200',
-}
+    'aprobar': 'bg-green-200',
+    'rechazar': 'bg-red-200',
+    'cancelar': 'bg-red-200',
+};
 
 export default function CardButton(props: any) {
     const {buttonType, isFirst} = props;
