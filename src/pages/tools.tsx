@@ -34,7 +34,7 @@ export default function ToolsView() {
             </div>
             {tools.length === 0 &&
             <div className="flex flex-wrap -m-3">
-                "There are no tools"
+                There are no tools
             </div>
             }
         </CardsList>

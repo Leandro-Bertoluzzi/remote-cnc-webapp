@@ -38,7 +38,7 @@ export default function UsersView() {
             </div>
             {users.length === 0 &&
                 <div className="flex flex-wrap -m-3">
-                    "There are no users"
+                    There are no users
                 </div>
             }
         </CardsList>

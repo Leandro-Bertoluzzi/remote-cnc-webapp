@@ -42,7 +42,7 @@ export default function TasksView() {
             </div>
             {tasks.length === 0 &&
             <div className="flex flex-wrap -m-3">
-                "There are no tasks"
+                There are no tasks
             </div>
             }
         </CardsList>

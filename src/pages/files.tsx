@@ -34,7 +34,7 @@ export default function FilesView() {
             </div>
             {files.length === 0 &&
             <div className="flex flex-wrap -m-3">
-                "There are no files"
+                There are no files
             </div>
             }
         </CardsList>
