@@ -1,20 +1,23 @@
-export const BUTTON_DOWNLOAD = 'descargar';
-export const BUTTON_EDIT = 'editar';
-export const BUTTON_REMOVE = 'eliminar';
-export const BUTTON_APPROVE = 'aprobar';
-export const BUTTON_REJECT = 'rechazar';
-export const BUTTON_CANCEL = 'cancelar';
+import AssociativeArray from '../types/AssociativeArray';
+import CardButtonProps from '../types/CardButtonProps';
 
-const HOVER_COLOR_MAP: any = {
-    'descargar': 'bg-sky-200',
-    'editar': 'bg-green-200',
-    'eliminar': 'bg-red-200',
-    'aprobar': 'bg-green-200',
-    'rechazar': 'bg-red-200',
-    'cancelar': 'bg-red-200',
+export const BUTTON_DOWNLOAD: string = 'descargar';
+export const BUTTON_EDIT: string = 'editar';
+export const BUTTON_REMOVE: string = 'eliminar';
+export const BUTTON_APPROVE: string = 'aprobar';
+export const BUTTON_REJECT: string = 'rechazar';
+export const BUTTON_CANCEL: string = 'cancelar';
+
+const HOVER_COLOR_MAP: AssociativeArray = {
+    [BUTTON_DOWNLOAD]: 'bg-sky-200',
+    [BUTTON_EDIT]: 'bg-green-200',
+    [BUTTON_REMOVE]: 'bg-red-200',
+    [BUTTON_APPROVE]: 'bg-green-200',
+    [BUTTON_REJECT]: 'bg-red-200',
+    [BUTTON_CANCEL]: 'bg-red-200',
 };
 
-export default function CardButton(props: any) {
+export default function CardButton(props: CardButtonProps) {
     const {buttonType, isFirst} = props;
 
     const buttonHoverColor = HOVER_COLOR_MAP[buttonType.toLowerCase()];

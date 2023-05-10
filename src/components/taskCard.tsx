@@ -1,7 +1,8 @@
 import Card from './card';
 import { BUTTON_APPROVE, BUTTON_REJECT, BUTTON_CANCEL } from './cardButton';
+import TaskCardProps from '../types/TaskCardProps';
 
-export default function TaskCard(props: any) {
+export default function TaskCard(props: TaskCardProps) {
     const { task } = props;
 
     const materialText = `Material: ${task.material}`;

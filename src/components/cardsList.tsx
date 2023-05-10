@@ -1,4 +1,6 @@
-export default function CardsList(props: any) {
+import CardListProps from '../types/CardsListProps';
+
+export default function CardsList(props: CardListProps) {
     const { title } = props;
 
     return (

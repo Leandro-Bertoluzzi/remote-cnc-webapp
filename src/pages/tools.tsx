@@ -1,7 +1,8 @@
 import ToolCard from '../components/toolCard';
 import CardsList from '../components/cardsList';
+import Tool from '../types/Tool';
 
-const tools = [
+const tools: Tool[] = [
     {
       id: 1,
       name: 'Mecha 5mm',

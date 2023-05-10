@@ -1,7 +1,8 @@
 import FileCard from '../components/fileCard';
 import CardsList from '../components/cardsList';
+import File from '../types/File';
 
-const files = [
+const files: File[] = [
     {
       id: 1,
       name: 'archivo1.gcode',
@@ -28,8 +29,8 @@ export default function FilesView() {
     return (
         <CardsList title="Archivos">
             <div className="flex flex-wrap -m-3">
-                {files.map((file, key) => (
-                    <FileCard key={key} file={file} />
+                {files.map((file) => (
+                    <FileCard key={file.id} file={file} />
                 ))}
             </div>
             {files.length === 0 &&

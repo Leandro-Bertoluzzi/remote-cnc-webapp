@@ -1,7 +1,8 @@
 import UserCard from '../components/userCard';
 import CardsList from '../components/cardsList';
+import User from '../types/User';
 
-const users = [
+const users: User[] = [
     {
         id: 1,
         name: 'Testing admin',
@@ -32,8 +33,8 @@ export default function UsersView() {
     return (
         <CardsList title="Usuarios">
             <div className="flex flex-wrap -m-3">
-                {users.map((user, key) => (
-                    <UserCard key={key} user={user} />
+                {users.map((user) => (
+                    <UserCard key={user.id} user={user} />
                 ))}
             </div>
             {users.length === 0 &&

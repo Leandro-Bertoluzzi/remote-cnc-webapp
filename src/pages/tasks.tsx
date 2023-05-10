@@ -1,11 +1,13 @@
 import TaskCard from '../components/taskCard';
 import CardsList from '../components/cardsList';
+import Task from '../types/Task';
 
-const tasks = [
+const tasks: Task[] = [
     {
       id: 1,
       name: 'An example project 1',
       material: 'wood',
+      tool: 'Mecha 5mm',
       file: 'archivo1.gcode',
       notes: 'Additional instructions for admin',
     },
@@ -13,6 +15,7 @@ const tasks = [
       id: 2,
       name: 'An example project 2',
       material: 'aluminum',
+      tool: 'Mecha 5mm',
       file: 'archivo2.gcode',
       notes: 'Additional instructions for admin',
     },
@@ -20,6 +23,7 @@ const tasks = [
       id: 3,
       name: 'An example project 3',
       material: 'cardboard',
+      tool: 'Láser 1W',
       file: 'archivo1-20230502-190205.gcode',
       notes: 'Additional instructions for admin',
     },
@@ -27,6 +31,7 @@ const tasks = [
       id: 4,
       name: 'An example project 4',
       material: 'PLA',
+      tool: 'Extrusor de filamento',
       file: 'example.txt',
       notes: 'Additional instructions for admin',
     },
