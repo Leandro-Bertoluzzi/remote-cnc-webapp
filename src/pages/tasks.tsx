@@ -1,43 +1,32 @@
+import { useState, useEffect } from 'react';
 import TaskCard from '../components/taskCard';
 import CardsList from '../components/cardsList';
 import Task from '../types/Task';
-
-const tasks: Task[] = [
-    {
-        id: 1,
-        name: 'An example project 1',
-        material: 'wood',
-        tool: 'Mecha 5mm',
-        file: 'archivo1.gcode',
-        notes: 'Additional instructions for admin',
-    },
-    {
-        id: 2,
-        name: 'An example project 2',
-        material: 'aluminum',
-        tool: 'Mecha 5mm',
-        file: 'archivo2.gcode',
-        notes: 'Additional instructions for admin',
-    },
-    {
-        id: 3,
-        name: 'An example project 3',
-        material: 'cardboard',
-        tool: 'Láser 1W',
-        file: 'archivo1-20230502-190205.gcode',
-        notes: 'Additional instructions for admin',
-    },
-    {
-        id: 4,
-        name: 'An example project 4',
-        material: 'PLA',
-        tool: 'Extrusor de filamento',
-        file: 'example.txt',
-        notes: 'Additional instructions for admin',
-    },
-]
+import config from '../config';
 
 export default function TasksView() {
+    // Hooks for state variables
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const { API_PORT, API_HOST } = config;
+
+    /*  Function: updateTasks
+    *   Description: Initializes the array of tasks to display
+    */
+    function updateTasks() {
+        const apiBaseUrl = `http://${API_HOST}:${API_PORT}`;
+
+        fetch(`${apiBaseUrl}/tasks`)
+            .then((res) => res.json())
+            .then(data => {
+                setTasks(data);
+            })
+            .catch(error => {
+                console.log("Connection error: ", error.message);
+            });
+    }
+
+    // Action to execute at the beginning
+    useEffect(() => updateTasks(), []);
     return (
         <CardsList title="Tareas">
             <div className="flex flex-wrap -m-3">
