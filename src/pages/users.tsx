@@ -1,35 +1,33 @@
+import { useState, useEffect } from 'react';
 import UserCard from '../components/userCard';
 import CardsList from '../components/cardsList';
 import User from '../types/User';
-
-const users: User[] = [
-    {
-        id: 1,
-        name: 'Testing admin',
-        email: 'testingadmin@test.com',
-        role: 'admin',
-    },
-    {
-        id: 2,
-        name: 'Fulano Mengano',
-        email: 'fulano.mengano@test.com',
-        role: 'user',
-    },
-    {
-        id: 3,
-        name: 'Testing user 1',
-        email: 'testinguser1@test.com',
-        role: 'user',
-    },
-    {
-        id: 4,
-        name: 'Testing user 2',
-        email: 'testinguser2@test.com',
-        role: 'user',
-    },
-]
+import config from '../config';
 
 export default function UsersView() {
+    // Hooks for state variables
+    const [users, setUsers] = useState<User[]>([]);
+    const { API_PORT, API_HOST } = config;
+
+    /*  Function: updateUsers
+    *   Description: Initializes the array of users to display
+    */
+    function updateUsers() {
+        const apiBaseUrl = `http://${API_HOST}:${API_PORT}`;
+
+        fetch(`${apiBaseUrl}/users`)
+            .then((res) => res.json())
+            .then(data => {
+                setUsers(data);
+            })
+            .catch(error => {
+                console.log("Connection error: ", error.message);
+            });
+    }
+
+    // Action to execute at the beginning
+    useEffect(() => updateUsers(), []);
+
     return (
         <CardsList title="Usuarios">
             <div className="flex flex-wrap -m-3">

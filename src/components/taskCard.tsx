@@ -14,7 +14,7 @@ export default function TaskCard(props: TaskCardProps) {
     return (
         <Card
             mainText={task.name}
-            additionalText={[materialText, toolText, fileText, task.notes]}
+            additionalText={[materialText, toolText, fileText, task.note]}
             buttons={[BUTTON_APPROVE, BUTTON_REJECT, BUTTON_CANCEL]}
         />
     )
