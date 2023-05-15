@@ -6,10 +6,10 @@ export default function ToolCard(props: ToolCardProps) {
     const { tool } = props;
 
     return (
-      <Card
-        mainText={tool.name}
-        additionalText={[tool.description]}
-        buttons={[BUTTON_EDIT, BUTTON_REMOVE]}
-      />
+        <Card
+            mainText={tool.name}
+            additionalText={[tool.description]}
+            buttons={[BUTTON_EDIT, BUTTON_REMOVE]}
+        />
     )
-  }
+}

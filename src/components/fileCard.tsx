@@ -6,10 +6,10 @@ export default function FileCard(props: FileCardProps) {
     const { file } = props;
 
     return (
-      <Card
-        mainText={file.name}
-        additionalText={[file.description]}
-        buttons={[BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE]}
-      />
+        <Card
+            mainText={file.name}
+            additionalText={[file.description]}
+            buttons={[BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE]}
+        />
     )
-  }
+}

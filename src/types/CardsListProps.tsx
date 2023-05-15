@@ -4,4 +4,3 @@ export default interface CardListProps {
     title: string;
     children: ReactNode;
 }
-  

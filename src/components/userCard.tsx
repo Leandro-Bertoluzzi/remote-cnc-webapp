@@ -8,10 +8,10 @@ export default function UserCard(props: UserCardProps) {
     const roleText = `Role: ${user.role}`;
 
     return (
-      <Card
-        mainText={user.name}
-        additionalText={[roleText, user.email]}
-        buttons={[BUTTON_EDIT, BUTTON_REMOVE]}
-      />
+        <Card
+            mainText={user.name}
+            additionalText={[roleText, user.email]}
+            buttons={[BUTTON_EDIT, BUTTON_REMOVE]}
+        />
     )
-  }
+}

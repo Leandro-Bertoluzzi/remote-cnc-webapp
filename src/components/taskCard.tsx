@@ -12,10 +12,10 @@ export default function TaskCard(props: TaskCardProps) {
     // TODO (buttons): approve+reject for admin, cancel for user
 
     return (
-      <Card
-        mainText={task.name}
-        additionalText={[materialText, toolText, fileText, task.notes]}
-        buttons={[BUTTON_APPROVE, BUTTON_REJECT, BUTTON_CANCEL]}
-      />
+        <Card
+            mainText={task.name}
+            additionalText={[materialText, toolText, fileText, task.notes]}
+            buttons={[BUTTON_APPROVE, BUTTON_REJECT, BUTTON_CANCEL]}
+        />
     )
-  }
+}

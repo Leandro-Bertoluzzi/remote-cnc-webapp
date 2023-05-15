@@ -4,26 +4,26 @@ import File from '../types/File';
 
 const files: File[] = [
     {
-      id: 1,
-      name: 'archivo1.gcode',
-      description: 'Just an example',
+        id: 1,
+        name: 'archivo1.gcode',
+        description: 'Just an example',
     },
     {
-      id: 2,
-      name: 'archivo2.gcode',
-      description: 'Another example',
+        id: 2,
+        name: 'archivo2.gcode',
+        description: 'Another example',
     },
     {
-      id: 3,
-      name: 'archivo1-20230502-190205.gcode',
-      description: 'An example with timestamp',
+        id: 3,
+        name: 'archivo1-20230502-190205.gcode',
+        description: 'An example with timestamp',
     },
     {
-      id: 4,
-      name: 'example.txt',
-      description: 'An example with .txt file extension',
+        id: 4,
+        name: 'example.txt',
+        description: 'An example with .txt file extension',
     },
-  ]
+]
 
 export default function FilesView() {
     return (
@@ -34,10 +34,10 @@ export default function FilesView() {
                 ))}
             </div>
             {files.length === 0 &&
-            <div className="flex flex-wrap -m-3">
-                There are no files
+                <div className="flex flex-wrap -m-3">
+                    There are no files
             </div>
             }
         </CardsList>
     )
-  }
+}

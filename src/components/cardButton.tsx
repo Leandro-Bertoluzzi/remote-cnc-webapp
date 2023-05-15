@@ -18,7 +18,7 @@ const HOVER_COLOR_MAP: AssociativeArray = {
 };
 
 export default function CardButton(props: CardButtonProps) {
-    const {buttonType, isFirst} = props;
+    const { buttonType, isFirst } = props;
 
     const buttonHoverColor = HOVER_COLOR_MAP[buttonType.toLowerCase()];
     const buttonText = buttonType.charAt(0).toUpperCase() + buttonType.slice(1);
@@ -30,4 +30,4 @@ export default function CardButton(props: CardButtonProps) {
             </a>
         </div>
     )
-  }
+}
