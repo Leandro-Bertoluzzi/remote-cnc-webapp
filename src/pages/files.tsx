@@ -1,31 +1,33 @@
+import { useState, useEffect } from 'react';
 import FileCard from '../components/fileCard';
 import CardsList from '../components/cardsList';
 import File from '../types/File';
-
-const files: File[] = [
-    {
-        id: 1,
-        name: 'archivo1.gcode',
-        description: 'Just an example',
-    },
-    {
-        id: 2,
-        name: 'archivo2.gcode',
-        description: 'Another example',
-    },
-    {
-        id: 3,
-        name: 'archivo1-20230502-190205.gcode',
-        description: 'An example with timestamp',
-    },
-    {
-        id: 4,
-        name: 'example.txt',
-        description: 'An example with .txt file extension',
-    },
-]
+import config from '../config';
 
 export default function FilesView() {
+    // Hooks for state variables
+    const [files, setFiles] = useState<File[]>([]);
+    const { API_PORT, API_HOST } = config;
+
+    /*  Function: updateFiles
+    *   Description: Initializes the array of files to display
+    */
+    function updateFiles() {
+        const apiBaseUrl = `http://${API_HOST}:${API_PORT}`;
+
+        fetch(`${apiBaseUrl}/files`)
+            .then((res) => res.json())
+            .then(data => {
+                setFiles(data);
+            })
+            .catch(error => {
+                console.log("Connection error: ", error.message);
+            });
+    }
+
+    // Action to execute at the beginning
+    useEffect(() => updateFiles(), []);
+
     return (
         <CardsList title="Archivos">
             <div className="flex flex-wrap -m-3">
