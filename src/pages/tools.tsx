@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ToolCard from '../components/toolCard';
 import CardsList from '../components/cardsList';
 import Tool from '../types/Tool';
+import EmptyCard from '../components/emptyCard';
 import config from '../config';
 
 export default function ToolsView() {
@@ -30,15 +31,17 @@ export default function ToolsView() {
 
     return (
         <CardsList title="Herramientas">
-            <div className="flex flex-wrap -m-3">
-                {tools.map((tool) => (
-                    <ToolCard key={tool.id} tool={tool} />
-                ))}
-            </div>
-            {tools.length === 0 &&
-                <div className="flex flex-wrap -m-3">
-                    There are no tools
-            </div>
+            {tools.length === 0 ? (
+                <EmptyCard itemName="herramientas configuradas" />
+            ) : (
+                    <>
+                        {
+                            tools.map((tool) => (
+                                <ToolCard key={tool.id} tool={tool} />
+                            ))
+                        }
+                    </>
+                )
             }
         </CardsList>
     )

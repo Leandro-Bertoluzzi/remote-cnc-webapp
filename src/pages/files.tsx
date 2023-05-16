@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import FileCard from '../components/fileCard';
 import CardsList from '../components/cardsList';
 import File from '../types/File';
+import EmptyCard from '../components/emptyCard';
 import config from '../config';
 
 export default function FilesView() {
@@ -30,15 +31,17 @@ export default function FilesView() {
 
     return (
         <CardsList title="Archivos">
-            <div className="flex flex-wrap -m-3">
-                {files.map((file) => (
-                    <FileCard key={file.id} file={file} />
-                ))}
-            </div>
-            {files.length === 0 &&
-                <div className="flex flex-wrap -m-3">
-                    There are no files
-            </div>
+            {files.length === 0 ? (
+                <EmptyCard itemName="archivos guardados" />
+            ) : (
+                    <>
+                        {
+                            files.map((file) => (
+                                <FileCard key={file.id} file={file} />
+                            ))
+                        }
+                    </>
+                )
             }
         </CardsList>
     )

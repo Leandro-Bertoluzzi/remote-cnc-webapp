@@ -8,7 +8,9 @@ export default function CardsList(props: CardListProps) {
             <div className="container px-4 mx-auto">
                 <div className="pt-5 px-5 pb-6 bg-white border rounded-xl">
                     <h3 className="mb-7 text-lg font-semibold">{title}</h3>
-                    {props.children}
+                    <div className="flex flex-wrap -m-3">
+                        {props.children}
+                    </div>
                 </div>
             </div>
         </section>

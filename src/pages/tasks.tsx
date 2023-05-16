@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import TaskCard from '../components/taskCard';
 import CardsList from '../components/cardsList';
 import Task from '../types/Task';
+import EmptyCard from '../components/emptyCard';
 import config from '../config';
 
 export default function TasksView() {
@@ -29,15 +30,17 @@ export default function TasksView() {
     useEffect(() => updateTasks(), []);
     return (
         <CardsList title="Tareas">
-            <div className="flex flex-wrap -m-3">
-                {tasks.map((task) => (
-                    <TaskCard key={task.id} task={task} />
-                ))}
-            </div>
-            {tasks.length === 0 &&
-                <div className="flex flex-wrap -m-3">
-                    There are no tasks
-            </div>
+            {tasks.length === 0 ? (
+                <EmptyCard itemName="tareas" />
+            ) : (
+                    <>
+                        {
+                            tasks.map((task) => (
+                                <TaskCard key={task.id} task={task} />
+                            ))
+                        }
+                    </>
+                )
             }
         </CardsList>
     )

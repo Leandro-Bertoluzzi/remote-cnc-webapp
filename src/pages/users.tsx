@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import UserCard from '../components/userCard';
 import CardsList from '../components/cardsList';
 import User from '../types/User';
+import EmptyCard from '../components/emptyCard';
 import config from '../config';
 
 export default function UsersView() {
@@ -30,15 +31,17 @@ export default function UsersView() {
 
     return (
         <CardsList title="Usuarios">
-            <div className="flex flex-wrap -m-3">
-                {users.map((user) => (
-                    <UserCard key={user.id} user={user} />
-                ))}
-            </div>
-            {users.length === 0 &&
-                <div className="flex flex-wrap -m-3">
-                    There are no users
-                </div>
+            {users.length === 0 ? (
+                <EmptyCard itemName="usuarios registrados" />
+            ) : (
+                    <>
+                        {
+                            users.map((user) => (
+                                <UserCard key={user.id} user={user} />
+                            ))
+                        }
+                    </>
+                )
             }
         </CardsList>
     )
