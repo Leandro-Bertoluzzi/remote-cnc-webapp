@@ -30,7 +30,7 @@ export default function UsersView() {
     useEffect(() => updateUsers(), []);
 
     return (
-        <CardsList title="Usuarios">
+        <CardsList title="Usuarios" addItemBtnText="Agregar usuario" showAddItemBtn>
             {users.length === 0 ? (
                 <EmptyCard itemName="usuarios registrados" />
             ) : (

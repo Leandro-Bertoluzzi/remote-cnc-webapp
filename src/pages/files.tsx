@@ -30,7 +30,7 @@ export default function FilesView() {
     useEffect(() => updateFiles(), []);
 
     return (
-        <CardsList title="Archivos">
+        <CardsList title="Archivos" addItemBtnText="Subir archivo" showAddItemBtn>
             {files.length === 0 ? (
                 <EmptyCard itemName="archivos guardados" />
             ) : (

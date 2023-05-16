@@ -29,7 +29,7 @@ export default function TasksView() {
     // Action to execute at the beginning
     useEffect(() => updateTasks(), []);
     return (
-        <CardsList title="Tareas">
+        <CardsList title="Tareas" addItemBtnText="Solicitar pedido" showAddItemBtn>
             {tasks.length === 0 ? (
                 <EmptyCard itemName="tareas" />
             ) : (

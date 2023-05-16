@@ -30,7 +30,7 @@ export default function ToolsView() {
     useEffect(() => updateTools(), []);
 
     return (
-        <CardsList title="Herramientas">
+        <CardsList title="Herramientas" addItemBtnText="Agregar herramienta" showAddItemBtn>
             {tools.length === 0 ? (
                 <EmptyCard itemName="herramientas configuradas" />
             ) : (
