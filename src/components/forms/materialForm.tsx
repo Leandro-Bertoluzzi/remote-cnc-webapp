@@ -71,3 +71,11 @@ export default function MaterialForm(props: MaterialFormProps) {
         </BaseForm>
     )
 }
+
+MaterialForm.defaultProps = {
+    materialInfo: {
+        id: 0,
+        name: "",
+        description: ""
+    }
+}

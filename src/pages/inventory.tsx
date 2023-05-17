@@ -9,47 +9,17 @@ import Tool from '../types/Tool';
 import ToolCard from '../components/cards/toolCard';
 import ToolForm from '../components/forms/toolForm';
 
-const EMPTY_TOOL: Tool = {
-    id: 0,
-    name: "",
-    description: ""
-};
-
-const EMPTY_MATERIAL: Material = {
-    id: 0,
-    name: "",
-    description: ""
-};
-
 export default function ToolsView() {
-    // Hooks for state variables (tools)
+    // Hooks for state variables
     const [tools, setTools] = useState<Tool[]>([]);
     const [showToolForm, setShowToolForm] = useState<boolean>(false);
-    const [toolToUpdate, setToolToUpdate] = useState<Tool>(EMPTY_TOOL);
-
-    // Hooks for state variables (materials)
     const [materials, setMaterials] = useState<Material[]>([]);
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
-    const [materialToUpdate, setMaterialToUpdate] = useState<Material>(EMPTY_MATERIAL);
-
-    // Hooks for state variables (other)
-    const [isCreate, setIsCreate] = useState<boolean>(false);
 
     /*  Function: showCreateToolFormModal
     *   Description: Enables the modal to upload a new tool
     */
     function  showCreateToolFormModal() {
-        setIsCreate(true);
-        setToolToUpdate(EMPTY_TOOL);
-        setShowToolForm(true);
-    }
-
-    /*  Function: showUpdateToolFormModal
-    *   Description: Enables the modal to update an existing tool
-    */
-    function showUpdateToolFormModal(tool: Tool) {
-        setIsCreate(false);
-        setToolToUpdate(tool);
         setShowToolForm(true);
     }
 
@@ -59,21 +29,11 @@ export default function ToolsView() {
     function hideToolFormModal() {
         setShowToolForm(false);
     }
+
     /*  Function: showCreateMaterialFormModal
     *   Description: Enables the modal to upload a new material
     */
     function  showCreateMaterialFormModal() {
-        setIsCreate(true);
-        setMaterialToUpdate(EMPTY_MATERIAL);
-        setShowMaterialForm(true);
-    }
-
-    /*  Function: showUpdateMaterialFormModal
-    *   Description: Enables the modal to update an existing material
-    */
-    function showUpdateMaterialFormModal(material: Material) {
-        setIsCreate(false);
-        setMaterialToUpdate(material);
         setShowMaterialForm(true);
     }
 
@@ -120,7 +80,6 @@ export default function ToolsView() {
                                     <ToolCard
                                         key={tool.id}
                                         tool={tool}
-                                        updateAction={showUpdateToolFormModal}
                                     />
                                 ))
                             }
@@ -144,7 +103,6 @@ export default function ToolsView() {
                                     <MaterialCard
                                         key={material.id}
                                         material={material}
-                                        updateAction={showUpdateMaterialFormModal}
                                     />
                                 ))
                             }
@@ -153,10 +111,10 @@ export default function ToolsView() {
                 }
             </CardsList>
             {showToolForm &&
-                <ToolForm exitAction={hideToolFormModal} create={isCreate} toolInfo={toolToUpdate} />
+                <ToolForm exitAction={hideToolFormModal} create={true} />
             }
             {showMaterialForm &&
-                <MaterialForm exitAction={hideMaterialFormModal} create={isCreate} materialInfo={materialToUpdate} />
+                <MaterialForm exitAction={hideMaterialFormModal} create={true} />
             }
         </>
     )

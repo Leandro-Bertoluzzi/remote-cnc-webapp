@@ -57,8 +57,8 @@ export default function FileForm(props: FileFormProps) {
 
     return (
         <BaseForm
-            title="Nuevo archivo"
-            subtitle="Selecciona un archivo para subir"
+            title={create ? "Nuevo archivo" : "Editar archivo"}
+            subtitle={create ? "Selecciona un archivo" : "Renombra tu archivo"}
             exitAction={exitAction}
             btnSubmitAction={create ? handleUploadClick : handleUpdateClick}
             btnSubmitText="Subir"
@@ -74,4 +74,12 @@ export default function FileForm(props: FileFormProps) {
             </div>
         </BaseForm>
     )
+}
+
+FileForm.defaultProps = {
+    fileInfo: {
+        id: 0,
+        file_name: "",
+        created_at: ""
+    }
 }

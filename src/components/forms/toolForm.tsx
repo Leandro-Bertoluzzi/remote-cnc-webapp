@@ -71,3 +71,11 @@ export default function ToolForm(props: ToolFormProps) {
         </BaseForm>
     )
 }
+
+ToolForm.defaultProps = {
+    toolInfo: {
+        id: 0,
+        name: "",
+        description: ""
+    }
+}
