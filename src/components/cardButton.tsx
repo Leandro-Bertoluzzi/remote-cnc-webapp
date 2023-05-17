@@ -18,16 +18,17 @@ const HOVER_COLOR_MAP: AssociativeArray = {
 };
 
 export default function CardButton(props: CardButtonProps) {
-    const { buttonType, isFirst } = props;
+    const { buttonInfo, isFirst } = props;
+    const { type, action } = buttonInfo;
 
-    const buttonHoverColor = HOVER_COLOR_MAP[buttonType.toLowerCase()];
-    const buttonText = buttonType.charAt(0).toUpperCase() + buttonType.slice(1);
+    const buttonHoverColor = HOVER_COLOR_MAP[type.toLowerCase()];
+    const buttonText = type.charAt(0).toUpperCase() + type.slice(1);
 
     return (
         <div className={`${isFirst ? "ml-auto " : ""}p-2 w-auto`}>
-            <a className={`inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border hover:${buttonHoverColor} rounded-lg`} href="#">
+            <button onClick={action} className={`inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border hover:${buttonHoverColor} rounded-lg`}>
                 {buttonText}
-            </a>
+            </button>
         </div>
     )
 }

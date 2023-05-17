@@ -1,18 +1,26 @@
 import { ChangeEvent, useState } from 'react';
-import apiRequest from '../services/apiService';
-import FileFormProps from '../types/FileFormProps';
-import FileInput from '../components/fileInput';
+import apiRequest from '../../services/apiService';
+import FileFormProps from '../../types/FileFormProps';
+import FileInput from '../fileInput';
 
 export default function FileForm(props: FileFormProps) {
     // Props
-    const { exitAction } = props;
+    const { exitAction, create, fileInfo } = props;
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
+    const [fileName, setFileName] = useState<string>(fileInfo.file_name);
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFile(e.target.files[0]);
+            setFileName(e.target.files[0].name);
+        }
+    };
+
+    const handleFileNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value) {
+            setFileName(e.target.value);
         }
     };
 
@@ -23,11 +31,25 @@ export default function FileForm(props: FileFormProps) {
 
         const formData = new FormData();
         formData.append("user_id", "1");
-        formData.append("file", file, file.name);
+        formData.append("file", file, fileName);
 
         apiRequest('files', 'POST', formData)
-        .then((data) => console.log(data))
-        .catch((err) => console.error(err));
+            .then((data) => console.log(data))
+            .catch((err) => console.error(err));
+
+        exitAction();
+    };
+
+    const handleUpdateClick = () => {
+        const data = {
+            "user_id": 1,
+            "file_name": fileName
+        }
+        const url = `files/${fileInfo.id}`;
+
+        apiRequest(url, 'PUT', JSON.stringify(data), true)
+            .then((data) => console.log(data))
+            .catch((err) => console.error(err));
 
         exitAction();
     };
@@ -50,11 +72,23 @@ export default function FileForm(props: FileFormProps) {
                                 </a>
                             </div>
                         </div>
+                        {create &&
+                            <div className="mb-5 w-full overflow-x-auto">
+                                <FileInput handleFileChange={handleFileChange} accept=".gcode, .txt" />
+                            </div>
+                        }
                         <div className="mb-5 w-full overflow-x-auto">
-                            <FileInput handleFileChange={handleFileChange} accept=".gcode, .txt"  />
+                            <label className="font-medium" htmlFor="file-name-input">Nombre de archivo: </label>
+                            <input id="file-name-input" type="text" onChange={handleFileNameChange} value={fileName} />
                         </div>
                         <div>
-                            <a onClick={handleUploadClick} className="flex items-center justify-center py-1 text-sm text-white font-semibold bg-neutral-600 rounded-lg focus:ring-4 focus:ring-neutral-400" href="#">Subir</a>
+                            <a
+                                onClick={create ? handleUploadClick : handleUpdateClick}
+                                className="flex items-center justify-center py-1 text-sm text-white font-semibold bg-neutral-600 rounded-lg focus:ring-4 focus:ring-neutral-400"
+                                href="#"
+                            >
+                                Subir
+                            </a>
                         </div>
                     </div>
                 </div>

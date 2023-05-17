@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
-import EmptyCard from '../components/emptyCard';
+import EmptyCard from '../components/cards/emptyCard';
 import Task from '../types/Task';
-import TaskCard from '../components/taskCard';
+import TaskCard from '../components/cards/taskCard';
 
 export default function TasksView() {
     // Hooks for state variables

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
-import EmptyCard from '../components/emptyCard';
+import EmptyCard from '../components/cards/emptyCard';
 import Tool from '../types/Tool';
-import ToolCard from '../components/toolCard';
+import ToolCard from '../components/cards/toolCard';
 
 export default function ToolsView() {
     // Hooks for state variables

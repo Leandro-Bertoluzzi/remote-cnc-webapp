@@ -1,4 +1,6 @@
+import ButtonInfo from './ButtonInfo';
+
 export default interface CardButtonProps {
-    buttonType: string;
+    buttonInfo: ButtonInfo;
     isFirst: boolean;
 }
