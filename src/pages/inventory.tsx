@@ -24,7 +24,7 @@ export default function ToolsView() {
     }
 
     /*  Function: hideToolFormModal
-    *   Description: Disables the modal to upload a new tool or update an existing one
+    *   Description: Disables the modal to upload a new tool
     */
     function hideToolFormModal() {
         setShowToolForm(false);
@@ -38,7 +38,7 @@ export default function ToolsView() {
     }
 
     /*  Function: hideMaterialFormModal
-    *   Description: Disables the modal to upload a new material or update an existing one
+    *   Description: Disables the modal to upload a new material
     */
     function hideMaterialFormModal() {
         setShowMaterialForm(false);

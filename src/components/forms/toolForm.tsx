@@ -30,7 +30,7 @@ export default function ToolForm(props: ToolFormProps) {
             "description": toolDescription
         }
 
-        apiRequest('tools', 'POST', JSON.stringify(data), true)
+        apiRequest('tools', 'POST', data, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 
@@ -45,7 +45,7 @@ export default function ToolForm(props: ToolFormProps) {
         }
         const url = `tools/${toolInfo.id}`;
 
-        apiRequest(url, 'PUT', JSON.stringify(data), true)
+        apiRequest(url, 'PUT', data, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 

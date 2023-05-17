@@ -48,7 +48,7 @@ export default function FileForm(props: FileFormProps) {
         }
         const url = `files/${fileInfo.id}`;
 
-        apiRequest(url, 'PUT', JSON.stringify(data), true)
+        apiRequest(url, 'PUT', data, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 

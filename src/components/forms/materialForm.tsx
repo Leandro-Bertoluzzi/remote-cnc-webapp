@@ -30,7 +30,7 @@ export default function MaterialForm(props: MaterialFormProps) {
             "description": materialDescription
         }
 
-        apiRequest('materials', 'POST', JSON.stringify(data), true)
+        apiRequest('materials', 'POST', data, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 
@@ -45,7 +45,7 @@ export default function MaterialForm(props: MaterialFormProps) {
         }
         const url = `materials/${materialInfo.id}`;
 
-        apiRequest(url, 'PUT', JSON.stringify(data), true)
+        apiRequest(url, 'PUT', data, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 
