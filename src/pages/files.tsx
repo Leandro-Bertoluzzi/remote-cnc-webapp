@@ -19,7 +19,7 @@ export default function FilesView() {
     }
 
     /*  Function: hideFileFormModal
-    *   Description: Disables the modal to upload a new file or update an existing one
+    *   Description: Disables the modal to upload a new file
     */
     function hideFileFormModal() {
         setShowFileForm(false);
