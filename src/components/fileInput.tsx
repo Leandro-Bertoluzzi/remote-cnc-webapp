@@ -28,7 +28,7 @@ export default function FileInput(props: FileInputProps) {
             <label className="block font-medium" htmlFor="file-input">Archivo a subir</label>
 
             {/* Custom button to select and upload a file */}
-            <button onClick={handleUploadClick} className="inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border rounded-lg bg-white" href="#">
+            <button onClick={handleUploadClick} className="inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border rounded-lg bg-white">
                 {file ? 'Cambiar' : 'Elegir'}
             </button>
 

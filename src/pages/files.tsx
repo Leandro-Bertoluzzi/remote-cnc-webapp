@@ -69,7 +69,7 @@ export default function FilesView() {
                 }
             </CardsList>
             {showCreateFile &&
-                <FileForm exitAction={hideCreateUserModal} fileInfo={files[0]}></FileForm>
+                <FileForm exitAction={hideCreateUserModal} />
             }
         </>
     )
