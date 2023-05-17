@@ -1,34 +1,15 @@
 import { useState, useEffect } from 'react';
-import FileCard from '../components/fileCard';
+import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
-import FileInfo from '../types/FileInfo';
 import EmptyCard from '../components/emptyCard';
+import FileCard from '../components/fileCard';
 import FileForm from '../components/fileForm';
-import config from '../config';
+import FileInfo from '../types/FileInfo';
 
 export default function FilesView() {
     // Hooks for state variables
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [showCreateFile, setShowCreateFile] = useState<boolean>(false);
-
-    // Other constants
-    const { API_PORT, API_HOST } = config;
-
-    /*  Function: updateFiles
-    *   Description: Initializes the array of files to display
-    */
-    function updateFiles() {
-        const apiBaseUrl = `http://${API_HOST}:${API_PORT}`;
-
-        fetch(`${apiBaseUrl}/files`)
-            .then((res) => res.json())
-            .then(data => {
-                setFiles(data);
-            })
-            .catch(error => {
-                console.log("Connection error: ", error.message);
-            });
-    }
 
     /*  Function: showCreateUserModal
     *   Description: Enables the modal to upload a new file
@@ -45,7 +26,15 @@ export default function FilesView() {
     }
 
     // Action to execute at the beginning
-    useEffect(() => updateFiles(), []);
+    useEffect(() => {
+        apiRequest('files', 'GET')
+        .then(data => {
+            setFiles(data);
+        })
+        .catch(error => {
+            console.log("Connection error: ", error.message);
+        });
+    }, []);
 
     return (
         <>

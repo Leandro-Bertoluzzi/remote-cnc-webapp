@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
+import apiRequest from '../services/apiService';
 import FileFormProps from '../types/FileFormProps';
 import FileInput from '../components/fileInput';
-import config from '../config';
 
 export default function FileForm(props: FileFormProps) {
     // Props
@@ -9,9 +9,6 @@ export default function FileForm(props: FileFormProps) {
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
-
-    // Other constants
-    const { API_PORT, API_HOST } = config;
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -28,13 +25,7 @@ export default function FileForm(props: FileFormProps) {
         formData.append("user_id", "1");
         formData.append("file", file, file.name);
 
-        const apiUrl = `http://${API_HOST}:${API_PORT}/files`;
-
-        fetch(apiUrl, {
-            method: 'POST',
-            body: formData,
-        })
-        .then((res) => res.json())
+        apiRequest('files', 'POST', formData)
         .then((data) => console.log(data))
         .catch((err) => console.error(err));
 

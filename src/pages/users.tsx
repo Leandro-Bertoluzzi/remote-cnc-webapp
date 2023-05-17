@@ -1,33 +1,24 @@
 import { useState, useEffect } from 'react';
-import UserCard from '../components/userCard';
+import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
-import User from '../types/User';
 import EmptyCard from '../components/emptyCard';
-import config from '../config';
+import User from '../types/User';
+import UserCard from '../components/userCard';
 
 export default function UsersView() {
     // Hooks for state variables
     const [users, setUsers] = useState<User[]>([]);
-    const { API_PORT, API_HOST } = config;
-
-    /*  Function: updateUsers
-    *   Description: Initializes the array of users to display
-    */
-    function updateUsers() {
-        const apiBaseUrl = `http://${API_HOST}:${API_PORT}`;
-
-        fetch(`${apiBaseUrl}/users`)
-            .then((res) => res.json())
-            .then(data => {
-                setUsers(data);
-            })
-            .catch(error => {
-                console.log("Connection error: ", error.message);
-            });
-    }
 
     // Action to execute at the beginning
-    useEffect(() => updateUsers(), []);
+    useEffect(() => {
+        apiRequest('users', 'GET')
+        .then(data => {
+            setUsers(data);
+        })
+        .catch(error => {
+            console.log("Connection error: ", error.message);
+        });
+    }, []);
 
     return (
         <CardsList title="Usuarios" addItemBtnText="Agregar usuario" showAddItemBtn>
