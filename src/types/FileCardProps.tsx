@@ -1,5 +1,5 @@
-import File from './File';
+import FileInfo from './FileInfo';
 
 export default interface FileCardProps {
-    file: File;
+    file: FileInfo;
 }

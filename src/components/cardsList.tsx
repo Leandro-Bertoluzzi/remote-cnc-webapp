@@ -1,7 +1,7 @@
 import CardListProps from '../types/CardsListProps';
 
 export default function CardsList(props: CardListProps) {
-    const { title, showAddItemBtn, addItemBtnText } = props;
+    const { title, showAddItemBtn, addItemBtnText, addItemBtnAction } = props;
 
     return (
         <section data-section-id="1" data-share="" data-category="cards" className="py-4 overflow-hidden">
@@ -13,7 +13,7 @@ export default function CardsList(props: CardListProps) {
                     </div>
                 </div>
                 {showAddItemBtn &&
-                    <a className="inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border rounded-lg bg-white" href="#">
+                    <a onClick={addItemBtnAction} className="inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border rounded-lg bg-white" href="#">
                         {addItemBtnText ?? "Crear nuevo"}
                     </a>
                 }
