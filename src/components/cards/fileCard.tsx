@@ -5,12 +5,16 @@ import Card from './card';
 import FileCardProps from '../../types/FileCardProps';
 
 export default function FileCard(props: FileCardProps) {
-    const { file } = props;
+    const { file, updateAction } = props;
 
     // Text
     const createdAtText = `Created at: ${file.created_at}`;
 
     // Methods
+    const updateFile = () => {
+        updateAction(file)
+    };
+
     const removeFile = () => {
         const url = `files/${file.id}`;
 
@@ -26,7 +30,7 @@ export default function FileCard(props: FileCardProps) {
     }
     const btnEdit: ButtonInfo = {
         type: BUTTON_EDIT,
-        action: () => {console.log("Edit file: ", file.id);}
+        action: updateFile
     }
     const btnRemove: ButtonInfo = {
         type: BUTTON_REMOVE,
