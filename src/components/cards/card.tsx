@@ -1,5 +1,5 @@
-import CardButton from './cardButton';
-import CardProps from '../types/CardProps';
+import CardButton from '../cardButton';
+import CardProps from '../../types/CardProps';
 
 export default function Card(props: CardProps) {
     const { mainText, additionalText, buttons } = props;

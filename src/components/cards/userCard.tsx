@@ -1,6 +1,6 @@
 import Card from './card';
-import { BUTTON_EDIT, BUTTON_REMOVE } from './cardButton';
-import UserCardProps from '../types/UserCardProps';
+import { BUTTON_EDIT, BUTTON_REMOVE } from '../cardButton';
+import UserCardProps from '../../types/UserCardProps';
 
 export default function UserCard(props: UserCardProps) {
     const { user } = props;

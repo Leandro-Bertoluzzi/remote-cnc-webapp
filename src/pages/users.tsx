@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
-import EmptyCard from '../components/emptyCard';
+import EmptyCard from '../components/cards/emptyCard';
 import User from '../types/User';
-import UserCard from '../components/userCard';
+import UserCard from '../components/cards/userCard';
 
 export default function UsersView() {
     // Hooks for state variables

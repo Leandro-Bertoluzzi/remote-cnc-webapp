@@ -1,4 +1,4 @@
-import EmptyCardProps from '../types/EmptyCardProps';
+import EmptyCardProps from '../../types/EmptyCardProps';
 
 export default function EmptyCard(props: EmptyCardProps) {
     const { itemName } = props;

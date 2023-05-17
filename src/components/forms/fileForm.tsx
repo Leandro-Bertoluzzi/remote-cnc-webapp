@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
-import apiRequest from '../services/apiService';
-import FileFormProps from '../types/FileFormProps';
-import FileInput from '../components/fileInput';
+import apiRequest from '../../services/apiService';
+import FileFormProps from '../../types/FileFormProps';
+import FileInput from '../fileInput';
 
 export default function FileForm(props: FileFormProps) {
     // Props

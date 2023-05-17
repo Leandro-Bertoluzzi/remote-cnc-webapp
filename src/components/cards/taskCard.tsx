@@ -1,6 +1,6 @@
 import Card from './card';
-import { BUTTON_APPROVE, BUTTON_REJECT, BUTTON_CANCEL } from './cardButton';
-import TaskCardProps from '../types/TaskCardProps';
+import { BUTTON_APPROVE, BUTTON_REJECT, BUTTON_CANCEL } from '../cardButton';
+import TaskCardProps from '../../types/TaskCardProps';
 
 export default function TaskCard(props: TaskCardProps) {
     const { task } = props;

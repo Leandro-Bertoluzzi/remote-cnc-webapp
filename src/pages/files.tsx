@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
-import EmptyCard from '../components/emptyCard';
-import FileCard from '../components/fileCard';
-import FileForm from '../components/fileForm';
+import EmptyCard from '../components/cards/emptyCard';
+import FileCard from '../components/cards/fileCard';
+import FileForm from '../components/forms/fileForm';
 import FileInfo from '../types/FileInfo';
 
 export default function FilesView() {
