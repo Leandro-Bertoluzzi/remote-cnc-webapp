@@ -18,7 +18,11 @@ export default function Card(props: CardProps) {
                     </div>
                 </div>
                 {buttons.map((button, key: number) => (
-                    <CardButton key={key} buttonType={button} isFirst={key == 0 ? true : false} />
+                    <CardButton
+                        key={key}
+                        buttonInfo={button}
+                        isFirst={key == 0 ? true : false}
+                    />
                 ))}
             </div>
         </div>
