@@ -21,3 +21,7 @@ export default function CardsList(props: CardListProps) {
         </section>
     )
 }
+
+CardsList.defaultProps = {
+    showAddItemBtn: false
+}

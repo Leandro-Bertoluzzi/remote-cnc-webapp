@@ -4,7 +4,7 @@ const options: MenuOption[] = [
     {
         name: 'Ver estado de tareas',
         description: '',
-        path: '#',
+        path: '/user-tasks',
     },
     {
         name: 'Monitorizar equipo',
@@ -22,9 +22,9 @@ const options: MenuOption[] = [
         path: '#',
     },
     {
-        name: 'Administrar tareas',
+        name: 'Administrar solicitudes',
         description: '',
-        path: '/tasks',
+        path: '/requested-tasks',
     },
     {
         name: 'Administrar usuarios',

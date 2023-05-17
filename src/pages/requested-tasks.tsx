@@ -5,13 +5,15 @@ import EmptyCard from '../components/cards/emptyCard';
 import Task from '../types/Task';
 import TaskCard from '../components/cards/taskCard';
 
-export default function TasksView() {
+export default function RequestsView() {
     // Hooks for state variables
     const [tasks, setTasks] = useState<Task[]>([]);
 
     // Action to execute at the beginning
     useEffect(() => {
-        apiRequest('tasks', 'GET')
+        const url = 'tasks?status=pending-validation';
+
+        apiRequest(url, 'GET')
         .then(data => {
             setTasks(data);
         })
@@ -21,9 +23,9 @@ export default function TasksView() {
     }, []);
 
     return (
-        <CardsList title="Tareas" addItemBtnText="Solicitar pedido" showAddItemBtn>
+        <CardsList title="Solicitudes">
             {tasks.length === 0 ? (
-                <EmptyCard itemName="tareas" />
+                <EmptyCard itemName="solicitudes" />
             ) : (
                     <>
                         {

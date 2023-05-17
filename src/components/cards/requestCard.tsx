@@ -1,9 +1,9 @@
-import { BUTTON_CANCEL } from '../cardButton';
+import { BUTTON_APPROVE, BUTTON_REJECT } from '../cardButton';
 import ButtonInfo from '../../types/ButtonInfo';
 import BaseCard from './baseCard';
-import TaskCardProps from '../../types/TaskCardProps';
+import RequestCardProps from '../../types/RequestCardProps';
 
-export default function TaskCard(props: TaskCardProps) {
+export default function RequestCard(props: RequestCardProps) {
     const { task } = props;
 
     // Text
@@ -12,8 +12,12 @@ export default function TaskCard(props: TaskCardProps) {
     const fileText = `File: ${task.file}`;
 
     // Buttons
-    const btnCancel: ButtonInfo = {
-        type: BUTTON_CANCEL,
+    const btnApprove: ButtonInfo = {
+        type: BUTTON_APPROVE,
+        action: () => {}
+    }
+    const btnReject: ButtonInfo = {
+        type: BUTTON_REJECT,
         action: () => {}
     }
 
@@ -21,7 +25,7 @@ export default function TaskCard(props: TaskCardProps) {
         <BaseCard
             mainText={task.name}
             additionalText={[materialText, toolText, fileText, task.note]}
-            buttons={[btnCancel]}
+            buttons={[btnApprove, btnReject]}
         />
     )
 }
