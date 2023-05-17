@@ -1,6 +1,6 @@
 import { BUTTON_APPROVE, BUTTON_REJECT, BUTTON_CANCEL } from '../cardButton';
 import ButtonInfo from '../../types/ButtonInfo';
-import Card from './card';
+import BaseCard from './baseCard';
 import TaskCardProps from '../../types/TaskCardProps';
 
 export default function TaskCard(props: TaskCardProps) {
@@ -28,7 +28,7 @@ export default function TaskCard(props: TaskCardProps) {
     }
 
     return (
-        <Card
+        <BaseCard
             mainText={task.name}
             additionalText={[materialText, toolText, fileText, task.note]}
             buttons={[btnApprove, btnReject, btnCancel]}

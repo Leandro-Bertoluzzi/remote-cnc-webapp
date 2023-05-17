@@ -1,6 +1,6 @@
 import { BUTTON_EDIT, BUTTON_REMOVE } from '../cardButton';
 import ButtonInfo from '../../types/ButtonInfo';
-import Card from './card';
+import BaseCard from './baseCard';
 import MaterialCardProps from '../../types/MaterialCardProps';
 
 export default function MaterialCard(props: MaterialCardProps) {
@@ -17,7 +17,7 @@ export default function MaterialCard(props: MaterialCardProps) {
     }
 
     return (
-        <Card
+        <BaseCard
             mainText={material.name}
             additionalText={[material.description]}
             buttons={[btnEdit, btnRemove]}

@@ -1,6 +1,6 @@
 import { BUTTON_EDIT, BUTTON_REMOVE } from '../cardButton';
 import ButtonInfo from '../../types/ButtonInfo';
-import Card from './card';
+import BaseCard from './baseCard';
 import ToolCardProps from '../../types/ToolCardProps';
 
 export default function ToolCard(props: ToolCardProps) {
@@ -17,7 +17,7 @@ export default function ToolCard(props: ToolCardProps) {
     }
 
     return (
-        <Card
+        <BaseCard
             mainText={tool.name}
             additionalText={[tool.description]}
             buttons={[btnEdit, btnRemove]}

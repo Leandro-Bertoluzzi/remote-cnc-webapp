@@ -1,7 +1,7 @@
 import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE } from '../cardButton';
 import apiRequest from '../../services/apiService';
 import ButtonInfo from '../../types/ButtonInfo';
-import Card from './card';
+import BaseCard from './baseCard';
 import FileCardProps from '../../types/FileCardProps';
 
 export default function FileCard(props: FileCardProps) {
@@ -38,7 +38,7 @@ export default function FileCard(props: FileCardProps) {
     }
 
     return (
-        <Card
+        <BaseCard
             mainText={file.file_name}
             additionalText={[createdAtText]}
             buttons={[btnDownload, btnEdit, btnRemove]}

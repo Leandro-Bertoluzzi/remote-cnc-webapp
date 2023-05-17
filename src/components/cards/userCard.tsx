@@ -1,6 +1,6 @@
 import { BUTTON_EDIT, BUTTON_REMOVE } from '../cardButton';
 import ButtonInfo from '../../types/ButtonInfo';
-import Card from './card';
+import BaseCard from './baseCard';
 import UserCardProps from '../../types/UserCardProps';
 
 export default function UserCard(props: UserCardProps) {
@@ -20,7 +20,7 @@ export default function UserCard(props: UserCardProps) {
     }
 
     return (
-        <Card
+        <BaseCard
             mainText={user.name}
             additionalText={[roleText, user.email]}
             buttons={[btnEdit, btnRemove]}

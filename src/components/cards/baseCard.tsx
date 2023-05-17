@@ -1,7 +1,7 @@
 import CardButton from '../cardButton';
 import CardProps from '../../types/CardProps';
 
-export default function Card(props: CardProps) {
+export default function BaseCard(props: CardProps) {
     const { mainText, additionalText, buttons } = props;
 
     return (
