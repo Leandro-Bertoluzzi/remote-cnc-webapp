@@ -1,44 +1,38 @@
 import { useState, useEffect } from 'react';
-import UserCard from '../components/userCard';
+import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
+import EmptyCard from '../components/emptyCard';
 import User from '../types/User';
-import config from '../config';
+import UserCard from '../components/userCard';
 
 export default function UsersView() {
     // Hooks for state variables
     const [users, setUsers] = useState<User[]>([]);
-    const { API_PORT, API_HOST } = config;
-
-    /*  Function: updateUsers
-    *   Description: Initializes the array of users to display
-    */
-    function updateUsers() {
-        const apiBaseUrl = `http://${API_HOST}:${API_PORT}`;
-
-        fetch(`${apiBaseUrl}/users`)
-            .then((res) => res.json())
-            .then(data => {
-                setUsers(data);
-            })
-            .catch(error => {
-                console.log("Connection error: ", error.message);
-            });
-    }
 
     // Action to execute at the beginning
-    useEffect(() => updateUsers(), []);
+    useEffect(() => {
+        apiRequest('users', 'GET')
+        .then(data => {
+            setUsers(data);
+        })
+        .catch(error => {
+            console.log("Connection error: ", error.message);
+        });
+    }, []);
 
     return (
-        <CardsList title="Usuarios">
-            <div className="flex flex-wrap -m-3">
-                {users.map((user) => (
-                    <UserCard key={user.id} user={user} />
-                ))}
-            </div>
-            {users.length === 0 &&
-                <div className="flex flex-wrap -m-3">
-                    There are no users
-                </div>
+        <CardsList title="Usuarios" addItemBtnText="Agregar usuario" showAddItemBtn>
+            {users.length === 0 ? (
+                <EmptyCard itemName="usuarios registrados" />
+            ) : (
+                    <>
+                        {
+                            users.map((user) => (
+                                <UserCard key={user.id} user={user} />
+                            ))
+                        }
+                    </>
+                )
             }
         </CardsList>
     )
