@@ -37,7 +37,7 @@ export default function UserForm(props: UserFormProps) {
             "role": userRole
         }
 
-        apiRequest('users', 'POST', JSON.stringify(data), true)
+        apiRequest('users', 'POST', data, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 
@@ -52,7 +52,7 @@ export default function UserForm(props: UserFormProps) {
         }
         const url = `users/${userInfo.id}`;
 
-        apiRequest(url, 'PUT', JSON.stringify(data), true)
+        apiRequest(url, 'PUT', data, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 

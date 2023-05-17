@@ -19,7 +19,7 @@ export default function apiRequest(
             'Content-Type': 'application/json'
         } :
         undefined,
-        body: body,
+        body: json ? JSON.stringify(body) : body,
     })
     .then((res) => res.json());
 };
