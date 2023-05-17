@@ -6,34 +6,15 @@ import FileCard from '../components/cards/fileCard';
 import FileForm from '../components/forms/fileForm';
 import FileInfo from '../types/FileInfo';
 
-const EMPTY_FILE: FileInfo = {
-    id: 0,
-    file_name: "",
-    created_at: ""
-};
-
 export default function FilesView() {
     // Hooks for state variables
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [showFileForm, setShowFileForm] = useState<boolean>(false);
-    const [isCreate, setIsCreate] = useState<boolean>(false);
-    const [fileToUpdate, setFileToUpdate] = useState<FileInfo>(EMPTY_FILE);
 
     /*  Function: showCreateFileFormModal
     *   Description: Enables the modal to upload a new file
     */
     function  showCreateFileFormModal() {
-        setIsCreate(true);
-        setFileToUpdate(EMPTY_FILE);
-        setShowFileForm(true);
-    }
-
-    /*  Function: showUpdateFileFormModal
-    *   Description: Enables the modal to update an existing file
-    */
-    function showUpdateFileFormModal(file: FileInfo) {
-        setIsCreate(false);
-        setFileToUpdate(file);
         setShowFileForm(true);
     }
 
@@ -72,7 +53,6 @@ export default function FilesView() {
                                     <FileCard
                                         key={file.id}
                                         file={file}
-                                        updateAction={showUpdateFileFormModal}
                                     />
                                 ))
                             }
@@ -81,7 +61,7 @@ export default function FilesView() {
                 }
             </CardsList>
             {showFileForm &&
-                <FileForm exitAction={hideFileFormModal} create={isCreate} fileInfo={fileToUpdate} />
+                <FileForm exitAction={hideFileFormModal} create={true} />
             }
         </>
     )

@@ -32,9 +32,9 @@ const options: MenuOption[] = [
         path: '/users',
     },
     {
-        name: 'Administrar herramientas',
+        name: 'Administrar inventario',
         description: '',
-        path: '/tools',
+        path: '/inventory',
     },
 ]
 
