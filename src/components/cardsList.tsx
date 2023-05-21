@@ -6,9 +6,9 @@ export default function CardsList(props: CardListProps) {
     return (
         <section data-section-id="1" data-share="" data-category="cards" className="py-4 overflow-hidden">
             <div className="container px-4 mx-auto">
-                <div className="pt-5 px-5 pb-6 bg-white border rounded-xl">
-                    <h3 className="mb-7 text-lg font-semibold">{title}</h3>
-                    <div className="flex flex-wrap -m-3">
+                <div className="p-4 bg-white border rounded-xl">
+                    <h3 className="mb-4 text-lg font-semibold">{title}</h3>
+                    <div className="flex flex-wrap">
                         {props.children}
                     </div>
                 </div>

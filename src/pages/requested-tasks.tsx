@@ -11,7 +11,7 @@ export default function RequestsView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        const url = 'tasks?status=pending-validation';
+        const url = 'tasks?status=pending_approval';
 
         apiRequest(url, 'GET')
         .then(data => {
@@ -30,7 +30,11 @@ export default function RequestsView() {
                     <>
                         {
                             tasks.map((task) => (
-                                <TaskCard key={task.id} task={task} />
+                                <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    show={true}
+                                />
                             ))
                         }
                     </>

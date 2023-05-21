@@ -4,7 +4,7 @@ import BaseCard from './baseCard';
 import TaskCardProps from '../../types/TaskCardProps';
 
 export default function TaskCard(props: TaskCardProps) {
-    const { task } = props;
+    const { task, show } = props;
 
     // Text
     const materialText = `Material: ${task.material}`;
@@ -15,6 +15,10 @@ export default function TaskCard(props: TaskCardProps) {
     const btnCancel: ButtonInfo = {
         type: BUTTON_CANCEL,
         action: () => {}
+    }
+
+    if (!show) {
+        return <></>;
     }
 
     return (
