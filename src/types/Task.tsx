@@ -3,6 +3,8 @@ type TaskStatus = 'pending_approval' | 'on_hold' | 'in_progress' | 'finished' | 
 export default interface Task {
     id: number;
     name: string;
+    status: TaskStatus;
+    priority: number;
     material: string;
     material_id: number;
     tool: string;
@@ -10,10 +12,7 @@ export default interface Task {
     file: string;
     file_id: number;
     note: string;
-    priority: number;
     created_at: string;
-    approved_at?: string;
-    rejected_at?: string;
-    finished_at?: string;
-    status: TaskStatus;
+    admin: string;
+    status_updated_at: string;
 }
