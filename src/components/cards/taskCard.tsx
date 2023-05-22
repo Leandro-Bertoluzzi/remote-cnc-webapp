@@ -22,6 +22,13 @@ export default function TaskCard(props: TaskCardProps) {
     const materialText = `Material: ${task.material}`;
     const toolText = `Tool: ${task.tool}`;
     const fileText = `File: ${task.file}`;
+    const approvalNote = task.status === 'on_hold' || task.status === 'in_progress' || task.status === 'finished'
+        ? `Approved by ${task.admin}`
+        : (
+            task.status === 'rejected'
+            ? `Rejected by ${task.admin}`
+            : ''
+        );
 
     /*  Function: showUpdateTaskFormModal
     *   Description: Enables the modal to update the current task
@@ -55,7 +62,7 @@ export default function TaskCard(props: TaskCardProps) {
         <>
             <BaseCard
                 mainText={task.name}
-                additionalText={[materialText, toolText, fileText, task.note]}
+                additionalText={[materialText, toolText, fileText, task.note, approvalNote]}
                 buttons={[btnEdit, btnCancel]}
             />
             {showTaskForm &&
