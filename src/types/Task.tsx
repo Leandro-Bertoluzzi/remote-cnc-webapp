@@ -4,8 +4,11 @@ export default interface Task {
     id: number;
     name: string;
     material: string;
+    material_id: number;
     tool: string;
+    tool_id: number;
     file: string;
+    file_id: number;
     note: string;
     priority: number;
     created_at: string;

@@ -3,7 +3,7 @@ import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import Task from '../types/Task';
-import TaskCard from '../components/cards/taskCard';
+import RequestCard from '../components/cards/requestCard';
 
 export default function RequestsView() {
     // Hooks for state variables
@@ -30,10 +30,9 @@ export default function RequestsView() {
                     <>
                         {
                             tasks.map((task) => (
-                                <TaskCard
+                                <RequestCard
                                     key={task.id}
                                     task={task}
-                                    show={true}
                                 />
                             ))
                         }
