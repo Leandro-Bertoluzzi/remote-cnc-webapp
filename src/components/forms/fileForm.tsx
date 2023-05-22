@@ -61,7 +61,7 @@ export default function FileForm(props: FileFormProps) {
             subtitle={create ? "Selecciona un archivo" : "Renombra tu archivo"}
             exitAction={exitAction}
             btnSubmitAction={create ? handleUploadClick : handleUpdateClick}
-            btnSubmitText="Subir"
+            btnSubmitText={create ? "Subir" : "Actualizar"}
         >
             {create &&
                 <div className="mb-5 w-full overflow-x-auto">

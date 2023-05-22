@@ -83,7 +83,7 @@ export default function TaskForm(props: TaskFormProps) {
             subtitle=""
             exitAction={exitAction}
             btnSubmitAction={create ? handleUploadClick : handleUpdateClick}
-            btnSubmitText="Subir"
+            btnSubmitText={create ? "Crear" : "Actualizar"}
         >
             <div className="mb-5 w-full overflow-x-auto">
                 <label className="font-medium" htmlFor="task-name-input">Nombre: </label>

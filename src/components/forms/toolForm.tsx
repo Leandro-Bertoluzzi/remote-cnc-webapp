@@ -58,7 +58,7 @@ export default function ToolForm(props: ToolFormProps) {
             subtitle=""
             exitAction={exitAction}
             btnSubmitAction={create ? handleUploadClick : handleUpdateClick}
-            btnSubmitText="Subir"
+            btnSubmitText="Guardar"
         >
             <div className="mb-5 w-full overflow-x-auto">
                 <label className="font-medium" htmlFor="tool-name-input">Nombre: </label>
