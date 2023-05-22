@@ -65,7 +65,7 @@ export default function UserForm(props: UserFormProps) {
             subtitle=""
             exitAction={exitAction}
             btnSubmitAction={create ? handleUploadClick : handleUpdateClick}
-            btnSubmitText="Subir"
+            btnSubmitText={create ? "Crear" : "Actualizar"}
         >
             <div className="mb-5 w-full overflow-x-auto">
                 <label className="font-medium" htmlFor="user-name-input">Nombre: </label>
