@@ -5,7 +5,7 @@ export default function BaseForm(props: BaseFormProps) {
     const { title, subtitle, exitAction, btnSubmitAction, btnSubmitText } = props;
 
     return (
-        <section className="fixed inset-0 z-50 flex items-center justify-center flex-wrap py-20 bg-neutral-500 bg-opacity-80 overflow-y-auto">
+        <section className="fixed inset-0 z-50 flex items-center-md justify-center flex-wrap py-20 bg-neutral-500 bg-opacity-80 overflow-y-auto">
             <div className="container px-4 mx-auto">
                 <div className="pt-5 max-w-md mx-auto bg-neutral-50 border border-neutral-100 rounded-xl">
                     <div className="px-6 pb-7">
