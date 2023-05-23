@@ -60,7 +60,7 @@ export default function TaskForm(props: TaskFormProps) {
     };
 
     const handleUpdateClick = () => {
-        let data = {
+        const dataUpdateTask = {
             "name": taskName,
             "tool_id": taskTool,
             "material_id": taskMaterial,
@@ -68,18 +68,18 @@ export default function TaskForm(props: TaskFormProps) {
         }
         let url = `tasks/${taskInfo.id}`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, 'PUT', dataUpdateTask, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 
         // We ask for approval again, since we made changes to the task
-        data = {
+        const dataUpdateStatus = {
             'user_id': taskInfo.user_id,
             "status": 'pending_approval'
         }
         url = `tasks/${taskInfo.id}/status`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, 'PUT', dataUpdateStatus, true)
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 
