@@ -11,7 +11,8 @@ const TASK_STATUSES = [
     'on_hold',
     'in_progress',
     'finished',
-    'rejected'
+    'rejected',
+    'cancelled'
 ];
 
 export default function TasksFilter(props: TasksFilterProps) {
