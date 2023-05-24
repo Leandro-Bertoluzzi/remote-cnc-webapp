@@ -10,7 +10,12 @@ export default function apiRequest(
     json: boolean = false
 ): Promise<any> {
     const { API_PORT, API_HOST } = config;
-    const apiUrl = `http://${API_HOST}:${API_PORT}/${relativeUrl}`;
+
+    // Adds the JWT token to the URL as a query parameter
+    const token = (relativeUrl.includes('?') ? '&' : '?')
+        + 'token='
+        + localStorage.getItem('remote-cnc-token');
+    const apiUrl = `http://${API_HOST}:${API_PORT}/${relativeUrl}${token}`;
 
     return fetch(apiUrl,{
         method: method,
