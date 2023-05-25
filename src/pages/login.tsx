@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 import apiRequest from '../services/apiService';
 import config from '../config';

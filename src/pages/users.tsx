@@ -20,8 +20,6 @@ export default function UsersView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (isValidated) { return; }
-
         const { JWT_NAME } = config;
         const callbackUrl = "users";
         const token = localStorage.getItem(JWT_NAME);
@@ -40,6 +38,7 @@ export default function UsersView() {
                 }
             })
             .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /*  Function: showCreateUserFormModal

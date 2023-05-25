@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from "next/router";
 
+import apiRequest from '../services/apiService';
 import config from '../config';
 import MenuOption from '../types/MenuOption';
 
@@ -54,6 +55,18 @@ export default function MainMenu() {
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
         }
+
+        apiRequest('users/auth', 'GET')
+            .then((response) => {
+                if (response.data) {
+                    // Do nothing, it worked!
+                }
+                if (response.error) {
+                    router.push(`/login?callbackUrl=${callbackUrl}`);
+                }
+            })
+            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

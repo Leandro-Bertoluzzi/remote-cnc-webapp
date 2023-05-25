@@ -31,8 +31,6 @@ export default function TasksView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (isValidated) { return; }
-
         const { JWT_NAME } = config;
         const callbackUrl = "tasks";
         const token = localStorage.getItem(JWT_NAME);
@@ -51,6 +49,7 @@ export default function TasksView() {
                 }
             })
             .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /*  Function: showCreateTaskFormModal

@@ -20,8 +20,6 @@ export default function FilesView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (isValidated) { return; }
-
         const { JWT_NAME } = config;
         const callbackUrl = "files";
         const token = localStorage.getItem(JWT_NAME);
@@ -40,6 +38,7 @@ export default function FilesView() {
                 }
             })
             .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /*  Function: showCreateFileFormModal
