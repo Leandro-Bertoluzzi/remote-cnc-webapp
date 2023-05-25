@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
+
 import apiRequest from '../services/apiService';
 import CardsList from '../components/cardsList';
+import config from '../config';
 import EmptyCard from '../components/cards/emptyCard';
 import FileCard from '../components/cards/fileCard';
 import FileForm from '../components/forms/fileForm';
@@ -10,6 +13,33 @@ export default function FilesView() {
     // Hooks for state variables
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [showFileForm, setShowFileForm] = useState<boolean>(false);
+    const [isValidated, setIsValidated] = useState<boolean>(false);
+
+    // Other hooks
+    const router = useRouter();
+
+    // Action to execute at the beginning
+    useEffect(() => {
+        const { JWT_NAME } = config;
+        const callbackUrl = "files";
+        const token = localStorage.getItem(JWT_NAME);
+
+        if (!token) {
+            router.push(`/login?callbackUrl=${callbackUrl}`);
+        }
+
+        apiRequest('users/auth', 'GET')
+            .then((response) => {
+                if (response.data) {
+                    setIsValidated(true);
+                }
+                if (response.error) {
+                    router.push(`/login?callbackUrl=${callbackUrl}`);
+                }
+            })
+            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     /*  Function: showCreateFileFormModal
     *   Description: Enables the modal to upload a new file
@@ -27,6 +57,8 @@ export default function FilesView() {
 
     // Action to execute at the beginning
     useEffect(() => {
+        if (!isValidated) { return; }
+
         apiRequest('files', 'GET')
         .then(data => {
             setFiles(data);
@@ -34,7 +66,7 @@ export default function FilesView() {
         .catch(error => {
             console.log("Connection error: ", error.message);
         });
-    }, []);
+    }, [isValidated]);
 
     return (
         <>

@@ -66,20 +66,17 @@ export default function TaskForm(props: TaskFormProps) {
             "material_id": taskMaterial,
             "file_id": taskFile
         }
-        let url = `tasks/${taskInfo.id}`;
-
-        apiRequest(url, 'PUT', dataUpdateTask, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
-
-        // We ask for approval again, since we made changes to the task
         const dataUpdateStatus = {
             'user_id': taskInfo.user_id,
             "status": 'pending_approval'
         }
-        url = `tasks/${taskInfo.id}/status`;
+        const urlUpdateTask = `tasks/${taskInfo.id}`;
+        const urlUpdateStatus = `tasks/${taskInfo.id}/status`;
 
-        apiRequest(url, 'PUT', dataUpdateStatus, true)
+        // We update the task and then we ask for approval again,
+        // since we made changes to the task
+        apiRequest(urlUpdateTask, 'PUT', dataUpdateTask, true)
+            .then((data) => apiRequest(urlUpdateStatus, 'PUT', dataUpdateStatus, true))
             .then((data) => console.log(data))
             .catch((err) => console.error(err));
 

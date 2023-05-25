@@ -9,8 +9,13 @@ export default function apiRequest(
     body?: any,
     json: boolean = false
 ): Promise<any> {
-    const { API_PORT, API_HOST } = config;
-    const apiUrl = `http://${API_HOST}:${API_PORT}/${relativeUrl}`;
+    const { API_PORT, API_HOST, JWT_NAME } = config;
+
+    // Adds the JWT token to the URL as a query parameter
+    const token = (relativeUrl.includes('?') ? '&' : '?')
+        + 'token='
+        + localStorage.getItem(JWT_NAME);
+    const apiUrl = `http://${API_HOST}:${API_PORT}/${relativeUrl}${token}`;
 
     return fetch(apiUrl,{
         method: method,

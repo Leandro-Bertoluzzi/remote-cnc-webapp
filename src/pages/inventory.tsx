@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
+
 import apiRequest from '../services/apiService';
+import config from '../config';
 import CardsList from '../components/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import Material from '../types/Material';
@@ -15,6 +18,33 @@ export default function ToolsView() {
     const [showToolForm, setShowToolForm] = useState<boolean>(false);
     const [materials, setMaterials] = useState<Material[]>([]);
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
+    const [isValidated, setIsValidated] = useState<boolean>(false);
+
+    // Other hooks
+    const router = useRouter();
+
+    // Action to execute at the beginning
+    useEffect(() => {
+        const { JWT_NAME } = config;
+        const callbackUrl = "inventory";
+        const token = localStorage.getItem(JWT_NAME);
+
+        if (!token) {
+            router.push(`/login?callbackUrl=${callbackUrl}`);
+        }
+
+        apiRequest('users/auth', 'GET')
+            .then((response) => {
+                if (response.data) {
+                    setIsValidated(true);
+                }
+                if (response.error) {
+                    router.push(`/login?callbackUrl=${callbackUrl}`);
+                }
+            })
+            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     /*  Function: showCreateToolFormModal
     *   Description: Enables the modal to upload a new tool
@@ -46,6 +76,8 @@ export default function ToolsView() {
 
     // Action to execute at the beginning
     useEffect(() => {
+        if (!isValidated) { return; }
+
         apiRequest('tools', 'GET')
             .then(data => {
                 setTools(data);
@@ -61,7 +93,7 @@ export default function ToolsView() {
             .catch(error => {
                 console.log("Connection error: ", error.message);
             });
-    }, []);
+    }, [isValidated]);
 
     return (
         <>
