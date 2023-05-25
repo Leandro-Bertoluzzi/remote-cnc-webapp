@@ -1,3 +1,7 @@
+import { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
+
+import config from '../config';
 import MenuOption from '../types/MenuOption';
 
 const options: MenuOption[] = [
@@ -39,6 +43,19 @@ const options: MenuOption[] = [
 ]
 
 export default function MainMenu() {
+    const router = useRouter();
+
+    // Action to execute at the beginning
+    useEffect(() => {
+        const { JWT_NAME } = config;
+        const callbackUrl = "";
+        const token = localStorage.getItem(JWT_NAME);
+
+        if (!token) {
+            router.push(`/login?callbackUrl=${callbackUrl}`);
+        }
+    }, []);
+
     return (
         <div className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4">
             <div className="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
+
 import apiRequest from '../services/apiService';
+import config from '../config';
 import CardsList from '../components/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import User from '../types/User';
@@ -10,6 +13,34 @@ export default function UsersView() {
     // Hooks for state variables
     const [users, setUsers] = useState<User[]>([]);
     const [showUserForm, setShowUserForm] = useState<boolean>(false);
+    const [isValidated, setIsValidated] = useState<boolean>(false);
+
+    // Other hooks
+    const router = useRouter();
+
+    // Action to execute at the beginning
+    useEffect(() => {
+        if (isValidated) { return; }
+
+        const { JWT_NAME } = config;
+        const callbackUrl = "users";
+        const token = localStorage.getItem(JWT_NAME);
+
+        if (!token) {
+            router.push(`/login?callbackUrl=${callbackUrl}`);
+        }
+
+        apiRequest('users/auth', 'GET')
+            .then((response) => {
+                if (response.data) {
+                    setIsValidated(true);
+                }
+                if (response.error) {
+                    router.push(`/login?callbackUrl=${callbackUrl}`);
+                }
+            })
+            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+    }, []);
 
     /*  Function: showCreateUserFormModal
     *   Description: Enables the modal to upload a new user
@@ -27,6 +58,8 @@ export default function UsersView() {
 
     // Action to execute at the beginning
     useEffect(() => {
+        if (!isValidated) { return; }
+
         apiRequest('users', 'GET')
             .then(data => {
                 setUsers(data);
@@ -34,7 +67,7 @@ export default function UsersView() {
             .catch(error => {
                 console.log("Connection error: ", error.message);
             });
-    }, []);
+    }, [isValidated]);
 
     return (
         <>
