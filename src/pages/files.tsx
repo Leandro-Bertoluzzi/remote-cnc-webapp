@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 
 import apiRequest from '../services/apiService';
+import { getJwtToken } from '../services/storage';
 import CardsList from '../components/cardsList';
-import config from '../config';
 import EmptyCard from '../components/cards/emptyCard';
 import FileCard from '../components/cards/fileCard';
 import FileForm from '../components/forms/fileForm';
@@ -20,9 +20,8 @@ export default function FilesView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        const { JWT_NAME } = config;
         const callbackUrl = "files";
-        const token = localStorage.getItem(JWT_NAME);
+        const token = getJwtToken();
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
@@ -44,7 +43,7 @@ export default function FilesView() {
     /*  Function: showCreateFileFormModal
     *   Description: Enables the modal to upload a new file
     */
-    function  showCreateFileFormModal() {
+    function showCreateFileFormModal() {
         setShowFileForm(true);
     }
 

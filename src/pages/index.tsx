@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from "next/router";
 
 import apiRequest from '../services/apiService';
-import config from '../config';
+import { getJwtToken } from '../services/storage';
 import MenuOption from '../types/MenuOption';
 
 const options: MenuOption[] = [
@@ -48,9 +48,8 @@ export default function MainMenu() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        const { JWT_NAME } = config;
         const callbackUrl = "";
-        const token = localStorage.getItem(JWT_NAME);
+        const token = getJwtToken();
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);

@@ -31,7 +31,6 @@ export default function FileForm(props: FileFormProps) {
         }
 
         const formData = new FormData();
-        formData.append("user_id", "1");
         formData.append("file", file, fileName);
 
         apiRequest('files', 'POST', formData)
@@ -43,7 +42,6 @@ export default function FileForm(props: FileFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "user_id": 1,
             "file_name": fileName
         }
         const url = `files/${fileInfo.id}`;

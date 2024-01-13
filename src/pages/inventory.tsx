@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 
 import apiRequest from '../services/apiService';
-import config from '../config';
+import { getJwtToken } from '../services/storage';
 import CardsList from '../components/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import Material from '../types/Material';
@@ -25,9 +25,8 @@ export default function ToolsView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        const { JWT_NAME } = config;
         const callbackUrl = "inventory";
-        const token = localStorage.getItem(JWT_NAME);
+        const token = getJwtToken();
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
@@ -49,7 +48,7 @@ export default function ToolsView() {
     /*  Function: showCreateToolFormModal
     *   Description: Enables the modal to upload a new tool
     */
-    function  showCreateToolFormModal() {
+    function showCreateToolFormModal() {
         setShowToolForm(true);
     }
 
@@ -63,7 +62,7 @@ export default function ToolsView() {
     /*  Function: showCreateMaterialFormModal
     *   Description: Enables the modal to upload a new material
     */
-    function  showCreateMaterialFormModal() {
+    function showCreateMaterialFormModal() {
         setShowMaterialForm(true);
     }
 

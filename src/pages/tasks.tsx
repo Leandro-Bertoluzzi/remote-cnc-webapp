@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 
 import apiRequest from '../services/apiService';
-import config from '../config';
+import { getJwtToken } from '../services/storage';
 import CardsList from '../components/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import FileInfo from "../types/FileInfo";
@@ -31,9 +31,8 @@ export default function TasksView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        const { JWT_NAME } = config;
         const callbackUrl = "tasks";
-        const token = localStorage.getItem(JWT_NAME);
+        const token = getJwtToken();
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);

@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 import apiRequest from '../services/apiService';
-import config from '../config';
+import { setJwtToken } from '../services/storage';
 
 export default function Login() {
     // Hooks for state variables
@@ -19,7 +19,6 @@ export default function Login() {
     };
 
     const handleUploadClick = () => {
-        const { JWT_NAME } = config;
         const data = {
             "email": email,
             "password": password
@@ -28,7 +27,7 @@ export default function Login() {
         apiRequest('users/login', 'POST', data, true)
             .then((response) => {
                 console.log(response);
-                localStorage.setItem(JWT_NAME, response.data.token);
+                setJwtToken(response.data.token);
                 router.push(callbackUrl);
             })
             .catch((err) => console.error(err));
@@ -42,7 +41,7 @@ export default function Login() {
             <div className="w-full p-6">
               <div className="md:max-w-xl text-center mx-auto">
                 <h2 className="mb-4 font-heading font-bold text-gray-900 text-6xl sm:text-7xl">Identificación de usuario</h2>
-                <p className="mb-11 text-lg text-gray-500">Bienvenido de nuevo</p>
+                <p className="mb-11 text-lg text-gray-500">¡Bienvenido!</p>
                 <div className="flex flex-wrap max-w-md mx-auto mb-5">
                   <div className="w-full p-2">
                     <input onChange={handleEmailChange} className="w-full px-5 py-3.5 text-gray-500 placeholder-gray-500 bg-white outline-none focus:ring-4 focus:ring-indigo-500 border border-gray-200 rounded-lg" type="text" placeholder="Email address" name="email" />
@@ -64,7 +63,7 @@ export default function Login() {
                 </div>
                 <p className="text-base text-gray-600">
                   <span>¿No tiene cuenta?</span>
-                  <a className="text-blue-900 hover:text-blue-400" href="#"> Contáctanos</a>
+                  <a className="text-blue-900 hover:text-blue-400" href="#"> Contáctenos</a>
                 </p>
               </div>
             </div>
