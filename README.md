@@ -12,13 +12,14 @@
 
 <!-- Status -->
 
-<h4 align="center"> 
+<h4 align="center">
 	🚧 Remote CNC webapp 🚀 Under construction...  🚧
-</h4> 
+</h4>
 
 ## Getting Started
 
 The first time you use the app, you must run:
+
 ```bash
 npm install
 # or
@@ -35,12 +36,12 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## :checkered_flag: Deployment ##
+## :checkered_flag: Deployment
 
 You can export the app as a static site, and serve it from a static server:
 
 ```bash
-$ npm run build-static
+$ npm run build
 # or
-yarn build-static
+yarn build
 ```
