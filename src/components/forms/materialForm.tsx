@@ -5,7 +5,7 @@ import MaterialFormProps from '../../types/MaterialFormProps';
 
 export default function MaterialForm(props: MaterialFormProps) {
     // Props
-    const { exitAction, create, materialInfo } = props;
+    const { exitAction, create, materialInfo, setError } = props;
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);
@@ -30,8 +30,12 @@ export default function MaterialForm(props: MaterialFormProps) {
         }
 
         apiRequest('materials', 'POST', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };
@@ -44,8 +48,12 @@ export default function MaterialForm(props: MaterialFormProps) {
         const url = `materials/${materialInfo.id}`;
 
         apiRequest(url, 'PUT', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };

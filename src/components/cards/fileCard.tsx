@@ -8,7 +8,7 @@ import FileForm from '../forms/fileForm';
 
 export default function FileCard(props: FileCardProps) {
     // Props
-    const { file } = props;
+    const { file, setError } = props;
 
     // Hooks for state variables
     const [showFileForm, setShowFileForm] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export default function FileCard(props: FileCardProps) {
                 console.log(response);
             })
             .catch((err) => {
-                console.error(err);
+                setError(err.message);
             });
     };
 
@@ -68,7 +68,7 @@ export default function FileCard(props: FileCardProps) {
                 buttons={[btnDownload, btnEdit, btnRemove]}
             />
             {showFileForm &&
-                <FileForm exitAction={hideFileFormModal} create={false} fileInfo={file} />
+                <FileForm setError={setError} exitAction={hideFileFormModal} create={false} fileInfo={file} />
             }
         </>
     )

@@ -4,6 +4,7 @@ import Task from "./Task";
 import Tool from "./Tool";
 
 type btnActionType = () => void;
+type setStringActionType = (str: string) => void;
 
 export default interface TaskFormProps {
     exitAction: btnActionType;
@@ -12,4 +13,5 @@ export default interface TaskFormProps {
     toolsList: Tool[];
     materialsList: Material[];
     filesList: FileInfo[];
+    setError: setStringActionType;
 }

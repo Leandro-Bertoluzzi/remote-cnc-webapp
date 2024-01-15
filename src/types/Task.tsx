@@ -5,17 +5,13 @@ export default interface Task {
     name: string;
     status: TaskStatus;
     priority: number;
-    user: string;
     user_id: number;
-    material: string;
     material_id: number;
-    tool: string;
     tool_id: number;
-    file: string;
     file_id: number;
     note: string;
     created_at: string;
-    admin: string;
+    admin_id: number;
     status_updated_at: string;
     cancellation_reason: string;
 }

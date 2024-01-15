@@ -6,7 +6,7 @@ import FileInput from '../fileInput';
 
 export default function FileForm(props: FileFormProps) {
     // Props
-    const { exitAction, create, fileInfo } = props;
+    const { exitAction, create, fileInfo, setError } = props;
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
@@ -30,6 +30,13 @@ export default function FileForm(props: FileFormProps) {
             return;
         }
 
+        /*
+        if(this.files[0].size > FILE_SIZE_LIMIT) {
+            // SHOW AN ERROR MESSAGE
+            return;
+        }
+        */
+
         const formData = new FormData();
         formData.append("file", file, fileName);
 
@@ -38,7 +45,7 @@ export default function FileForm(props: FileFormProps) {
                 console.log(response);
             })
             .catch((err) => {
-                console.error(err);
+                setError(err.message);
             });
 
         exitAction();
@@ -55,7 +62,7 @@ export default function FileForm(props: FileFormProps) {
                 console.log(response);
             })
             .catch((err) => {
-                console.error(err);
+                setError(err.message);
             });
 
         exitAction();

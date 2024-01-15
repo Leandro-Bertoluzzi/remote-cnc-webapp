@@ -8,6 +8,7 @@ import EmptyCard from '../components/cards/emptyCard';
 import Material from '../types/Material';
 import MaterialCard from '../components/cards/materialCard';
 import MaterialForm from '../components/forms/materialForm';
+import MessageDialog from '@/components/dialogs/messageDialog';
 import Tool from '../types/Tool';
 import ToolCard from '../components/cards/toolCard';
 import ToolForm from '../components/forms/toolForm';
@@ -19,6 +20,8 @@ export default function ToolsView() {
     const [materials, setMaterials] = useState<Material[]>([]);
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
     const [isValidated, setIsValidated] = useState<boolean>(false);
+    const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     // Other hooks
     const router = useRouter();
@@ -68,6 +71,21 @@ export default function ToolsView() {
         setShowMaterialForm(false);
     }
 
+    /*  Function: showErrorDialog
+    *   Description: Shows a dialog with information about the error
+    */
+    function showErrorDialog(message: string) {
+        setErrorMsg(message);
+        setShowMessageDialog(true);
+    }
+
+    /*  Function: hideErrorDialog
+    *   Description: Hides the dialog with information about the error
+    */
+    function hideErrorDialog() {
+        setShowMessageDialog(false);
+    }
+
     // Action to execute at the beginning
     useEffect(() => {
         if (!isValidated) { return; }
@@ -106,6 +124,7 @@ export default function ToolsView() {
                                     <ToolCard
                                         key={tool.id}
                                         tool={tool}
+                                        setError={showErrorDialog}
                                     />
                                 ))
                             }
@@ -129,6 +148,7 @@ export default function ToolsView() {
                                     <MaterialCard
                                         key={material.id}
                                         material={material}
+                                        setError={showErrorDialog}
                                     />
                                 ))
                             }
@@ -136,11 +156,19 @@ export default function ToolsView() {
                     )
                 }
             </CardsList>
+            {showMessageDialog &&
+                <MessageDialog
+                    onClose={hideErrorDialog}
+                    type='error'
+                    title='Error de base de datos'
+                    text={errorMsg}
+                />
+            }
             {showToolForm &&
-                <ToolForm exitAction={hideToolFormModal} create={true} />
+                <ToolForm exitAction={hideToolFormModal} create={true} setError={showErrorDialog} />
             }
             {showMaterialForm &&
-                <MaterialForm exitAction={hideMaterialFormModal} create={true} />
+                <MaterialForm exitAction={hideMaterialFormModal} create={true} setError={showErrorDialog} />
             }
         </>
     )

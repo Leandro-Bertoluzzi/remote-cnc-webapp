@@ -7,7 +7,7 @@ import UserCardProps from '../../types/UserCardProps';
 import UserForm from '../forms/userForm';
 
 export default function UserCard(props: UserCardProps) {
-    const { user } = props;
+    const { user, setError } = props;
 
     // Text
     const roleText = `Role: ${user.role}`;
@@ -22,8 +22,12 @@ export default function UserCard(props: UserCardProps) {
         const url = `users/${user.id}`;
 
         apiRequest(url, 'DELETE')
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
     };
 
     /*  Function: showUpdateUserFormModal
@@ -58,7 +62,7 @@ export default function UserCard(props: UserCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showUserForm &&
-                <UserForm exitAction={hideUserFormModal} create={false} userInfo={user} />
+                <UserForm setError={setError} exitAction={hideUserFormModal} create={false} userInfo={user} />
             }
         </>
     )

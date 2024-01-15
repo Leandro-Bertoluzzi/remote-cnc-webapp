@@ -5,7 +5,7 @@ import UserFormProps from '../../types/UserFormProps';
 
 export default function UserForm(props: UserFormProps) {
     // Props
-    const { exitAction, create, userInfo } = props;
+    const { exitAction, create, userInfo, setError } = props;
 
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);
@@ -46,8 +46,12 @@ export default function UserForm(props: UserFormProps) {
         }
 
         apiRequest('users', 'POST', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };
@@ -61,8 +65,12 @@ export default function UserForm(props: UserFormProps) {
         const url = `users/${userInfo.id}`;
 
         apiRequest(url, 'PUT', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };

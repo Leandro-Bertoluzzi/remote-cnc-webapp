@@ -7,6 +7,7 @@ import CardsList from '../components/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import FileInfo from "../types/FileInfo";
 import Material from "../types/Material";
+import MessageDialog from '@/components/dialogs/messageDialog';
 import Task from '../types/Task';
 import TaskCard from '../components/cards/taskCard';
 import TasksFilter from '../components/tasksFilter';
@@ -25,6 +26,8 @@ export default function TasksView() {
     const [taskTypes, setTaskTypes] = useState<string[]>(DEFAULT_TASK_TYPES);
     const [showTaskForm, setShowTaskForm] = useState<boolean>(false);
     const [isValidated, setIsValidated] = useState<boolean>(false);
+    const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     // Other hooks
     const router = useRouter();
@@ -60,6 +63,21 @@ export default function TasksView() {
         setShowTaskForm(false);
     }
 
+    /*  Function: showErrorDialog
+    *   Description: Shows a dialog with information about the error
+    */
+    function showErrorDialog(message: string) {
+        setErrorMsg(message);
+        setShowMessageDialog(true);
+    }
+
+    /*  Function: hideErrorDialog
+    *   Description: Hides the dialog with information about the error
+    */
+    function hideErrorDialog() {
+        setShowMessageDialog(false);
+    }
+
     // Action to execute at the beginning
     useEffect(() => {
         if (!isValidated) { return; }
@@ -69,7 +87,7 @@ export default function TasksView() {
                 setAvailableFiles(data);
             })
             .catch(error => {
-                console.log('Connection error: ', error.message);
+                showErrorDialog(error.message);
             });
 
         apiRequest('materials', 'GET')
@@ -77,7 +95,7 @@ export default function TasksView() {
                 setAvailableMaterials(data);
             })
             .catch(error => {
-                console.log('Connection error: ', error.message);
+                showErrorDialog(error.message);
             });
 
         apiRequest('tasks', 'GET')
@@ -85,7 +103,7 @@ export default function TasksView() {
                 setTasks(data);
             })
             .catch(error => {
-                console.log('Connection error: ', error.message);
+                showErrorDialog(error.message);
             });
 
         apiRequest('tools', 'GET')
@@ -93,7 +111,7 @@ export default function TasksView() {
                 setAvailableTools(data);
             })
             .catch(error => {
-                console.log('Connection error: ', error.message);
+                showErrorDialog(error.message);
             });
     }, [isValidated]);
 
@@ -145,6 +163,7 @@ export default function TasksView() {
                                         toolsList={availableTools}
                                         materialsList={availableMaterials}
                                         filesList={availableFiles}
+                                        setError={showErrorDialog}
                                     />
                                 ))
                             }
@@ -152,6 +171,14 @@ export default function TasksView() {
                     )
                 }
             </CardsList>
+            {showMessageDialog &&
+                <MessageDialog
+                    onClose={hideErrorDialog}
+                    type='error'
+                    title='Error de base de datos'
+                    text={errorMsg}
+                />
+            }
             {showTaskForm &&
                 <TaskForm
                     exitAction={hideTaskFormModal}
@@ -159,6 +186,7 @@ export default function TasksView() {
                     toolsList={availableTools}
                     materialsList={availableMaterials}
                     filesList={availableFiles}
+                    setError={showErrorDialog}
                 />
             }
         </>

@@ -11,7 +11,8 @@ export default function TaskForm(props: TaskFormProps) {
         taskInfo,
         toolsList,
         materialsList,
-        filesList
+        filesList,
+        setError
     } = props;
 
     // Hooks for state variables
@@ -69,8 +70,12 @@ export default function TaskForm(props: TaskFormProps) {
         }
 
         apiRequest('tasks', 'POST', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };
@@ -96,8 +101,12 @@ export default function TaskForm(props: TaskFormProps) {
         // since we made changes to the task
         apiRequest(urlUpdateTask, 'PUT', dataUpdateTask, true)
             .then((data) => apiRequest(urlUpdateStatus, 'PUT', dataUpdateStatus, true))
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };
