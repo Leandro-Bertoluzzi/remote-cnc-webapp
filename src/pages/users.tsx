@@ -29,12 +29,7 @@ export default function UsersView() {
 
         apiRequest('users/auth', 'GET')
             .then((response) => {
-                if (response.data) {
-                    setIsValidated(true);
-                }
-                if (response.error) {
-                    router.push(`/login?callbackUrl=${callbackUrl}`);
-                }
+                setIsValidated(true);
             })
             .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
             // eslint-disable-next-line react-hooks/exhaustive-deps

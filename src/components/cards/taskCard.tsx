@@ -21,9 +21,9 @@ export default function TaskCard(props: TaskCardProps) {
     const [showCancelTaskForm, setShowCancelTaskForm] = useState<boolean>(false);
 
     // Text
-    const materialText = `Material: ${task.material}`;
-    const toolText = `Tool: ${task.tool}`;
-    const fileText = `File: ${task.file}`;
+    const materialText = `Material: ${materialsList.find(material => material.id == task.material_id)?.name}`;
+    const toolText = `Tool: ${toolsList.find(tool => tool.id == task.tool_id)?.name}`;
+    const fileText = `File: ${filesList.find(file => file.id == task.file_id)?.file_name}`;
     const additionalText = [materialText, toolText, fileText];
 
     if(task.note){

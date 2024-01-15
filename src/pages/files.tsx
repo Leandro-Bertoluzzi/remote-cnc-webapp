@@ -29,15 +29,10 @@ export default function FilesView() {
 
         apiRequest('users/auth', 'GET')
             .then((response) => {
-                if (response.data) {
-                    setIsValidated(true);
-                }
-                if (response.error) {
-                    router.push(`/login?callbackUrl=${callbackUrl}`);
-                }
+                setIsValidated(true);
             })
             .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /*  Function: showCreateFileFormModal
@@ -59,12 +54,12 @@ export default function FilesView() {
         if (!isValidated) { return; }
 
         apiRequest('files', 'GET')
-        .then(data => {
-            setFiles(data);
-        })
-        .catch(error => {
-            console.log("Connection error: ", error.message);
-        });
+            .then(data => {
+                setFiles(data);
+            })
+            .catch(error => {
+                console.error(error.message);
+            });
     }, [isValidated]);
 
     return (
@@ -78,17 +73,17 @@ export default function FilesView() {
                 {files.length === 0 ? (
                     <EmptyCard itemName="archivos guardados" />
                 ) : (
-                        <>
-                            {
-                                files.map((file) => (
-                                    <FileCard
-                                        key={file.id}
-                                        file={file}
-                                    />
-                                ))
-                            }
-                        </>
-                    )
+                    <>
+                        {
+                            files.map((file) => (
+                                <FileCard
+                                    key={file.id}
+                                    file={file}
+                                />
+                            ))
+                        }
+                    </>
+                )
                 }
             </CardsList>
             {showFileForm &&

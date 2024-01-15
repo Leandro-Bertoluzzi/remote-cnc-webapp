@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 import apiRequest from '../../services/apiService';
 import BaseForm from './baseForm';
 import TaskFormProps from '../../types/TaskFormProps';
@@ -15,10 +15,26 @@ export default function TaskForm(props: TaskFormProps) {
     } = props;
 
     // Hooks for state variables
-    const [taskName, setTaskName] = useState<string>(taskInfo.name);
-    const [taskTool, setTaskTool] = useState<number>(taskInfo.tool_id);
-    const [taskMaterial, setTaskMaterial] = useState<number>(taskInfo.material_id);
-    const [taskFile, setTaskFile] = useState<number>(taskInfo.file_id);
+    const [taskName, setTaskName] = useState<string>();
+    const [taskTool, setTaskTool] = useState<number>();
+    const [taskMaterial, setTaskMaterial] = useState<number>();
+    const [taskFile, setTaskFile] = useState<number>();
+
+    // Action to execute at the beginning
+    useEffect(() => {
+        if (taskInfo) {
+            setTaskName(taskInfo.name);
+            setTaskTool(taskInfo.tool_id);
+            setTaskMaterial(taskInfo.material_id);
+            setTaskFile(taskInfo.file_id);
+            return;
+        }
+
+        setTaskName("");
+        setTaskTool(toolsList[0].id);
+        setTaskMaterial(materialsList[0].id);
+        setTaskFile(filesList[0].id);
+    }, []);
 
     const handleTaskNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
@@ -60,6 +76,10 @@ export default function TaskForm(props: TaskFormProps) {
     };
 
     const handleUpdateClick = () => {
+        if (!taskInfo) {
+            exitAction();
+        }
+
         const dataUpdateTask = {
             "name": taskName,
             "tool_id": taskTool,
@@ -67,11 +87,10 @@ export default function TaskForm(props: TaskFormProps) {
             "file_id": taskFile
         }
         const dataUpdateStatus = {
-            'user_id': taskInfo.user_id,
             "status": 'pending_approval'
         }
-        const urlUpdateTask = `tasks/${taskInfo.id}`;
-        const urlUpdateStatus = `tasks/${taskInfo.id}/status`;
+        const urlUpdateTask = `tasks/${taskInfo?.id}`;
+        const urlUpdateStatus = `tasks/${taskInfo?.id}/status`;
 
         // We update the task and then we ask for approval again,
         // since we made changes to the task
@@ -154,14 +173,4 @@ export default function TaskForm(props: TaskFormProps) {
             </div>
         </BaseForm>
     )
-}
-
-TaskForm.defaultProps = {
-    taskInfo: {
-        id: 0,
-        name: "",
-        tool_id: 0,
-        material_id: 0,
-        file_id: 0
-    }
 }

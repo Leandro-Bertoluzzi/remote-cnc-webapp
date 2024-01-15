@@ -25,7 +25,6 @@ export default function MaterialForm(props: MaterialFormProps) {
 
     const handleUploadClick = () => {
         const data = {
-            "user_id": 1,
             "name": materialName,
             "description": materialDescription
         }
@@ -39,7 +38,6 @@ export default function MaterialForm(props: MaterialFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "user_id": 1,
             "name": materialName,
             "description": materialDescription
         }

@@ -57,12 +57,7 @@ export default function MainMenu() {
 
         apiRequest('users/auth', 'GET')
             .then((response) => {
-                if (response.data) {
-                    // Do nothing, it worked!
-                }
-                if (response.error) {
-                    router.push(`/login?callbackUrl=${callbackUrl}`);
-                }
+                // Do nothing, it worked!
             })
             .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
             // eslint-disable-next-line react-hooks/exhaustive-deps

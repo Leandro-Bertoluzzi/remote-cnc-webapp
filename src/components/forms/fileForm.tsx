@@ -34,8 +34,12 @@ export default function FileForm(props: FileFormProps) {
         formData.append("file", file, fileName);
 
         apiRequest('files', 'POST', formData)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
 
         exitAction();
     };
@@ -47,8 +51,12 @@ export default function FileForm(props: FileFormProps) {
         const url = `files/${fileInfo.id}`;
 
         apiRequest(url, 'PUT', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
 
         exitAction();
     };
@@ -63,7 +71,7 @@ export default function FileForm(props: FileFormProps) {
         >
             {create &&
                 <div className="mb-5 w-full overflow-x-auto">
-                    <FileInput handleFileChange={handleFileChange} accept=".gcode, .txt" />
+                    <FileInput handleFileChange={handleFileChange} accept=".gcode, .nc, .txt" />
                 </div>
             }
             <div className="mb-5 w-full overflow-x-auto">

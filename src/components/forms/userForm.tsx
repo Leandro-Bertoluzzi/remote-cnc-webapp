@@ -10,6 +10,7 @@ export default function UserForm(props: UserFormProps) {
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);
     const [userEmail, setUserEmail] = useState<string>(userInfo.email);
+    const [userPassword, setUserPassword] = useState<string>(userInfo.email);
     const [userRole, setUserRole] = useState<string>(userInfo.role);
 
     const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -24,6 +25,12 @@ export default function UserForm(props: UserFormProps) {
         }
     };
 
+    const handleUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value) {
+            setUserPassword(e.target.value);
+        }
+    };
+
     const handleUserRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         if (e.target.value) {
             setUserRole(e.target.value);
@@ -34,6 +41,7 @@ export default function UserForm(props: UserFormProps) {
         const data = {
             "name": userName,
             "email": userEmail,
+            "password": userPassword,
             "role": userRole
         }
 
@@ -75,6 +83,12 @@ export default function UserForm(props: UserFormProps) {
                 <label className="font-medium" htmlFor="user-email-input">Correo electrónico: </label>
                 <input id="user-email-input" type="text" onChange={handleUserEmailChange} value={userEmail} />
             </div>
+            {create &&
+                <div className="mb-5 w-full overflow-x-auto">
+                    <label className="font-medium" htmlFor="user-password-input">Contraseña: </label>
+                    <input id="user-password-input" type="password" onChange={handleUserPasswordChange} value={userPassword} />
+                </div>
+            }
             <div className="mb-5 w-full overflow-x-auto">
                 <label className="font-medium" htmlFor="user-role-input">Rol: </label>
                 <select

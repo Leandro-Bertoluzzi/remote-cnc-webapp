@@ -14,7 +14,8 @@ export default function FileCard(props: FileCardProps) {
     const [showFileForm, setShowFileForm] = useState<boolean>(false);
 
     // Text
-    const createdAtText = `Created at: ${file.created_at}`;
+    const createdAt = new Date(file.created_at);
+    const createdAtText = `Created at: ${createdAt.toLocaleString()}`;
 
     /*  Function: removeFile
     *   Description: Removes the current file
@@ -23,8 +24,12 @@ export default function FileCard(props: FileCardProps) {
         const url = `files/${file.id}`;
 
         apiRequest(url, 'DELETE')
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     };
 
     /*  Function: showUpdateFileFormModal

@@ -25,7 +25,6 @@ export default function ToolForm(props: ToolFormProps) {
 
     const handleUploadClick = () => {
         const data = {
-            "user_id": 1,
             "name": toolName,
             "description": toolDescription
         }
@@ -39,7 +38,6 @@ export default function ToolForm(props: ToolFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "user_id": 1,
             "name": toolName,
             "description": toolDescription
         }
