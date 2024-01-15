@@ -8,12 +8,15 @@ import EmptyCard from '../components/cards/emptyCard';
 import FileCard from '../components/cards/fileCard';
 import FileForm from '../components/forms/fileForm';
 import FileInfo from '../types/FileInfo';
+import MessageDialog from '@/components/dialogs/messageDialog';
 
 export default function FilesView() {
     // Hooks for state variables
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [showFileForm, setShowFileForm] = useState<boolean>(false);
     const [isValidated, setIsValidated] = useState<boolean>(false);
+    const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     // Other hooks
     const router = useRouter();
@@ -49,6 +52,21 @@ export default function FilesView() {
         setShowFileForm(false);
     }
 
+    /*  Function: showErrorDialog
+    *   Description: Shows a dialog with information about the error
+    */
+    function showErrorDialog(message: string) {
+        setErrorMsg(message);
+        setShowMessageDialog(true);
+    }
+
+    /*  Function: hideErrorDialog
+    *   Description: Hides the dialog with information about the error
+    */
+    function hideErrorDialog() {
+        setShowMessageDialog(false);
+    }
+
     // Action to execute at the beginning
     useEffect(() => {
         if (!isValidated) { return; }
@@ -58,7 +76,7 @@ export default function FilesView() {
                 setFiles(data);
             })
             .catch(error => {
-                console.error(error.message);
+                showErrorDialog(error.message);
             });
     }, [isValidated]);
 
@@ -79,6 +97,7 @@ export default function FilesView() {
                                 <FileCard
                                     key={file.id}
                                     file={file}
+                                    setError={showErrorDialog}
                                 />
                             ))
                         }
@@ -86,8 +105,16 @@ export default function FilesView() {
                 )
                 }
             </CardsList>
+            {showMessageDialog &&
+                <MessageDialog
+                    onClose={hideErrorDialog}
+                    type='error'
+                    title='Error de base de datos'
+                    text={errorMsg}
+                />
+            }
             {showFileForm &&
-                <FileForm exitAction={hideFileFormModal} create={true} />
+                <FileForm exitAction={hideFileFormModal} create={true} setError={showErrorDialog} />
             }
         </>
     )

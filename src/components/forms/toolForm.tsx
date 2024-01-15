@@ -5,7 +5,7 @@ import ToolFormProps from '../../types/ToolFormProps';
 
 export default function ToolForm(props: ToolFormProps) {
     // Props
-    const { exitAction, create, toolInfo } = props;
+    const { exitAction, create, toolInfo, setError } = props;
 
     // Hooks for state variables
     const [toolName, setToolName] = useState<string>(toolInfo.name);
@@ -30,8 +30,12 @@ export default function ToolForm(props: ToolFormProps) {
         }
 
         apiRequest('tools', 'POST', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };
@@ -44,8 +48,12 @@ export default function ToolForm(props: ToolFormProps) {
         const url = `tools/${toolInfo.id}`;
 
         apiRequest(url, 'PUT', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };

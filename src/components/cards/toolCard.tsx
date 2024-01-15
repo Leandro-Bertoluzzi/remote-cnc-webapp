@@ -8,7 +8,7 @@ import ToolForm from '../forms/toolForm';
 
 export default function ToolCard(props: ToolCardProps) {
     // Props
-    const { tool } = props;
+    const { tool, setError } = props;
 
     // Hooks for state variables
     const [showToolForm, setShowToolForm] = useState<boolean>(false);
@@ -20,8 +20,12 @@ export default function ToolCard(props: ToolCardProps) {
         const url = `tools/${tool.id}`;
 
         apiRequest(url, 'DELETE')
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
     };
 
     /*  Function: showUpdateToolFormModal
@@ -56,7 +60,7 @@ export default function ToolCard(props: ToolCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showToolForm &&
-                <ToolForm exitAction={hideToolFormModal} create={false} toolInfo={tool} />
+                <ToolForm setError={setError} exitAction={hideToolFormModal} create={false} toolInfo={tool} />
             }
         </>
     )

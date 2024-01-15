@@ -7,7 +7,8 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
     // Props
     const {
         exitAction,
-        taskInfo
+        taskInfo,
+        setError
     } = props;
 
     // Hooks for state variables
@@ -30,8 +31,12 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
         const url = `tasks/${taskInfo.id}/status`;
 
         apiRequest(url, 'PUT', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
 
         exitAction();
     };
@@ -51,6 +56,7 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
                     name="cancellation_reason"
                     onChange={handleCancellationReasonChange}
                     value={cancellationReason}
+                    placeholder='Escribe la razón aquí...'
                     rows={3} cols={50}
                 >
                 </textarea>

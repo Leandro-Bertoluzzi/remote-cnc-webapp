@@ -8,12 +8,12 @@ const APPROVED_STATUS = 'on_hold';
 const REJECTED_STATUS = 'rejected';
 
 export default function RequestCard(props: RequestCardProps) {
-    const { task } = props;
+    const { task, setError } = props;
 
     // Text
-    const materialText = `Material: ${task.material}`;
-    const toolText = `Tool: ${task.tool}`;
-    const fileText = `File: ${task.file}`;
+    const materialText = `Material: ${task.material_id}`;
+    const toolText = `Tool: ${task.tool_id}`;
+    const fileText = `File: ${task.file_id}`;
 
     /*  Function: approveRequest
     *   Description: Approves the current request
@@ -25,8 +25,12 @@ export default function RequestCard(props: RequestCardProps) {
         const url = `tasks/${task.id}/status`;
 
         apiRequest(url, 'PUT', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
     };
 
     /*  Function: rejectRequest
@@ -39,8 +43,12 @@ export default function RequestCard(props: RequestCardProps) {
         const url = `tasks/${task.id}/status`;
 
         apiRequest(url, 'PUT', data, true)
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
     };
 
     // Buttons

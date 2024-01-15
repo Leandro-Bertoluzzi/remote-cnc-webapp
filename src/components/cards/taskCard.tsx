@@ -13,7 +13,8 @@ export default function TaskCard(props: TaskCardProps) {
         show,
         toolsList,
         materialsList,
-        filesList
+        filesList,
+        setError
     } = props;
 
     // Hooks for state variables
@@ -30,10 +31,10 @@ export default function TaskCard(props: TaskCardProps) {
         additionalText.push(task.note)
     }
     if(task.status === 'on_hold' || task.status === 'in_progress' || task.status === 'finished'){
-        additionalText.push(`Approved by ${task.admin}`)
+        additionalText.push(`Approved by ${task.admin_id}`)
     }
     if(task.status === 'rejected'){
-        additionalText.push(`Rejected by ${task.admin}`)
+        additionalText.push(`Rejected by ${task.admin_id}`)
     }
     if(task.status === 'cancelled'){
         additionalText.push(`Cancellation reason: ${task.cancellation_reason}`)
@@ -96,12 +97,14 @@ export default function TaskCard(props: TaskCardProps) {
                     toolsList={toolsList}
                     materialsList={materialsList}
                     filesList={filesList}
+                    setError={setError}
                 />
             }
             {showCancelTaskForm &&
                 <CancelTaskForm
                     exitAction={hideCancelFormModal}
                     taskInfo={task}
+                    setError={setError}
                 />
             }
         </>

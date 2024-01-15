@@ -5,6 +5,7 @@ import apiRequest from '../services/apiService';
 import { getJwtToken } from '../services/storage';
 import CardsList from '../components/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
+import MessageDialog from '@/components/dialogs/messageDialog';
 import Task from '../types/Task';
 import RequestCard from '../components/cards/requestCard';
 
@@ -12,9 +13,26 @@ export default function RequestsView() {
     // Hooks for state variables
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isValidated, setIsValidated] = useState<boolean>(false);
+    const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     // Other hooks
     const router = useRouter();
+
+    /*  Function: showErrorDialog
+    *   Description: Shows a dialog with information about the error
+    */
+    function showErrorDialog(message: string) {
+        setErrorMsg(message);
+        setShowMessageDialog(true);
+    }
+
+    /*  Function: hideErrorDialog
+    *   Description: Hides the dialog with information about the error
+    */
+    function hideErrorDialog() {
+        setShowMessageDialog(false);
+    }
 
     // Action to execute at the beginning
     useEffect(() => {
@@ -44,7 +62,7 @@ export default function RequestsView() {
             setTasks(data);
         })
         .catch(error => {
-            console.log("Connection error: ", error.message);
+            showErrorDialog(error.message);
         });
     }, [isValidated]);
 
@@ -59,11 +77,20 @@ export default function RequestsView() {
                                 <RequestCard
                                     key={task.id}
                                     task={task}
+                                    setError={showErrorDialog}
                                 />
                             ))
                         }
                     </>
                 )
+            }
+            {showMessageDialog &&
+                <MessageDialog
+                    onClose={hideErrorDialog}
+                    type='error'
+                    title='Error de base de datos'
+                    text={errorMsg}
+                />
             }
         </CardsList>
     )

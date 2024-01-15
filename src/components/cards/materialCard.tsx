@@ -8,7 +8,7 @@ import MaterialForm from '../forms/materialForm';
 
 export default function MaterialCard(props: MaterialCardProps) {
     // Props
-    const { material } = props;
+    const { material, setError } = props;
 
     // Hooks for state variables
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
@@ -20,8 +20,12 @@ export default function MaterialCard(props: MaterialCardProps) {
         const url = `materials/${material.id}`;
 
         apiRequest(url, 'DELETE')
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
     };
 
     /*  Function: showUpdateMaterialFormModal
@@ -56,7 +60,7 @@ export default function MaterialCard(props: MaterialCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showMaterialForm &&
-                <MaterialForm exitAction={hideMaterialFormModal} create={false} materialInfo={material} />
+                <MaterialForm setError={setError} exitAction={hideMaterialFormModal} create={false} materialInfo={material} />
             }
         </>
     )
