@@ -24,7 +24,6 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
     */
     const cancelTask = () => {
         const data = {
-            'user_id': taskInfo.user_id,
             "status": 'cancelled',
             'cancellation_reason': cancellationReason,
         }

@@ -20,9 +20,7 @@ export default function RequestCard(props: RequestCardProps) {
     */
     const approveRequest = () => {
         const data = {
-            'user_id': 1,
-            'status': APPROVED_STATUS,
-            'admin_id': 1
+            'status': APPROVED_STATUS
         }
         const url = `tasks/${task.id}/status`;
 
@@ -36,9 +34,7 @@ export default function RequestCard(props: RequestCardProps) {
     */
     const rejectRequest = () => {
         const data = {
-            'user_id': 1,
-            'status': REJECTED_STATUS,
-            'admin_id': 1
+            'status': REJECTED_STATUS
         }
         const url = `tasks/${task.id}/status`;
 

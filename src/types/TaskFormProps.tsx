@@ -8,7 +8,7 @@ type btnActionType = () => void;
 export default interface TaskFormProps {
     exitAction: btnActionType;
     create: boolean;
-    taskInfo: Task;
+    taskInfo?: Task;
     toolsList: Tool[];
     materialsList: Material[];
     filesList: FileInfo[];
