@@ -3,14 +3,14 @@ import { useRouter } from "next/router";
 
 import apiRequest from '../services/apiService';
 import { getJwtToken } from '../services/storage';
-import CardsList from '../components/cardsList';
+import CardsList from '../components/containers/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import FileInfo from "../types/FileInfo";
 import Material from "../types/Material";
 import MessageDialog from '@/components/dialogs/messageDialog';
 import Task from '../types/Task';
 import TaskCard from '../components/cards/taskCard';
-import TasksFilter from '../components/tasksFilter';
+import TasksFilter from '../components/discrete/tasksFilter';
 import TaskForm from '../components/forms/taskForm';
 import Tool from "../types/Tool";
 
@@ -151,7 +151,7 @@ export default function TasksView() {
                 ) : (
                         <>
                             <TasksFilter
-                                initialStatus={DEFAULT_TASK_TYPES}
+                                filterStatus={taskTypes}
                                 updateTaskStatusList={updateTaskStatusList}
                             />
                             {

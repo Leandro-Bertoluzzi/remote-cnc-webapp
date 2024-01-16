@@ -1,7 +1,9 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import apiRequest from '../../services/apiService';
 import BaseForm from './baseForm';
 import UserFormProps from '../../types/UserFormProps';
+import LabeledTextInput from '../discrete/labeledTextInput';
+import LabeledSelect from '../discrete/labeledSelect';
 
 export default function UserForm(props: UserFormProps) {
     // Props
@@ -13,28 +15,20 @@ export default function UserForm(props: UserFormProps) {
     const [userPassword, setUserPassword] = useState<string>(userInfo.email);
     const [userRole, setUserRole] = useState<string>(userInfo.role);
 
-    const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setUserName(e.target.value);
-        }
+    const handleUserNameChange = (name: string) => {
+        setUserName(name);
     };
 
-    const handleUserEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setUserEmail(e.target.value);
-        }
+    const handleUserEmailChange = (email: string) => {
+        setUserEmail(email);
     };
 
-    const handleUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setUserPassword(e.target.value);
-        }
+    const handleUserPasswordChange = (password: string) => {
+        setUserPassword(password);
     };
 
-    const handleUserRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        if (e.target.value) {
-            setUserRole(e.target.value);
-        }
+    const handleUserRoleChange = (role: string) => {
+        setUserRole(role);
     };
 
     const handleUploadClick = () => {
@@ -84,29 +78,44 @@ export default function UserForm(props: UserFormProps) {
             btnSubmitText={create ? "Crear" : "Actualizar"}
         >
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="user-name-input">Nombre: </label>
-                <input id="user-name-input" type="text" onChange={handleUserNameChange} value={userName} />
+                <LabeledTextInput
+                    label="Nombre"
+                    name="user-name"
+                    placeholder=""
+                    value={userName}
+                    handleChange={handleUserNameChange}
+                />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="user-email-input">Correo electrónico: </label>
-                <input id="user-email-input" type="text" onChange={handleUserEmailChange} value={userEmail} />
+                <LabeledTextInput
+                    label="Correo electrónico"
+                    name="user-email"
+                    type="email"
+                    placeholder=""
+                    value={userEmail}
+                    handleChange={handleUserEmailChange}
+                />
             </div>
             {create &&
                 <div className="mb-5 w-full overflow-x-auto">
-                    <label className="font-medium" htmlFor="user-password-input">Contraseña: </label>
-                    <input id="user-password-input" type="password" onChange={handleUserPasswordChange} value={userPassword} />
+                    <LabeledTextInput
+                        label="Contraseña"
+                        name="user-password"
+                        type="password"
+                        placeholder=""
+                        value={userPassword}
+                        handleChange={handleUserPasswordChange}
+                    />
                 </div>
             }
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="user-role-input">Rol: </label>
-                <select
-                    id="user-role-input"
-                    value={userRole}
-                    onChange={handleUserRoleChange}
-                >
-                    <option value="user">user</option>
-                    <option value="admin">admin</option>
-                </select>
+                <LabeledSelect
+                    label="Rol de usuario"
+                    name="user-role"
+                    selectedOption={userRole}
+                    handleChange={handleUserRoleChange}
+                    options={["user", "admin"]}
+                />
             </div>
         </BaseForm>
     )

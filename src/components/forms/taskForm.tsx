@@ -1,6 +1,9 @@
-import { ChangeEvent, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import apiRequest from '../../services/apiService';
 import BaseForm from './baseForm';
+import ItemsSelect from '../discrete/itemsSelect';
+import LabeledTextArea from '../discrete/labeledTextArea';
+import LabeledTextInput from '../discrete/labeledTextInput';
 import TaskFormProps from '../../types/TaskFormProps';
 
 export default function TaskForm(props: TaskFormProps) {
@@ -20,6 +23,7 @@ export default function TaskForm(props: TaskFormProps) {
     const [taskTool, setTaskTool] = useState<number>();
     const [taskMaterial, setTaskMaterial] = useState<number>();
     const [taskFile, setTaskFile] = useState<number>();
+    const [taskNote, setTaskNote] = useState<string>();
 
     // Action to execute at the beginning
     useEffect(() => {
@@ -31,34 +35,34 @@ export default function TaskForm(props: TaskFormProps) {
             return;
         }
 
+        if (!toolsList[0] || !materialsList[0] || !filesList[0]) {
+            return;
+        }
+
         setTaskName("");
         setTaskTool(toolsList[0].id);
         setTaskMaterial(materialsList[0].id);
         setTaskFile(filesList[0].id);
-    }, []);
+    }, [taskInfo, toolsList, materialsList, filesList]);
 
-    const handleTaskNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setTaskName(e.target.value);
-        }
+    const handleTaskNameChange = (taskName: string) => {
+        setTaskName(taskName);
     };
 
-    const handleTaskToolChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        if (e.target.value) {
-            setTaskTool(parseInt(e.target.value));
-        }
+    const handleTaskToolChange = (toolId: number) => {
+        setTaskTool(toolId);
     };
 
-    const handleTaskMaterialChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        if (e.target.value) {
-            setTaskMaterial(parseInt(e.target.value));
-        }
+    const handleTaskMaterialChange = (materialId: number) => {
+        setTaskMaterial(materialId);
     };
 
-    const handleTaskFileChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        if (e.target.value) {
-            setTaskFile(parseInt(e.target.value));
-        }
+    const handleTaskFileChange = (fileId: number) => {
+        setTaskMaterial(fileId);
+    };
+
+    const handleTaskNoteChange = (taskNote: string) => {
+        setTaskNote(taskNote);
     };
 
     const handleUploadClick = () => {
@@ -120,65 +124,49 @@ export default function TaskForm(props: TaskFormProps) {
             btnSubmitText={create ? "Crear" : "Actualizar"}
         >
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="task-name-input">Nombre: </label>
-                <input id="task-name-input" type="text" onChange={handleTaskNameChange} value={taskName} />
+                <LabeledTextInput
+                    label="Nombre"
+                    name="task-name"
+                    placeholder="Nombre de tarea"
+                    value={taskName}
+                    handleChange={handleTaskNameChange}
+                />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="task-tool-input">Herramienta: </label>
-                <select
-                    id="task-tool-input"
-                    value={taskTool}
-                    onChange={handleTaskToolChange}
-                >
-                    {
-                        toolsList.map((tool) => (
-                            <option
-                                key={tool.id}
-                                value={tool.id}
-                            >
-                                {tool.name}
-                            </option>
-                        ))
-                    }
-                </select>
+                <ItemsSelect
+                    label="Herramienta"
+                    name="task-tool"
+                    selectedOption={taskTool}
+                    handleChange={handleTaskToolChange}
+                    items={toolsList}
+                />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="task-material-input">Material: </label>
-                <select
-                    id="task-material-input"
-                    value={taskMaterial}
-                    onChange={handleTaskMaterialChange}
-                >
-                    {
-                        materialsList.map((material) => (
-                            <option
-                                key={material.id}
-                                value={material.id}
-                            >
-                                {material.name}
-                            </option>
-                        ))
-                    }
-                </select>
+                <ItemsSelect
+                    label="Material"
+                    name="task-material"
+                    selectedOption={taskMaterial}
+                    handleChange={handleTaskMaterialChange}
+                    items={materialsList}
+                />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="task-file-input">Archivo: </label>
-                <select
-                    id="task-file-input"
-                    value={taskFile}
-                    onChange={handleTaskFileChange}
-                >
-                    {
-                        filesList.map((file) => (
-                            <option
-                                key={file.id}
-                                value={file.id}
-                            >
-                                {file.file_name}
-                            </option>
-                        ))
-                    }
-                </select>
+                <ItemsSelect
+                    label="Archivo"
+                    name="task-file"
+                    selectedOption={taskFile}
+                    handleChange={handleTaskFileChange}
+                    items={filesList}
+                />
+            </div>
+            <div className="mb-5 w-full overflow-x-auto">
+                <LabeledTextArea
+                    label="Nota adicional"
+                    name="task-note"
+                    handleChange={handleTaskNoteChange}
+                    value={taskNote}
+                    placeholder="Puedes dejar una nota aquí..."
+                />
             </div>
         </BaseForm>
     )

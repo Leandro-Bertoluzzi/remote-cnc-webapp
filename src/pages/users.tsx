@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import apiRequest from '../services/apiService';
 import { getJwtToken } from '../services/storage';
-import CardsList from '../components/cardsList';
+import CardsList from '../components/containers/cardsList';
 import EmptyCard from '../components/cards/emptyCard';
 import MessageDialog from '@/components/dialogs/messageDialog';
 import User from '../types/User';

@@ -1,4 +1,4 @@
-import { BUTTON_APPROVE, BUTTON_REJECT } from '../cardButton';
+import { BUTTON_APPROVE, BUTTON_REJECT } from '../cards/baseCard';
 import apiRequest from '../../services/apiService';
 import ButtonInfo from '../../types/ButtonInfo';
 import BaseCard from './baseCard';

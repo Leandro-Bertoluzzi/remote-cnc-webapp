@@ -1,5 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react';
-import FileInputProps from '../types/FileInputProps';
+import FileInputProps from '../../types/FileInputProps';
 
 export default function FileInput(props: FileInputProps) {
     // Props
