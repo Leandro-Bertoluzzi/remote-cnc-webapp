@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import apiRequest from '../../services/apiService';
 import BaseForm from './baseForm';
 import CancelTaskFormProps from '../../types/CancelTaskFormProps';
+import LabeledTextArea from '../discrete/labeledTextArea';
 
 export default function CancelTaskForm(props: CancelTaskFormProps) {
     // Props
@@ -14,10 +15,8 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
     // Hooks for state variables
     const [cancellationReason, setCancellationReason] = useState<string>("");
 
-    const handleCancellationReasonChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        if (e.target.value) {
-            setCancellationReason(e.target.value);
-        }
+    const handleCancellationReasonChange = (reason: string) => {
+        setCancellationReason(reason);
     };
 
     /*  Function: cancelTask
@@ -50,16 +49,13 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
             btnSubmitText="Aceptar"
         >
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="block font-medium" htmlFor="task-name-input">Razón de cancelación: </label>
-                <textarea
-                    id="task-name-input"
-                    name="cancellation_reason"
-                    onChange={handleCancellationReasonChange}
+                <LabeledTextArea
+                    label="Razón de cancelación"
+                    name="task-cancel"
+                    handleChange={handleCancellationReasonChange}
                     value={cancellationReason}
-                    placeholder='Escribe la razón aquí...'
-                    rows={3} cols={50}
-                >
-                </textarea>
+                    placeholder="Escribe la razón aquí..."
+                />
             </div>
         </BaseForm>
     )

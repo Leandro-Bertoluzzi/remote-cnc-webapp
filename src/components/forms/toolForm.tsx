@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import apiRequest from '../../services/apiService';
 import BaseForm from './baseForm';
 import ToolFormProps from '../../types/ToolFormProps';
+import LabeledTextInput from '../discrete/labeledTextInput';
 
 export default function ToolForm(props: ToolFormProps) {
     // Props
@@ -11,16 +12,12 @@ export default function ToolForm(props: ToolFormProps) {
     const [toolName, setToolName] = useState<string>(toolInfo.name);
     const [toolDescription, setToolDescription] = useState<string>(toolInfo.description);
 
-    const handleToolNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setToolName(e.target.value);
-        }
+    const handleToolNameChange = (name: string) => {
+        setToolName(name);
     };
 
-    const handleToolDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setToolDescription(e.target.value);
-        }
+    const handleToolDescriptionChange = (description: string) => {
+        setToolDescription(description);
     };
 
     const handleUploadClick = () => {
@@ -67,12 +64,22 @@ export default function ToolForm(props: ToolFormProps) {
             btnSubmitText="Guardar"
         >
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="tool-name-input">Nombre: </label>
-                <input id="tool-name-input" type="text" onChange={handleToolNameChange} value={toolName} />
+                <LabeledTextInput
+                    label="Nombre"
+                    name="tool-name"
+                    placeholder=""
+                    value={toolName}
+                    handleChange={handleToolNameChange}
+                />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="tool-description-input">Descripción: </label>
-                <input id="tool-description-input" type="text" onChange={handleToolDescriptionChange} value={toolDescription} />
+                <LabeledTextInput
+                    label="Descripción"
+                    name="tool-description"
+                    placeholder=""
+                    value={toolDescription}
+                    handleChange={handleToolDescriptionChange}
+                />
             </div>
         </BaseForm>
     )

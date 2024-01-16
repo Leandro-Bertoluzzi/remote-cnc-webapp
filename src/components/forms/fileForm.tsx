@@ -1,8 +1,9 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import apiRequest from '../../services/apiService';
 import BaseForm from './baseForm';
 import FileFormProps from '../../types/FileFormProps';
-import FileInput from '../fileInput';
+import LabeledTextInput from '../discrete/labeledTextInput';
+import LabeledFileInput from '../discrete/labeledFileInput';
 
 export default function FileForm(props: FileFormProps) {
     // Props
@@ -10,19 +11,15 @@ export default function FileForm(props: FileFormProps) {
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
-    const [fileName, setFileName] = useState<string>(fileInfo.file_name);
+    const [fileName, setFileName] = useState<string>(fileInfo.name);
 
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setFile(e.target.files[0]);
-            setFileName(e.target.files[0].name);
-        }
+    const handleFileChange = (selectedFile: File) => {
+        setFile(selectedFile);
+        setFileName(selectedFile.name);
     };
 
-    const handleFileNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setFileName(e.target.value);
-        }
+    const handleFileNameChange = (name: string) => {
+        setFileName(name);
     };
 
     const handleUploadClick = () => {
@@ -53,7 +50,7 @@ export default function FileForm(props: FileFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "file_name": fileName
+            "name": fileName
         }
         const url = `files/${fileInfo.id}`;
 
@@ -78,12 +75,23 @@ export default function FileForm(props: FileFormProps) {
         >
             {create &&
                 <div className="mb-5 w-full overflow-x-auto">
-                    <FileInput handleFileChange={handleFileChange} accept=".gcode, .nc, .txt" />
+                    <LabeledFileInput
+                        label="Archivo"
+                        name="file-name"
+                        handleChange={handleFileChange}
+                        helperText=""
+                        accept=".gcode, .nc, .txt"
+                    />
                 </div>
             }
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="file-name-input">Nombre de archivo: </label>
-                <input id="file-name-input" type="text" onChange={handleFileNameChange} value={fileName} />
+                <LabeledTextInput
+                    label="Nombre de archivo"
+                    name="file-name"
+                    placeholder=""
+                    value={fileName}
+                    handleChange={handleFileNameChange}
+                />
             </div>
         </BaseForm>
     )
@@ -92,7 +100,7 @@ export default function FileForm(props: FileFormProps) {
 FileForm.defaultProps = {
     fileInfo: {
         id: 0,
-        file_name: "",
+        name: "",
         created_at: ""
     }
 }

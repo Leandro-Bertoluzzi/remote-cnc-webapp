@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BUTTON_CANCEL, BUTTON_EDIT } from '../cardButton';
+import { BUTTON_CANCEL, BUTTON_EDIT } from '../cards/baseCard';
 import ButtonInfo from '../../types/ButtonInfo';
 import BaseCard from './baseCard';
 import CancelTaskForm from '../forms/cancelTaskForm';
@@ -24,7 +24,7 @@ export default function TaskCard(props: TaskCardProps) {
     // Text
     const materialText = `Material: ${materialsList.find(material => material.id == task.material_id)?.name}`;
     const toolText = `Tool: ${toolsList.find(tool => tool.id == task.tool_id)?.name}`;
-    const fileText = `File: ${filesList.find(file => file.id == task.file_id)?.file_name}`;
+    const fileText = `File: ${filesList.find(file => file.id == task.file_id)?.name}`;
     const additionalText = [materialText, toolText, fileText];
 
     if(task.note){

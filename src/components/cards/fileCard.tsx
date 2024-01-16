@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE } from '../cardButton';
+import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE } from '../cards/baseCard';
 import apiRequest from '../../services/apiService';
 import ButtonInfo from '../../types/ButtonInfo';
 import BaseCard from './baseCard';
@@ -63,7 +63,7 @@ export default function FileCard(props: FileCardProps) {
     return (
         <>
             <BaseCard
-                mainText={file.file_name}
+                mainText={file.name}
                 additionalText={[createdAtText]}
                 buttons={[btnDownload, btnEdit, btnRemove]}
             />

@@ -1,4 +1,5 @@
-import CardListProps from '../types/CardsListProps';
+import CardListProps from '../../types/CardsListProps';
+import { Button } from 'flowbite-react';
 
 export default function CardsList(props: CardListProps) {
     const { title, showAddItemBtn, addItemBtnText, addItemBtnAction } = props;
@@ -13,9 +14,9 @@ export default function CardsList(props: CardListProps) {
                     </div>
                 </div>
                 {showAddItemBtn &&
-                    <a onClick={addItemBtnAction} className="inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border rounded-lg bg-white" href="#">
+                    <Button color="gray" onClick={addItemBtnAction}>
                         {addItemBtnText ?? "Crear nuevo"}
-                    </a>
+                    </Button>
                 }
             </div>
         </section>

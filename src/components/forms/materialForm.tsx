@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import apiRequest from '../../services/apiService';
 import BaseForm from './baseForm';
 import MaterialFormProps from '../../types/MaterialFormProps';
+import LabeledTextInput from '../discrete/labeledTextInput';
 
 export default function MaterialForm(props: MaterialFormProps) {
     // Props
@@ -11,16 +12,12 @@ export default function MaterialForm(props: MaterialFormProps) {
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);
     const [materialDescription, setMaterialDescription] = useState<string>(materialInfo.description);
 
-    const handleMaterialNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setMaterialName(e.target.value);
-        }
+    const handleMaterialNameChange = (name: string) => {
+        setMaterialName(name);
     };
 
-    const handleMaterialDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            setMaterialDescription(e.target.value);
-        }
+    const handleMaterialDescriptionChange = (description: string) => {
+        setMaterialDescription(description);
     };
 
     const handleUploadClick = () => {
@@ -67,12 +64,22 @@ export default function MaterialForm(props: MaterialFormProps) {
             btnSubmitText="Guardar"
         >
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="material-name-input">Nombre: </label>
-                <input id="material-name-input" type="text" onChange={handleMaterialNameChange} value={materialName} />
+                <LabeledTextInput
+                    label="Nombre"
+                    name="material-name"
+                    placeholder=""
+                    value={materialName}
+                    handleChange={handleMaterialNameChange}
+                />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <label className="font-medium" htmlFor="material-description-input">Descripción: </label>
-                <input id="material-description-input" type="text" onChange={handleMaterialDescriptionChange} value={materialDescription} />
+                <LabeledTextInput
+                    label="Descripción"
+                    name="material-description"
+                    placeholder=""
+                    value={materialDescription}
+                    handleChange={handleMaterialDescriptionChange}
+                />
             </div>
         </BaseForm>
     )

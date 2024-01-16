@@ -18,8 +18,10 @@ export default async function apiRequest(
         + getJwtToken();
     const apiUrl = `http://${API_HOST}:${API_PORT}/${relativeUrl}${token}`;
 
+    let response;
+
     try {
-        const response = await fetch(apiUrl, {
+        response = await fetch(apiUrl, {
             method: method,
             headers: json ? {
                 'Accept': 'application/json',
@@ -28,14 +30,14 @@ export default async function apiRequest(
                 undefined,
             body: json ? JSON.stringify(body) : body,
         });
-
-        if (!response.ok) {
-            const res = await response.json();
-            const detail = res.detail ? `detail: ${res.detail}` : ""
-            throw Error(`${response.status} ${response.statusText} ${detail}`);
-        }
-        return await response.json();
     }  catch(error) {
         throw Error("Falló la conexión con la API");
     }
+
+    if (!response.ok) {
+        const res = await response.json();
+        const detail = res.detail ? `: ${res.detail}` : ""
+        throw Error(`${response.status} ${response.statusText} ${detail}`);
+    }
+    return await response.json();
 };
