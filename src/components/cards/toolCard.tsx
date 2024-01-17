@@ -78,7 +78,13 @@ export default function ToolCard(props: ToolCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showToolForm &&
-                <ToolForm setError={setError} exitAction={hideToolFormModal} create={false} toolInfo={tool} />
+                <ToolForm
+                    exitAction={hideToolFormModal}
+                    create={false}
+                    toolInfo={tool}
+                    setError={setError}
+                    setNotification={setNotification}
+                />
             }
             {showRemoveConfirmation &&
                 <ConfirmDialog
