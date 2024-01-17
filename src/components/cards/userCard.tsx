@@ -80,7 +80,13 @@ export default function UserCard(props: UserCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showUserForm &&
-                <UserForm setError={setError} exitAction={hideUserFormModal} create={false} userInfo={user} />
+                <UserForm
+                    exitAction={hideUserFormModal}
+                    create={false}
+                    userInfo={user}
+                    setError={setError}
+                    setNotification={setNotification}
+                />
             }
             {showRemoveConfirmation &&
                 <ConfirmDialog

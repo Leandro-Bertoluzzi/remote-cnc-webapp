@@ -78,7 +78,13 @@ export default function MaterialCard(props: MaterialCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showMaterialForm &&
-                <MaterialForm setError={setError} exitAction={hideMaterialFormModal} create={false} materialInfo={material} />
+                <MaterialForm
+                    exitAction={hideMaterialFormModal}
+                    create={false}
+                    materialInfo={material}
+                    setError={setError}
+                    setNotification={setNotification}
+                />
             }
             {showRemoveConfirmation &&
                 <ConfirmDialog

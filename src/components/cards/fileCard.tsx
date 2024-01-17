@@ -86,7 +86,13 @@ export default function FileCard(props: FileCardProps) {
                 buttons={[btnDownload, btnEdit, btnRemove]}
             />
             {showFileForm &&
-                <FileForm setError={setError} exitAction={hideFileFormModal} create={false} fileInfo={file} />
+                <FileForm
+                    exitAction={hideFileFormModal}
+                    create={false}
+                    fileInfo={file}
+                    setError={setError}
+                    setNotification={setNotification}
+                />
             }
             {showRemoveConfirmation &&
                 <ConfirmDialog
