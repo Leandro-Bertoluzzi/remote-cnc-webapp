@@ -6,7 +6,7 @@ import LabeledTextInput from '../discrete/labeledTextInput';
 
 export default function MaterialForm(props: MaterialFormProps) {
     // Props
-    const { exitAction, create, materialInfo, setError } = props;
+    const { exitAction, create, materialInfo, setError, setNotification } = props;
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);
@@ -28,7 +28,7 @@ export default function MaterialForm(props: MaterialFormProps) {
 
         apiRequest('materials', 'POST', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);
@@ -46,7 +46,7 @@ export default function MaterialForm(props: MaterialFormProps) {
 
         apiRequest(url, 'PUT', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);

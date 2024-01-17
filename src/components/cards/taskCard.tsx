@@ -14,7 +14,8 @@ export default function TaskCard(props: TaskCardProps) {
         toolsList,
         materialsList,
         filesList,
-        setError
+        setError,
+        setNotification
     } = props;
 
     // Hooks for state variables
@@ -98,6 +99,7 @@ export default function TaskCard(props: TaskCardProps) {
                     materialsList={materialsList}
                     filesList={filesList}
                     setError={setError}
+                    setNotification={setNotification}
                 />
             }
             {showCancelTaskForm &&
@@ -105,6 +107,7 @@ export default function TaskCard(props: TaskCardProps) {
                     exitAction={hideCancelFormModal}
                     taskInfo={task}
                     setError={setError}
+                    setNotification={setNotification}
                 />
             }
         </>

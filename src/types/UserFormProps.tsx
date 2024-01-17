@@ -8,4 +8,5 @@ export default interface UserFormProps {
     create: boolean;
     userInfo: User;
     setError: setStringActionType;
+    setNotification: setStringActionType;
 }

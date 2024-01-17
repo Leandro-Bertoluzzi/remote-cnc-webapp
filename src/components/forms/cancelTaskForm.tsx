@@ -9,7 +9,8 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
     const {
         exitAction,
         taskInfo,
-        setError
+        setError,
+        setNotification
     } = props;
 
     // Hooks for state variables
@@ -31,7 +32,7 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
 
         apiRequest(url, 'PUT', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);

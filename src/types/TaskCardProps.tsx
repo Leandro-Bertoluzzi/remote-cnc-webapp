@@ -12,4 +12,5 @@ export default interface TaskCardProps {
     materialsList: Material[];
     filesList: FileInfo[];
     setError: setStringActionType;
+    setNotification: setStringActionType;
 }

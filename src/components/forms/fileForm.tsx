@@ -7,7 +7,7 @@ import LabeledFileInput from '../discrete/labeledFileInput';
 
 export default function FileForm(props: FileFormProps) {
     // Props
-    const { exitAction, create, fileInfo, setError } = props;
+    const { exitAction, create, fileInfo, setError, setNotification } = props;
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
@@ -39,7 +39,7 @@ export default function FileForm(props: FileFormProps) {
 
         apiRequest('files', 'POST', formData)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);
@@ -56,7 +56,7 @@ export default function FileForm(props: FileFormProps) {
 
         apiRequest(url, 'PUT', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);
