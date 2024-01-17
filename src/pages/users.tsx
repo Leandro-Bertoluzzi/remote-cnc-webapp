@@ -9,6 +9,7 @@ import MessageDialog from '@/components/dialogs/messageDialog';
 import User from '../types/User';
 import UserCard from '../components/cards/userCard';
 import UserForm from '../components/forms/userForm';
+import { MessageDialogType } from '@/types/MessageDialogProps';
 
 export default function UsersView() {
     // Hooks for state variables
@@ -16,7 +17,9 @@ export default function UsersView() {
     const [showUserForm, setShowUserForm] = useState<boolean>(false);
     const [isValidated, setIsValidated] = useState<boolean>(false);
     const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
-    const [errorMsg, setErrorMsg] = useState<string>("");
+    const [notification, setNotification] = useState<string>("");
+    const [messageType, setMessageType] = useState<MessageDialogType>("error");
+    const [messageTitle, setMessageTitle] = useState<string>("");
 
     // Other hooks
     const router = useRouter();
@@ -35,7 +38,7 @@ export default function UsersView() {
                 setIsValidated(true);
             })
             .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /*  Function: showCreateUserFormModal
@@ -56,14 +59,26 @@ export default function UsersView() {
     *   Description: Shows a dialog with information about the error
     */
     function showErrorDialog(message: string) {
-        setErrorMsg(message);
+        setNotification(message);
+        setMessageType("error");
+        setMessageTitle("Error de API");
         setShowMessageDialog(true);
     }
 
-    /*  Function: hideErrorDialog
-    *   Description: Hides the dialog with information about the error
+    /*  Function: showNotification
+    *   Description: Shows a dialog with a notification
     */
-    function hideErrorDialog() {
+    function showNotification(message: string) {
+        setNotification(message);
+        setMessageType("info");
+        setMessageTitle("¡Éxito!");
+        setShowMessageDialog(true);
+    }
+
+    /*  Function: hideMessageDialog
+    *   Description: Hides the message dialog
+    */
+    function hideMessageDialog() {
         setShowMessageDialog(false);
     }
 
@@ -91,30 +106,36 @@ export default function UsersView() {
                 {users.length === 0 ? (
                     <EmptyCard itemName="usuarios registrados" />
                 ) : (
-                        <>
-                            {
-                                users.map((user) => (
-                                    <UserCard
-                                        key={user.id}
-                                        user={user}
-                                        setError={showErrorDialog}
-                                    />
-                                ))
-                            }
-                        </>
-                    )
+                    <>
+                        {
+                            users.map((user) => (
+                                <UserCard
+                                    key={user.id}
+                                    user={user}
+                                    setError={showErrorDialog}
+                                    setNotification={showNotification}
+                                />
+                            ))
+                        }
+                    </>
+                )
                 }
             </CardsList>
             {showMessageDialog &&
                 <MessageDialog
-                    onClose={hideErrorDialog}
-                    type='error'
-                    title='Error de base de datos'
-                    text={errorMsg}
+                    onClose={hideMessageDialog}
+                    type={messageType}
+                    title={messageTitle}
+                    text={notification}
                 />
             }
             {showUserForm &&
-                <UserForm exitAction={hideUserFormModal} create={true} setError={showErrorDialog} />
+                <UserForm
+                    exitAction={hideUserFormModal}
+                    create={true}
+                    setError={showErrorDialog}
+                    setNotification={showNotification}
+                />
             }
         </>
     )

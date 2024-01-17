@@ -1,9 +1,9 @@
-type MessageDialogType = 'info' | 'warning' | 'error';
+export type MessageDialogType = 'info' | 'warning' | 'error';
 type btnActionType = () => void;
 
 export default interface MessageDialogProps {
     onClose: btnActionType;
-    type: MessageDialogType;
+    type?: MessageDialogType;
     title: string;
     text: string;
 }

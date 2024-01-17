@@ -7,7 +7,7 @@ import LabeledSelect from '../discrete/labeledSelect';
 
 export default function UserForm(props: UserFormProps) {
     // Props
-    const { exitAction, create, userInfo, setError } = props;
+    const { exitAction, create, userInfo, setError, setNotification } = props;
 
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);
@@ -41,7 +41,7 @@ export default function UserForm(props: UserFormProps) {
 
         apiRequest('users', 'POST', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);
@@ -60,7 +60,7 @@ export default function UserForm(props: UserFormProps) {
 
         apiRequest(url, 'PUT', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);

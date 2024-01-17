@@ -8,4 +8,5 @@ export default interface MaterialFormProps {
     create: boolean;
     materialInfo: Material;
     setError: setStringActionType;
+    setNotification: setStringActionType;
 }

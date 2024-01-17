@@ -7,4 +7,5 @@ export default interface CancelTaskFormProps {
     exitAction: btnActionType;
     taskInfo: Task;
     setError: setStringActionType;
+    setNotification: setStringActionType;
 }

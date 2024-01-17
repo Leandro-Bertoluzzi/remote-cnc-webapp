@@ -6,7 +6,7 @@ import LabeledTextInput from '../discrete/labeledTextInput';
 
 export default function ToolForm(props: ToolFormProps) {
     // Props
-    const { exitAction, create, toolInfo, setError } = props;
+    const { exitAction, create, toolInfo, setError, setNotification } = props;
 
     // Hooks for state variables
     const [toolName, setToolName] = useState<string>(toolInfo.name);
@@ -28,7 +28,7 @@ export default function ToolForm(props: ToolFormProps) {
 
         apiRequest('tools', 'POST', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);
@@ -46,7 +46,7 @@ export default function ToolForm(props: ToolFormProps) {
 
         apiRequest(url, 'PUT', data, true)
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);

@@ -14,4 +14,5 @@ export default interface TaskFormProps {
     materialsList: Material[];
     filesList: FileInfo[];
     setError: setStringActionType;
+    setNotification: setStringActionType;
 }

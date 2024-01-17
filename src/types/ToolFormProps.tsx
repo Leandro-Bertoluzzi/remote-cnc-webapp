@@ -8,4 +8,5 @@ export default interface ToolFormProps {
     create: boolean;
     toolInfo: Tool;
     setError: setStringActionType;
+    setNotification: setStringActionType;
 }

@@ -3,27 +3,31 @@ import { BUTTON_EDIT, BUTTON_REMOVE } from '../cards/baseCard';
 import apiRequest from '../../services/apiService';
 import ButtonInfo from '../../types/ButtonInfo';
 import BaseCard from './baseCard';
+import ConfirmDialog from '../dialogs/confirmDialog';
 import UserCardProps from '../../types/UserCardProps';
 import UserForm from '../forms/userForm';
 
 export default function UserCard(props: UserCardProps) {
-    const { user, setError } = props;
+    const { user, setError, setNotification } = props;
 
     // Text
     const roleText = `Role: ${user.role}`;
 
     // Hooks for state variables
     const [showUserForm, setShowUserForm] = useState<boolean>(false);
+    const [showRemoveConfirmation, setShowRemoveConfirmation] = useState<boolean>(false);
 
     /*  Function: removeUser
     *   Description: Removes the current user
     */
     const removeUser = () => {
+        hideRemoveConfirmationModal()
+
         const url = `users/${user.id}`;
 
         apiRequest(url, 'DELETE')
             .then((response) => {
-                console.log(response);
+                setNotification(response.success);
             })
             .catch((err) => {
                 setError(err.message);
@@ -44,6 +48,20 @@ export default function UserCard(props: UserCardProps) {
         setShowUserForm(false);
     }
 
+    /*  Function: showRemoveConfirmationModal
+    *   Description: Enables the modal to confirm the removal of the file
+    */
+    function showRemoveConfirmationModal() {
+        setShowRemoveConfirmation(true);
+    }
+
+    /*  Function: hideRemoveConfirmationModal
+    *   Description: Disables the modal to confirm the removal of the file
+    */
+    function hideRemoveConfirmationModal() {
+        setShowRemoveConfirmation(false);
+    }
+
     // Buttons
     const btnEdit: ButtonInfo = {
         type: BUTTON_EDIT,
@@ -51,7 +69,7 @@ export default function UserCard(props: UserCardProps) {
     }
     const btnRemove: ButtonInfo = {
         type: BUTTON_REMOVE,
-        action: removeUser
+        action: showRemoveConfirmationModal
     }
 
     return (
@@ -63,6 +81,15 @@ export default function UserCard(props: UserCardProps) {
             />
             {showUserForm &&
                 <UserForm setError={setError} exitAction={hideUserFormModal} create={false} userInfo={user} />
+            }
+            {showRemoveConfirmation &&
+                <ConfirmDialog
+                    title="Eliminar usuario"
+                    text="¿Está seguro de que desea eliminar el usuario? Esta acción no puede deshacerse"
+                    confirmText="Eliminar"
+                    onAccept={removeUser}
+                    onCancel={hideRemoveConfirmationModal}
+                />
             }
         </>
     )

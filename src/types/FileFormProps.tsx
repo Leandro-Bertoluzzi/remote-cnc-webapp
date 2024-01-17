@@ -8,4 +8,5 @@ export default interface FileFormProps {
     create: boolean;
     fileInfo: FileInfo;
     setError: setStringActionType;
+    setNotification: setStringActionType;
 }
