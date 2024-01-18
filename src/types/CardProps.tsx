@@ -1,4 +1,4 @@
-import ButtonInfo from './ButtonInfo';
+import ButtonInfo from "./ButtonInfo";
 
 export default interface CardProps {
     mainText: string;

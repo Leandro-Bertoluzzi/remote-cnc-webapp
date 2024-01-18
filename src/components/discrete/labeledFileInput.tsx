@@ -1,6 +1,6 @@
-import { ChangeEvent } from 'react';
-import { Label, FileInput } from 'flowbite-react';
-import LabeledFileInputProps from '../../types/LabeledFileInputProps';
+import { ChangeEvent } from "react";
+import { Label, FileInput } from "flowbite-react";
+import LabeledFileInputProps from "../../types/LabeledFileInputProps";
 
 export default function LabeledFileInput(props: LabeledFileInputProps) {
     // Props
@@ -18,10 +18,7 @@ export default function LabeledFileInput(props: LabeledFileInputProps) {
     return (
         <>
             <div className="mb-2 block">
-                <Label
-                    htmlFor={`input-${name}`}
-                    value={label}
-                />
+                <Label htmlFor={`input-${name}`} value={label} />
             </div>
             <FileInput
                 id={`input-${name}`}

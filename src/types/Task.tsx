@@ -1,4 +1,10 @@
-type TaskStatus = 'pending_approval' | 'on_hold' | 'in_progress' | 'finished' | 'rejected' | 'cancelled';
+type TaskStatus =
+    | "pending_approval"
+    | "on_hold"
+    | "in_progress"
+    | "finished"
+    | "rejected"
+    | "cancelled";
 
 export default interface Task {
     id: number;

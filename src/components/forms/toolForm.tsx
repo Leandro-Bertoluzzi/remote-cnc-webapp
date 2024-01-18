@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import apiRequest from '../../services/apiService';
-import BaseForm from './baseForm';
-import ToolFormProps from '../../types/ToolFormProps';
-import LabeledTextInput from '../discrete/labeledTextInput';
+import { useState } from "react";
+import apiRequest from "../../services/apiService";
+import BaseForm from "./baseForm";
+import ToolFormProps from "../../types/ToolFormProps";
+import LabeledTextInput from "../discrete/labeledTextInput";
 
 export default function ToolForm(props: ToolFormProps) {
     // Props
@@ -22,11 +22,11 @@ export default function ToolForm(props: ToolFormProps) {
 
     const handleUploadClick = () => {
         const data = {
-            "name": toolName,
-            "description": toolDescription
-        }
+            name: toolName,
+            description: toolDescription,
+        };
 
-        apiRequest('tools', 'POST', data, true)
+        apiRequest("tools", "POST", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -39,12 +39,12 @@ export default function ToolForm(props: ToolFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "name": toolName,
-            "description": toolDescription
-        }
+            name: toolName,
+            description: toolDescription,
+        };
         const url = `tools/${toolInfo.id}`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, "PUT", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -82,13 +82,13 @@ export default function ToolForm(props: ToolFormProps) {
                 />
             </div>
         </BaseForm>
-    )
+    );
 }
 
 ToolForm.defaultProps = {
     toolInfo: {
         id: 0,
         name: "",
-        description: ""
-    }
-}
+        description: "",
+    },
+};

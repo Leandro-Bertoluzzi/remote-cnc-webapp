@@ -1,4 +1,4 @@
-import config from '../config';
+import config from "../config";
 
 const { JWT_NAME } = config;
 
@@ -8,7 +8,7 @@ const { JWT_NAME } = config;
  * @returns The JWT token, or null if the token is not set.
  */
 export function getJwtToken(): string {
-    return localStorage.getItem(JWT_NAME) || '';
+    return localStorage.getItem(JWT_NAME) || "";
 }
 
 /**

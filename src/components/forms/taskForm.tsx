@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import apiRequest from '../../services/apiService';
-import BaseForm from './baseForm';
-import ItemsSelect from '../discrete/itemsSelect';
-import LabeledTextArea from '../discrete/labeledTextArea';
-import LabeledTextInput from '../discrete/labeledTextInput';
-import TaskFormProps from '../../types/TaskFormProps';
+import { useState, useEffect } from "react";
+import apiRequest from "../../services/apiService";
+import BaseForm from "./baseForm";
+import ItemsSelect from "../discrete/itemsSelect";
+import LabeledTextArea from "../discrete/labeledTextArea";
+import LabeledTextInput from "../discrete/labeledTextInput";
+import TaskFormProps from "../../types/TaskFormProps";
 
 export default function TaskForm(props: TaskFormProps) {
     // Props
@@ -16,7 +16,7 @@ export default function TaskForm(props: TaskFormProps) {
         materialsList,
         filesList,
         setError,
-        setNotification
+        setNotification,
     } = props;
 
     // Hooks for state variables
@@ -68,13 +68,13 @@ export default function TaskForm(props: TaskFormProps) {
 
     const handleUploadClick = () => {
         const data = {
-            "name": taskName,
-            "tool_id": taskTool,
-            "material_id": taskMaterial,
-            "file_id": taskFile
-        }
+            name: taskName,
+            tool_id: taskTool,
+            material_id: taskMaterial,
+            file_id: taskFile,
+        };
 
-        apiRequest('tasks', 'POST', data, true)
+        apiRequest("tasks", "POST", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -91,21 +91,21 @@ export default function TaskForm(props: TaskFormProps) {
         }
 
         const dataUpdateTask = {
-            "name": taskName,
-            "tool_id": taskTool,
-            "material_id": taskMaterial,
-            "file_id": taskFile
-        }
+            name: taskName,
+            tool_id: taskTool,
+            material_id: taskMaterial,
+            file_id: taskFile,
+        };
         const dataUpdateStatus = {
-            "status": 'pending_approval'
-        }
+            status: "pending_approval",
+        };
         const urlUpdateTask = `tasks/${taskInfo?.id}`;
         const urlUpdateStatus = `tasks/${taskInfo?.id}/status`;
 
         // We update the task and then we ask for approval again,
         // since we made changes to the task
-        apiRequest(urlUpdateTask, 'PUT', dataUpdateTask, true)
-            .then((data) => apiRequest(urlUpdateStatus, 'PUT', dataUpdateStatus, true))
+        apiRequest(urlUpdateTask, "PUT", dataUpdateTask, true)
+            .then(() => apiRequest(urlUpdateStatus, "PUT", dataUpdateStatus, true))
             .then((response) => {
                 setNotification(response.success);
             })
@@ -170,5 +170,5 @@ export default function TaskForm(props: TaskFormProps) {
                 />
             </div>
         </BaseForm>
-    )
+    );
 }

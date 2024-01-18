@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import apiRequest from '../services/apiService';
-import { getJwtToken } from '../services/storage';
-import CardsList from '../components/containers/cardsList';
-import EmptyCard from '../components/cards/emptyCard';
-import FileCard from '../components/cards/fileCard';
-import FileForm from '../components/forms/fileForm';
-import FileInfo from '../types/FileInfo';
-import MessageDialog from '@/components/dialogs/messageDialog';
-import { MessageDialogType } from '@/types/MessageDialogProps';
+import apiRequest from "../services/apiService";
+import { getJwtToken } from "../services/storage";
+import CardsList from "../components/containers/cardsList";
+import EmptyCard from "../components/cards/emptyCard";
+import FileCard from "../components/cards/fileCard";
+import FileForm from "../components/forms/fileForm";
+import FileInfo from "../types/FileInfo";
+import MessageDialog from "@/components/dialogs/messageDialog";
+import { MessageDialogType } from "@/types/MessageDialogProps";
 
 export default function FilesView() {
     // Hooks for state variables
@@ -33,31 +33,31 @@ export default function FilesView() {
             router.push(`/login?callbackUrl=${callbackUrl}`);
         }
 
-        apiRequest('users/auth', 'GET')
-            .then((response) => {
+        apiRequest("users/auth", "GET")
+            .then(() => {
                 setIsValidated(true);
             })
-            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            .catch(() => router.push(`/login?callbackUrl=${callbackUrl}`));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /*  Function: showCreateFileFormModal
-    *   Description: Enables the modal to upload a new file
-    */
+     *   Description: Enables the modal to upload a new file
+     */
     function showCreateFileFormModal() {
         setShowFileForm(true);
     }
 
     /*  Function: hideFileFormModal
-    *   Description: Disables the modal to upload a new file
-    */
+     *   Description: Disables the modal to upload a new file
+     */
     function hideFileFormModal() {
         setShowFileForm(false);
     }
 
     /*  Function: showErrorDialog
-    *   Description: Shows a dialog with information about the error
-    */
+     *   Description: Shows a dialog with information about the error
+     */
     function showErrorDialog(message: string) {
         setNotification(message);
         setMessageType("error");
@@ -66,8 +66,8 @@ export default function FilesView() {
     }
 
     /*  Function: showNotification
-    *   Description: Shows a dialog with a notification
-    */
+     *   Description: Shows a dialog with a notification
+     */
     function showNotification(message: string) {
         setNotification(message);
         setMessageType("info");
@@ -76,21 +76,23 @@ export default function FilesView() {
     }
 
     /*  Function: hideMessageDialog
-    *   Description: Hides the message dialog
-    */
+     *   Description: Hides the message dialog
+     */
     function hideMessageDialog() {
         setShowMessageDialog(false);
     }
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (!isValidated) { return; }
+        if (!isValidated) {
+            return;
+        }
 
-        apiRequest('files', 'GET')
-            .then(data => {
+        apiRequest("files", "GET")
+            .then((data) => {
                 setFiles(data);
             })
-            .catch(error => {
+            .catch((error) => {
                 showErrorDialog(error.message);
             });
     }, [isValidated]);
@@ -107,36 +109,33 @@ export default function FilesView() {
                     <EmptyCard itemName="archivos guardados" />
                 ) : (
                     <>
-                        {
-                            files.map((file) => (
-                                <FileCard
-                                    key={file.id}
-                                    file={file}
-                                    setError={showErrorDialog}
-                                    setNotification={showNotification}
-                                />
-                            ))
-                        }
+                        {files.map((file) => (
+                            <FileCard
+                                key={file.id}
+                                file={file}
+                                setError={showErrorDialog}
+                                setNotification={showNotification}
+                            />
+                        ))}
                     </>
-                )
-                }
+                )}
             </CardsList>
-            {showMessageDialog &&
+            {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
                     type={messageType}
                     title={messageTitle}
                     text={notification}
                 />
-            }
-            {showFileForm &&
+            )}
+            {showFileForm && (
                 <FileForm
                     exitAction={hideFileFormModal}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}
                 />
-            }
+            )}
         </>
-    )
+    );
 }

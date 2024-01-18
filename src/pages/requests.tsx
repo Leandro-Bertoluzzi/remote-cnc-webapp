@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import apiRequest from '../services/apiService';
-import { getJwtToken } from '../services/storage';
-import CardsList from '../components/containers/cardsList';
-import EmptyCard from '../components/cards/emptyCard';
-import MessageDialog from '@/components/dialogs/messageDialog';
-import { MessageDialogType } from '@/types/MessageDialogProps';
-import Task from '../types/Task';
-import RequestCard from '../components/cards/requestCard';
+import apiRequest from "../services/apiService";
+import { getJwtToken } from "../services/storage";
+import CardsList from "../components/containers/cardsList";
+import EmptyCard from "../components/cards/emptyCard";
+import MessageDialog from "@/components/dialogs/messageDialog";
+import { MessageDialogType } from "@/types/MessageDialogProps";
+import Task from "../types/Task";
+import RequestCard from "../components/cards/requestCard";
 
 export default function RequestsView() {
     // Hooks for state variables
@@ -31,32 +31,34 @@ export default function RequestsView() {
             router.push(`/login?callbackUrl=${callbackUrl}`);
         }
 
-        apiRequest('users/auth', 'GET')
-            .then((response) => {
+        apiRequest("users/auth", "GET")
+            .then(() => {
                 setIsValidated(true);
             })
-            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            .catch(() => router.push(`/login?callbackUrl=${callbackUrl}`));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (!isValidated) { return; }
+        if (!isValidated) {
+            return;
+        }
 
-        const url = 'tasks?status=pending_approval';
+        const url = "tasks?status=pending_approval";
 
-        apiRequest(url, 'GET')
-            .then(data => {
+        apiRequest(url, "GET")
+            .then((data) => {
                 setTasks(data);
             })
-            .catch(error => {
+            .catch((error) => {
                 showErrorDialog(error.message);
             });
     }, [isValidated]);
 
     /*  Function: showErrorDialog
-    *   Description: Shows a dialog with information about the error
-    */
+     *   Description: Shows a dialog with information about the error
+     */
     function showErrorDialog(message: string) {
         setNotification(message);
         setMessageType("error");
@@ -65,8 +67,8 @@ export default function RequestsView() {
     }
 
     /*  Function: showNotification
-    *   Description: Shows a dialog with a notification
-    */
+     *   Description: Shows a dialog with a notification
+     */
     function showNotification(message: string) {
         setNotification(message);
         setMessageType("info");
@@ -75,8 +77,8 @@ export default function RequestsView() {
     }
 
     /*  Function: hideMessageDialog
-    *   Description: Hides the message dialog
-    */
+     *   Description: Hides the message dialog
+     */
     function hideMessageDialog() {
         setShowMessageDialog(false);
     }
@@ -87,27 +89,24 @@ export default function RequestsView() {
                 <EmptyCard itemName="solicitudes" />
             ) : (
                 <>
-                    {
-                        tasks.map((task) => (
-                            <RequestCard
-                                key={task.id}
-                                task={task}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
-                            />
-                        ))
-                    }
+                    {tasks.map((task) => (
+                        <RequestCard
+                            key={task.id}
+                            task={task}
+                            setError={showErrorDialog}
+                            setNotification={showNotification}
+                        />
+                    ))}
                 </>
-            )
-            }
-            {showMessageDialog &&
+            )}
+            {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
                     type={messageType}
                     title={messageTitle}
                     text={notification}
                 />
-            }
+            )}
         </CardsList>
-    )
+    );
 }

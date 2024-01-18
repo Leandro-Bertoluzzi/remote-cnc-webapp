@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import apiRequest from '../../services/apiService';
-import BaseForm from './baseForm';
-import MaterialFormProps from '../../types/MaterialFormProps';
-import LabeledTextInput from '../discrete/labeledTextInput';
+import { useState } from "react";
+import apiRequest from "../../services/apiService";
+import BaseForm from "./baseForm";
+import MaterialFormProps from "../../types/MaterialFormProps";
+import LabeledTextInput from "../discrete/labeledTextInput";
 
 export default function MaterialForm(props: MaterialFormProps) {
     // Props
@@ -10,7 +10,9 @@ export default function MaterialForm(props: MaterialFormProps) {
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);
-    const [materialDescription, setMaterialDescription] = useState<string>(materialInfo.description);
+    const [materialDescription, setMaterialDescription] = useState<string>(
+        materialInfo.description
+    );
 
     const handleMaterialNameChange = (name: string) => {
         setMaterialName(name);
@@ -22,11 +24,11 @@ export default function MaterialForm(props: MaterialFormProps) {
 
     const handleUploadClick = () => {
         const data = {
-            "name": materialName,
-            "description": materialDescription
-        }
+            name: materialName,
+            description: materialDescription,
+        };
 
-        apiRequest('materials', 'POST', data, true)
+        apiRequest("materials", "POST", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -39,12 +41,12 @@ export default function MaterialForm(props: MaterialFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "name": materialName,
-            "description": materialDescription
-        }
+            name: materialName,
+            description: materialDescription,
+        };
         const url = `materials/${materialInfo.id}`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, "PUT", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -82,13 +84,13 @@ export default function MaterialForm(props: MaterialFormProps) {
                 />
             </div>
         </BaseForm>
-    )
+    );
 }
 
 MaterialForm.defaultProps = {
     materialInfo: {
         id: 0,
         name: "",
-        description: ""
-    }
-}
+        description: "",
+    },
+};

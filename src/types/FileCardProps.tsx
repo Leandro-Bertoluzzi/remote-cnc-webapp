@@ -1,4 +1,4 @@
-import FileInfo from './FileInfo';
+import FileInfo from "./FileInfo";
 
 type setStringActionType = (str: string) => void;
 

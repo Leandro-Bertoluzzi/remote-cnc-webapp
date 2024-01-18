@@ -1,5 +1,5 @@
 type btnActionType = (text: string) => void;
-type InputType = 'text' | 'password' | 'email' | 'tel' | 'time' | 'url';
+type InputType = "text" | "password" | "email" | "tel" | "time" | "url";
 
 export default interface LabeledTextInputProps {
     handleChange: btnActionType;

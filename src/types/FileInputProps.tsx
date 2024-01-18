@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent } from "react";
 
 type btnActionType = (e: ChangeEvent<HTMLInputElement>) => void;
 

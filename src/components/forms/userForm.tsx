@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import apiRequest from '../../services/apiService';
-import BaseForm from './baseForm';
-import UserFormProps from '../../types/UserFormProps';
-import LabeledTextInput from '../discrete/labeledTextInput';
-import LabeledSelect from '../discrete/labeledSelect';
+import { useState } from "react";
+import apiRequest from "../../services/apiService";
+import BaseForm from "./baseForm";
+import UserFormProps from "../../types/UserFormProps";
+import LabeledTextInput from "../discrete/labeledTextInput";
+import LabeledSelect from "../discrete/labeledSelect";
 
 export default function UserForm(props: UserFormProps) {
     // Props
@@ -33,13 +33,13 @@ export default function UserForm(props: UserFormProps) {
 
     const handleUploadClick = () => {
         const data = {
-            "name": userName,
-            "email": userEmail,
-            "password": userPassword,
-            "role": userRole
-        }
+            name: userName,
+            email: userEmail,
+            password: userPassword,
+            role: userRole,
+        };
 
-        apiRequest('users', 'POST', data, true)
+        apiRequest("users", "POST", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -52,13 +52,13 @@ export default function UserForm(props: UserFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "name": userName,
-            "email": userEmail,
-            "role": userRole
-        }
+            name: userName,
+            email: userEmail,
+            role: userRole,
+        };
         const url = `users/${userInfo.id}`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, "PUT", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -96,7 +96,7 @@ export default function UserForm(props: UserFormProps) {
                     handleChange={handleUserEmailChange}
                 />
             </div>
-            {create &&
+            {create && (
                 <div className="mb-5 w-full overflow-x-auto">
                     <LabeledTextInput
                         label="Contraseña"
@@ -107,7 +107,7 @@ export default function UserForm(props: UserFormProps) {
                         handleChange={handleUserPasswordChange}
                     />
                 </div>
-            }
+            )}
             <div className="mb-5 w-full overflow-x-auto">
                 <LabeledSelect
                     label="Rol de usuario"
@@ -118,7 +118,7 @@ export default function UserForm(props: UserFormProps) {
                 />
             </div>
         </BaseForm>
-    )
+    );
 }
 
 UserForm.defaultProps = {
@@ -126,6 +126,6 @@ UserForm.defaultProps = {
         id: 0,
         name: "",
         email: "",
-        role: "user"
-    }
-}
+        role: "user",
+    },
+};
