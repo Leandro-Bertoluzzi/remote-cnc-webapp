@@ -2,12 +2,12 @@ import AssociativeArray from "../../types/AssociativeArray";
 import CardProps from "../../types/CardProps";
 import { Button } from "flowbite-react";
 
-export const BUTTON_DOWNLOAD: string = "descargar";
-export const BUTTON_EDIT: string = "editar";
-export const BUTTON_REMOVE: string = "eliminar";
-export const BUTTON_APPROVE: string = "aprobar";
-export const BUTTON_REJECT: string = "rechazar";
-export const BUTTON_CANCEL: string = "cancelar";
+export const BUTTON_DOWNLOAD = "descargar";
+export const BUTTON_EDIT = "editar";
+export const BUTTON_REMOVE = "eliminar";
+export const BUTTON_APPROVE = "aprobar";
+export const BUTTON_REJECT = "rechazar";
+export const BUTTON_CANCEL = "cancelar";
 
 const BUTTON_COLOR_MAP: AssociativeArray = {
     [BUTTON_DOWNLOAD]: "teal",

@@ -8,7 +8,7 @@ export default async function apiRequest(
     relativeUrl: string,
     method: string,
     body?: any,
-    json: boolean = false
+    json = false
 ): Promise<any> {
     const { API_PORT, API_HOST } = config;
 
