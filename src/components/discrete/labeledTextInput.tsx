@@ -1,6 +1,6 @@
-import { ChangeEvent } from 'react';
-import { Label, TextInput } from 'flowbite-react';
-import LabeledTextInputProps from '../../types/LabeledTextInputProps';
+import { ChangeEvent } from "react";
+import { Label, TextInput } from "flowbite-react";
+import LabeledTextInputProps from "../../types/LabeledTextInputProps";
 
 export default function LabeledTextInput(props: LabeledTextInputProps) {
     // Props
@@ -18,10 +18,7 @@ export default function LabeledTextInput(props: LabeledTextInputProps) {
     return (
         <>
             <div className="mb-2 block">
-                <Label
-                    htmlFor={`input-${name}`}
-                    value={label}
-                />
+                <Label htmlFor={`input-${name}`} value={label} />
             </div>
             <TextInput
                 id={`input-${name}`}

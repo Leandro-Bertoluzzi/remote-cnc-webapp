@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { BUTTON_APPROVE, BUTTON_REJECT } from '../cards/baseCard';
-import apiRequest from '../../services/apiService';
-import ButtonInfo from '../../types/ButtonInfo';
-import BaseCard from './baseCard';
-import ConfirmDialog from '../dialogs/confirmDialog';
-import RequestCardProps from '../../types/RequestCardProps';
+import { useState } from "react";
+import { BUTTON_APPROVE, BUTTON_REJECT } from "../cards/baseCard";
+import apiRequest from "../../services/apiService";
+import ButtonInfo from "../../types/ButtonInfo";
+import BaseCard from "./baseCard";
+import ConfirmDialog from "../dialogs/confirmDialog";
+import RequestCardProps from "../../types/RequestCardProps";
 
-const APPROVED_STATUS = 'on_hold';
-const REJECTED_STATUS = 'rejected';
+const APPROVED_STATUS = "on_hold";
+const REJECTED_STATUS = "rejected";
 
 export default function RequestCard(props: RequestCardProps) {
     const { task, setError, setNotification } = props;
@@ -20,17 +20,17 @@ export default function RequestCard(props: RequestCardProps) {
     const fileText = `File: ${task.file_id}`;
 
     /*  Function: approveRequest
-    *   Description: Approves the current request
-    */
+     *   Description: Approves the current request
+     */
     const approveRequest = () => {
-        hideApproveConfirmationModal()
+        hideApproveConfirmationModal();
 
         const data = {
-            'status': APPROVED_STATUS
-        }
+            status: APPROVED_STATUS,
+        };
         const url = `tasks/${task.id}/status`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, "PUT", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -40,17 +40,17 @@ export default function RequestCard(props: RequestCardProps) {
     };
 
     /*  Function: rejectRequest
-    *   Description: Rejects the current request
-    */
+     *   Description: Rejects the current request
+     */
     const rejectRequest = () => {
-        hideRejectConfirmationModal()
+        hideRejectConfirmationModal();
 
         const data = {
-            'status': REJECTED_STATUS
-        }
+            status: REJECTED_STATUS,
+        };
         const url = `tasks/${task.id}/status`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, "PUT", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -60,29 +60,29 @@ export default function RequestCard(props: RequestCardProps) {
     };
 
     /*  Function: showRemoveConfirmationModal
-    *   Description: Enables the modal to confirm the approval
-    */
+     *   Description: Enables the modal to confirm the approval
+     */
     function showRemoveConfirmationModal() {
         setShowApproveConfirmation(true);
     }
 
     /*  Function: hideApproveConfirmationModal
-    *   Description: Disables the modal to confirm the approval
-    */
+     *   Description: Disables the modal to confirm the approval
+     */
     function hideApproveConfirmationModal() {
         setShowApproveConfirmation(false);
     }
 
     /*  Function: showRejectConfirmationModal
-    *   Description: Enables the modal to confirm the approval
-    */
+     *   Description: Enables the modal to confirm the approval
+     */
     function showRejectConfirmationModal() {
         setShowRejectConfirmation(true);
     }
 
     /*  Function: hideApproveConfirmationModal
-    *   Description: Disables the modal to confirm the approval
-    */
+     *   Description: Disables the modal to confirm the approval
+     */
     function hideRejectConfirmationModal() {
         setShowRejectConfirmation(false);
     }
@@ -90,12 +90,12 @@ export default function RequestCard(props: RequestCardProps) {
     // Buttons
     const btnApprove: ButtonInfo = {
         type: BUTTON_APPROVE,
-        action: showRemoveConfirmationModal
-    }
+        action: showRemoveConfirmationModal,
+    };
     const btnReject: ButtonInfo = {
         type: BUTTON_REJECT,
-        action: showRejectConfirmationModal
-    }
+        action: showRejectConfirmationModal,
+    };
 
     return (
         <>
@@ -104,7 +104,7 @@ export default function RequestCard(props: RequestCardProps) {
                 additionalText={[materialText, toolText, fileText, task.note]}
                 buttons={[btnApprove, btnReject]}
             />
-            {showApproveConfirmation &&
+            {showApproveConfirmation && (
                 <ConfirmDialog
                     title="Aprobar solicitud"
                     text="¿Está seguro de que desea aprobar la solicitud?"
@@ -112,8 +112,8 @@ export default function RequestCard(props: RequestCardProps) {
                     onAccept={approveRequest}
                     onCancel={hideApproveConfirmationModal}
                 />
-            }
-            {showRejectConfirmation &&
+            )}
+            {showRejectConfirmation && (
                 <ConfirmDialog
                     title="Rechazar solicitud"
                     text="¿Está seguro de que desea rechazar la solicitud?"
@@ -121,7 +121,7 @@ export default function RequestCard(props: RequestCardProps) {
                     onAccept={rejectRequest}
                     onCancel={hideRejectConfirmationModal}
                 />
-            }
+            )}
         </>
-    )
+    );
 }

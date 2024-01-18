@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import apiRequest from '../services/apiService';
-import { getJwtToken } from '../services/storage';
-import CardsList from '../components/containers/cardsList';
-import EmptyCard from '../components/cards/emptyCard';
-import MessageDialog from '@/components/dialogs/messageDialog';
-import User from '../types/User';
-import UserCard from '../components/cards/userCard';
-import UserForm from '../components/forms/userForm';
-import { MessageDialogType } from '@/types/MessageDialogProps';
+import apiRequest from "../services/apiService";
+import { getJwtToken } from "../services/storage";
+import CardsList from "../components/containers/cardsList";
+import EmptyCard from "../components/cards/emptyCard";
+import MessageDialog from "@/components/dialogs/messageDialog";
+import User from "../types/User";
+import UserCard from "../components/cards/userCard";
+import UserForm from "../components/forms/userForm";
+import { MessageDialogType } from "@/types/MessageDialogProps";
 
 export default function UsersView() {
     // Hooks for state variables
@@ -33,31 +33,31 @@ export default function UsersView() {
             router.push(`/login?callbackUrl=${callbackUrl}`);
         }
 
-        apiRequest('users/auth', 'GET')
+        apiRequest("users/auth", "GET")
             .then((response) => {
                 setIsValidated(true);
             })
-            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            .catch((error) => router.push(`/login?callbackUrl=${callbackUrl}`));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /*  Function: showCreateUserFormModal
-    *   Description: Enables the modal to upload a new user
-    */
+     *   Description: Enables the modal to upload a new user
+     */
     function showCreateUserFormModal() {
         setShowUserForm(true);
     }
 
     /*  Function: hideUserFormModal
-    *   Description: Disables the modal to upload a new user
-    */
+     *   Description: Disables the modal to upload a new user
+     */
     function hideUserFormModal() {
         setShowUserForm(false);
     }
 
     /*  Function: showErrorDialog
-    *   Description: Shows a dialog with information about the error
-    */
+     *   Description: Shows a dialog with information about the error
+     */
     function showErrorDialog(message: string) {
         setNotification(message);
         setMessageType("error");
@@ -66,8 +66,8 @@ export default function UsersView() {
     }
 
     /*  Function: showNotification
-    *   Description: Shows a dialog with a notification
-    */
+     *   Description: Shows a dialog with a notification
+     */
     function showNotification(message: string) {
         setNotification(message);
         setMessageType("info");
@@ -76,21 +76,23 @@ export default function UsersView() {
     }
 
     /*  Function: hideMessageDialog
-    *   Description: Hides the message dialog
-    */
+     *   Description: Hides the message dialog
+     */
     function hideMessageDialog() {
         setShowMessageDialog(false);
     }
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (!isValidated) { return; }
+        if (!isValidated) {
+            return;
+        }
 
-        apiRequest('users', 'GET')
-            .then(data => {
+        apiRequest("users", "GET")
+            .then((data) => {
                 setUsers(data);
             })
-            .catch(error => {
+            .catch((error) => {
                 showErrorDialog(error.message);
             });
     }, [isValidated]);
@@ -107,36 +109,33 @@ export default function UsersView() {
                     <EmptyCard itemName="usuarios registrados" />
                 ) : (
                     <>
-                        {
-                            users.map((user) => (
-                                <UserCard
-                                    key={user.id}
-                                    user={user}
-                                    setError={showErrorDialog}
-                                    setNotification={showNotification}
-                                />
-                            ))
-                        }
+                        {users.map((user) => (
+                            <UserCard
+                                key={user.id}
+                                user={user}
+                                setError={showErrorDialog}
+                                setNotification={showNotification}
+                            />
+                        ))}
                     </>
-                )
-                }
+                )}
             </CardsList>
-            {showMessageDialog &&
+            {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
                     type={messageType}
                     title={messageTitle}
                     text={notification}
                 />
-            }
-            {showUserForm &&
+            )}
+            {showUserForm && (
                 <UserForm
                     exitAction={hideUserFormModal}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}
                 />
-            }
+            )}
         </>
-    )
+    );
 }

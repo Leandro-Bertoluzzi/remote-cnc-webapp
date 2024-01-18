@@ -1,5 +1,5 @@
-import { ChangeEvent, useRef, useState } from 'react';
-import FileInputProps from '../../types/FileInputProps';
+import { ChangeEvent, useRef, useState } from "react";
+import FileInputProps from "../../types/FileInputProps";
 
 export default function FileInput(props: FileInputProps) {
     // Props
@@ -25,16 +25,19 @@ export default function FileInput(props: FileInputProps) {
 
     return (
         <div>
-            <label className="block font-medium" htmlFor="file-input">Archivo a subir</label>
+            <label className="block font-medium" htmlFor="file-input">
+                Archivo a subir
+            </label>
 
             {/* Custom button to select and upload a file */}
-            <button onClick={handleUploadClick} className="inline-flex flex-wrap items-center px-6 py-2.5 text-sm font-medium border rounded-lg bg-white">
-                {file ? 'Cambiar' : 'Elegir'}
+            <button
+                onClick={handleUploadClick}
+                className="inline-flex flex-wrap items-center rounded-lg border bg-white px-6 py-2.5 text-sm font-medium"
+            >
+                {file ? "Cambiar" : "Elegir"}
             </button>
 
-            {file &&
-                <span>{file.name}</span>
-            }
+            {file && <span>{file.name}</span>}
 
             {/* Notice the `display: hidden` on the input */}
             <input
@@ -43,7 +46,7 @@ export default function FileInput(props: FileInputProps) {
                 ref={inputRef}
                 onChange={handleFileUpdates}
                 accept={accept}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
             />
         </div>
     );

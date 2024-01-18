@@ -1,48 +1,48 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-import apiRequest from '../services/apiService';
-import { getJwtToken } from '../services/storage';
-import MenuOption from '../types/MenuOption';
-import { Card } from 'flowbite-react';
+import apiRequest from "../services/apiService";
+import { getJwtToken } from "../services/storage";
+import MenuOption from "../types/MenuOption";
+import { Card } from "flowbite-react";
 
 const options: MenuOption[] = [
     {
-        name: 'Ver estado de tareas',
-        description: '',
-        path: '/tasks',
+        name: "Ver estado de tareas",
+        description: "",
+        path: "/tasks",
     },
     {
-        name: 'Monitorizar equipo',
-        description: '',
-        path: '#',
+        name: "Monitorizar equipo",
+        description: "",
+        path: "#",
     },
     {
-        name: 'Administrar archivos',
-        description: '',
-        path: '/files',
+        name: "Administrar archivos",
+        description: "",
+        path: "/files",
     },
     {
-        name: 'Control manual y calibración',
-        description: '',
-        path: '#',
+        name: "Control manual y calibración",
+        description: "",
+        path: "#",
     },
     {
-        name: 'Administrar solicitudes',
-        description: '',
-        path: '/requests',
+        name: "Administrar solicitudes",
+        description: "",
+        path: "/requests",
     },
     {
-        name: 'Administrar usuarios',
-        description: '',
-        path: '/users',
+        name: "Administrar usuarios",
+        description: "",
+        path: "/users",
     },
     {
-        name: 'Administrar inventario',
-        description: '',
-        path: '/inventory',
+        name: "Administrar inventario",
+        description: "",
+        path: "/inventory",
     },
-]
+];
 
 export default function MainMenu() {
     const router = useRouter();
@@ -56,19 +56,22 @@ export default function MainMenu() {
             router.push(`/login?callbackUrl=${callbackUrl}`);
         }
 
-        apiRequest('users/auth', 'GET')
-            .then((response) => {
+        apiRequest("users/auth", "GET")
+            .then(() => {
                 // Do nothing, it worked!
             })
-            .catch(error => router.push(`/login?callbackUrl=${callbackUrl}`));
+            .catch(() => router.push(`/login?callbackUrl=${callbackUrl}`));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <div className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4">
-            <Card className="max-w-sm w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+            <Card className="w-screen max-w-md max-w-sm flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                 {options.map((option) => (
-                    <div key={option.name} className="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                    <div
+                        key={option.name}
+                        className="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50"
+                    >
                         <div>
                             <a href={option.path} className="font-semibold text-gray-900">
                                 {option.name}
@@ -80,5 +83,5 @@ export default function MainMenu() {
                 ))}
             </Card>
         </div>
-    )
+    );
 }

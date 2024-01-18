@@ -1,17 +1,12 @@
-import { useState } from 'react';
-import apiRequest from '../../services/apiService';
-import BaseForm from './baseForm';
-import CancelTaskFormProps from '../../types/CancelTaskFormProps';
-import LabeledTextArea from '../discrete/labeledTextArea';
+import { useState } from "react";
+import apiRequest from "../../services/apiService";
+import BaseForm from "./baseForm";
+import CancelTaskFormProps from "../../types/CancelTaskFormProps";
+import LabeledTextArea from "../discrete/labeledTextArea";
 
 export default function CancelTaskForm(props: CancelTaskFormProps) {
     // Props
-    const {
-        exitAction,
-        taskInfo,
-        setError,
-        setNotification
-    } = props;
+    const { exitAction, taskInfo, setError, setNotification } = props;
 
     // Hooks for state variables
     const [cancellationReason, setCancellationReason] = useState<string>("");
@@ -21,16 +16,16 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
     };
 
     /*  Function: cancelTask
-    *   Description: Cancels the current task
-    */
+     *   Description: Cancels the current task
+     */
     const cancelTask = () => {
         const data = {
-            "status": 'cancelled',
-            'cancellation_reason': cancellationReason,
-        }
+            status: "cancelled",
+            cancellation_reason: cancellationReason,
+        };
         const url = `tasks/${taskInfo.id}/status`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, "PUT", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -59,5 +54,5 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
                 />
             </div>
         </BaseForm>
-    )
+    );
 }

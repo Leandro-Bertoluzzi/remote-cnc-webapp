@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { BUTTON_EDIT, BUTTON_REMOVE } from '../cards/baseCard';
-import apiRequest from '../../services/apiService';
-import ButtonInfo from '../../types/ButtonInfo';
-import BaseCard from './baseCard';
-import ConfirmDialog from '../dialogs/confirmDialog';
-import MaterialCardProps from '../../types/MaterialCardProps';
-import MaterialForm from '../forms/materialForm';
+import { useState } from "react";
+import { BUTTON_EDIT, BUTTON_REMOVE } from "../cards/baseCard";
+import apiRequest from "../../services/apiService";
+import ButtonInfo from "../../types/ButtonInfo";
+import BaseCard from "./baseCard";
+import ConfirmDialog from "../dialogs/confirmDialog";
+import MaterialCardProps from "../../types/MaterialCardProps";
+import MaterialForm from "../forms/materialForm";
 
 export default function MaterialCard(props: MaterialCardProps) {
     // Props
@@ -16,14 +16,14 @@ export default function MaterialCard(props: MaterialCardProps) {
     const [showRemoveConfirmation, setShowRemoveConfirmation] = useState<boolean>(false);
 
     /*  Function: removeMaterial
-    *   Description: Removes the current material
-    */
+     *   Description: Removes the current material
+     */
     const removeMaterial = () => {
-        hideRemoveConfirmationModal()
+        hideRemoveConfirmationModal();
 
         const url = `materials/${material.id}`;
 
-        apiRequest(url, 'DELETE')
+        apiRequest(url, "DELETE")
             .then((response) => {
                 setNotification(response.success);
             })
@@ -33,29 +33,29 @@ export default function MaterialCard(props: MaterialCardProps) {
     };
 
     /*  Function: showUpdateMaterialFormModal
-    *   Description: Enables the modal to update the current material
-    */
+     *   Description: Enables the modal to update the current material
+     */
     function showUpdateMaterialFormModal() {
         setShowMaterialForm(true);
     }
 
     /*  Function: hideMaterialFormModal
-    *   Description: Disables the modal to update the current material
-    */
+     *   Description: Disables the modal to update the current material
+     */
     function hideMaterialFormModal() {
         setShowMaterialForm(false);
     }
 
     /*  Function: showRemoveConfirmationModal
-    *   Description: Enables the modal to confirm the removal of the file
-    */
+     *   Description: Enables the modal to confirm the removal of the file
+     */
     function showRemoveConfirmationModal() {
         setShowRemoveConfirmation(true);
     }
 
     /*  Function: hideRemoveConfirmationModal
-    *   Description: Disables the modal to confirm the removal of the file
-    */
+     *   Description: Disables the modal to confirm the removal of the file
+     */
     function hideRemoveConfirmationModal() {
         setShowRemoveConfirmation(false);
     }
@@ -63,12 +63,12 @@ export default function MaterialCard(props: MaterialCardProps) {
     // Buttons
     const btnEdit: ButtonInfo = {
         type: BUTTON_EDIT,
-        action: showUpdateMaterialFormModal
-    }
+        action: showUpdateMaterialFormModal,
+    };
     const btnRemove: ButtonInfo = {
         type: BUTTON_REMOVE,
-        action: showRemoveConfirmationModal
-    }
+        action: showRemoveConfirmationModal,
+    };
 
     return (
         <>
@@ -77,7 +77,7 @@ export default function MaterialCard(props: MaterialCardProps) {
                 additionalText={[material.description]}
                 buttons={[btnEdit, btnRemove]}
             />
-            {showMaterialForm &&
+            {showMaterialForm && (
                 <MaterialForm
                     exitAction={hideMaterialFormModal}
                     create={false}
@@ -85,8 +85,8 @@ export default function MaterialCard(props: MaterialCardProps) {
                     setError={setError}
                     setNotification={setNotification}
                 />
-            }
-            {showRemoveConfirmation &&
+            )}
+            {showRemoveConfirmation && (
                 <ConfirmDialog
                     title="Eliminar material"
                     text="¿Está seguro de que desea eliminar el material? Esta acción no puede deshacerse"
@@ -94,7 +94,7 @@ export default function MaterialCard(props: MaterialCardProps) {
                     onAccept={removeMaterial}
                     onCancel={hideRemoveConfirmationModal}
                 />
-            }
+            )}
         </>
-    )
+    );
 }

@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import apiRequest from '../../services/apiService';
-import BaseForm from './baseForm';
-import FileFormProps from '../../types/FileFormProps';
-import LabeledTextInput from '../discrete/labeledTextInput';
-import LabeledFileInput from '../discrete/labeledFileInput';
+import { useState } from "react";
+import apiRequest from "../../services/apiService";
+import BaseForm from "./baseForm";
+import FileFormProps from "../../types/FileFormProps";
+import LabeledTextInput from "../discrete/labeledTextInput";
+import LabeledFileInput from "../discrete/labeledFileInput";
 
 export default function FileForm(props: FileFormProps) {
     // Props
@@ -37,7 +37,7 @@ export default function FileForm(props: FileFormProps) {
         const formData = new FormData();
         formData.append("file", file, fileName);
 
-        apiRequest('files', 'POST', formData)
+        apiRequest("files", "POST", formData)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -50,11 +50,11 @@ export default function FileForm(props: FileFormProps) {
 
     const handleUpdateClick = () => {
         const data = {
-            "name": fileName
-        }
+            name: fileName,
+        };
         const url = `files/${fileInfo.id}`;
 
-        apiRequest(url, 'PUT', data, true)
+        apiRequest(url, "PUT", data, true)
             .then((response) => {
                 setNotification(response.success);
             })
@@ -73,7 +73,7 @@ export default function FileForm(props: FileFormProps) {
             btnSubmitAction={create ? handleUploadClick : handleUpdateClick}
             btnSubmitText={create ? "Subir" : "Actualizar"}
         >
-            {create &&
+            {create && (
                 <div className="mb-5 w-full overflow-x-auto">
                     <LabeledFileInput
                         label="Archivo"
@@ -83,7 +83,7 @@ export default function FileForm(props: FileFormProps) {
                         accept=".gcode, .nc, .txt"
                     />
                 </div>
-            }
+            )}
             <div className="mb-5 w-full overflow-x-auto">
                 <LabeledTextInput
                     label="Nombre de archivo"
@@ -94,13 +94,13 @@ export default function FileForm(props: FileFormProps) {
                 />
             </div>
         </BaseForm>
-    )
+    );
 }
 
 FileForm.defaultProps = {
     fileInfo: {
         id: 0,
         name: "",
-        created_at: ""
-    }
-}
+        created_at: "",
+    },
+};

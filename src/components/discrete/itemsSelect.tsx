@@ -1,6 +1,6 @@
-import { ChangeEvent } from 'react';
-import { Label, Select } from 'flowbite-react';
-import ItemsSelectProps from '../../types/ItemsSelectProps';
+import { ChangeEvent } from "react";
+import { Label, Select } from "flowbite-react";
+import ItemsSelectProps from "../../types/ItemsSelectProps";
 
 export default function ItemsSelect(props: ItemsSelectProps) {
     // Props
@@ -18,10 +18,7 @@ export default function ItemsSelect(props: ItemsSelectProps) {
     return (
         <>
             <div className="mb-2 block">
-                <Label
-                    htmlFor={`select-${name}`}
-                    value={label}
-                />
+                <Label htmlFor={`select-${name}`} value={label} />
             </div>
             <Select
                 id={`select-${name}`}
@@ -29,16 +26,11 @@ export default function ItemsSelect(props: ItemsSelectProps) {
                 onChange={handleOptionChange}
                 required
             >
-            {
-                items.map((item) => (
-                    <option
-                        key={item.id}
-                        value={item.id}
-                    >
+                {items.map((item) => (
+                    <option key={item.id} value={item.id}>
                         {item.name}
                     </option>
-                ))
-            }
+                ))}
             </Select>
         </>
     );

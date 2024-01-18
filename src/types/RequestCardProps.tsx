@@ -1,4 +1,4 @@
-import Task from './Task';
+import Task from "./Task";
 
 type setStringActionType = (str: string) => void;
 

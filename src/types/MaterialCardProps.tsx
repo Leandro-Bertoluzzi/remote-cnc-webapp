@@ -1,4 +1,4 @@
-import Material from './Material';
+import Material from "./Material";
 
 type setStringActionType = (str: string) => void;
 

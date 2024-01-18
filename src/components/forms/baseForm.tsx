@@ -1,5 +1,5 @@
-import BaseFormProps from '../../types/BaseFormProps';
-import { Button, Modal } from 'flowbite-react';
+import BaseFormProps from "../../types/BaseFormProps";
+import { Button, Modal } from "flowbite-react";
 
 export default function BaseForm(props: BaseFormProps) {
     // Props
@@ -9,20 +9,16 @@ export default function BaseForm(props: BaseFormProps) {
         <Modal dismissible show={true} onClose={() => exitAction()}>
             <Modal.Header>
                 <div className="w-auto p-2">
-                    <h3 className="font-heading mb-1 text-lg text-neutral-600 font-semibold">{title}</h3>
-                    {subtitle &&
-                        <p className="text-sm text-neutral-400 font-medium">{subtitle}</p>
-                    }
+                    <h3 className="font-heading mb-1 text-lg font-semibold text-neutral-600">
+                        {title}
+                    </h3>
+                    {subtitle && <p className="text-sm font-medium text-neutral-400">{subtitle}</p>}
                 </div>
             </Modal.Header>
-            <Modal.Body>
-                {props.children}
-            </Modal.Body>
+            <Modal.Body>{props.children}</Modal.Body>
             <Modal.Footer>
-                <Button onClick={btnSubmitAction}>
-                    {btnSubmitText}
-                </Button>
+                <Button onClick={btnSubmitAction}>{btnSubmitText}</Button>
             </Modal.Footer>
         </Modal>
-    )
+    );
 }
