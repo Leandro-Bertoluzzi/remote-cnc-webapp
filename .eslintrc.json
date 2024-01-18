@@ -1,6 +1,4 @@
 {
-    "extends": "next/core-web-vitals",
-    "rules": {
-        "eol-last": [1, "always"]
-    }
+    "extends": ["eslint:recommended", "next/core-web-vitals", "prettier"],
+    "rules": {}
 }
