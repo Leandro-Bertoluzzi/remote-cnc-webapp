@@ -34,10 +34,10 @@ export default function UsersView() {
         }
 
         apiRequest("users/auth", "GET")
-            .then((response) => {
+            .then(() => {
                 setIsValidated(true);
             })
-            .catch((error) => router.push(`/login?callbackUrl=${callbackUrl}`));
+            .catch(() => router.push(`/login?callbackUrl=${callbackUrl}`));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
