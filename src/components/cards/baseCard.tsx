@@ -32,7 +32,7 @@ export default function BaseCard(props: CardProps) {
     };
 
     return (
-        <div className="w-full border-t p-3">
+        <div data-testid="item-card" className="w-full border-t p-3">
             <div className="-m-2 flex flex-wrap items-center justify-between">
                 <div className="w-auto p-2">
                     <div className="-m-1.5 flex flex-wrap items-center">

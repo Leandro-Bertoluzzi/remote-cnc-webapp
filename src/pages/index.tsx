@@ -54,6 +54,7 @@ export default function MainMenu() {
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
+            return;
         }
 
         apiRequest("users/auth", "GET")

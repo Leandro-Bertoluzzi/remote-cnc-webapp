@@ -42,6 +42,7 @@ export default function TasksView() {
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
+            return;
         }
 
         apiRequest("users/auth", "GET")
@@ -95,41 +96,27 @@ export default function TasksView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (!isValidated) {
-            return;
+        async function queryItems() {
+            try {
+                const files = await apiRequest("files", "GET");
+                const materials = await apiRequest("materials", "GET");
+                const tools = await apiRequest("tools", "GET");
+                const tasks = await apiRequest("tasks", "GET");
+
+                setAvailableFiles(files);
+                setAvailableMaterials(materials);
+                setAvailableTools(tools);
+                setTasks(tasks);
+            } catch (error) {
+                if (error instanceof Error) {
+                    showErrorDialog(error.message);
+                }
+            }
         }
 
-        apiRequest("files", "GET")
-            .then((data) => {
-                setAvailableFiles(data);
-            })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
-
-        apiRequest("materials", "GET")
-            .then((data) => {
-                setAvailableMaterials(data);
-            })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
-
-        apiRequest("tasks", "GET")
-            .then((data) => {
-                setTasks(data);
-            })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
-
-        apiRequest("tools", "GET")
-            .then((data) => {
-                setAvailableTools(data);
-            })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
+        if (isValidated) {
+            queryItems();
+        }
     }, [isValidated]);
 
     // Methods

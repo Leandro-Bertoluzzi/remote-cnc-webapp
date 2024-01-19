@@ -14,7 +14,7 @@ import Tool from "../types/Tool";
 import ToolCard from "../components/cards/toolCard";
 import ToolForm from "../components/forms/toolForm";
 
-export default function ToolsView() {
+export default function InventoryView() {
     // Hooks for state variables
     const [tools, setTools] = useState<Tool[]>([]);
     const [showToolForm, setShowToolForm] = useState<boolean>(false);
@@ -36,6 +36,7 @@ export default function ToolsView() {
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
+            return;
         }
 
         apiRequest("users/auth", "GET")
@@ -103,25 +104,23 @@ export default function ToolsView() {
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (!isValidated) {
-            return;
+        async function queryItems() {
+            try {
+                const materials = await apiRequest("materials", "GET");
+                const tools = await apiRequest("tools", "GET");
+
+                setMaterials(materials);
+                setTools(tools);
+            } catch (error) {
+                if (error instanceof Error) {
+                    showErrorDialog(error.message);
+                }
+            }
         }
 
-        apiRequest("tools", "GET")
-            .then((data) => {
-                setTools(data);
-            })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
-
-        apiRequest("materials", "GET")
-            .then((data) => {
-                setMaterials(data);
-            })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
+        if (isValidated) {
+            queryItems();
+        }
     }, [isValidated]);
 
     return (

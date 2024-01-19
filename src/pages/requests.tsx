@@ -29,6 +29,7 @@ export default function RequestsView() {
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
+            return;
         }
 
         apiRequest("users/auth", "GET")
