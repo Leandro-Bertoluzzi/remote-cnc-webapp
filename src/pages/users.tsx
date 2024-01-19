@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import apiRequest from "../services/apiService";
 import { getJwtToken } from "../services/storage";
 import CardsList from "../components/containers/cardsList";
-import EmptyCard from "../components/cards/emptyCard";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import User from "../types/User";
 import UserCard from "../components/cards/userCard";
@@ -31,6 +30,7 @@ export default function UsersView() {
 
         if (!token) {
             router.push(`/login?callbackUrl=${callbackUrl}`);
+            return;
         }
 
         apiRequest("users/auth", "GET")
@@ -105,20 +105,14 @@ export default function UsersView() {
                 addItemBtnAction={showCreateUserFormModal}
                 showAddItemBtn
             >
-                {users.length === 0 ? (
-                    <EmptyCard itemName="usuarios registrados" />
-                ) : (
-                    <>
-                        {users.map((user) => (
-                            <UserCard
-                                key={user.id}
-                                user={user}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
-                            />
-                        ))}
-                    </>
-                )}
+                {users.map((user) => (
+                    <UserCard
+                        key={user.id}
+                        user={user}
+                        setError={showErrorDialog}
+                        setNotification={showNotification}
+                    />
+                ))}
             </CardsList>
             {showMessageDialog && (
                 <MessageDialog

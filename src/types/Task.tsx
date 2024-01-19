@@ -17,7 +17,7 @@ export default interface Task {
     file_id: number;
     note: string;
     created_at: string;
-    admin_id: number;
+    admin_id?: number;
     status_updated_at: string;
     cancellation_reason: string;
 }
