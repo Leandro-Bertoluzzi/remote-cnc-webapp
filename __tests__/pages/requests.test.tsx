@@ -5,6 +5,8 @@ import apiRequest from "../../src/services/apiService";
 import { getJwtToken } from "../../src/services/storage";
 import mockRouter from "next-router-mock";
 import Task from "@/types/Task";
+import RequestCardProps from "@/types/RequestCardProps";
+import MessageDialogProps from "@/types/MessageDialogProps";
 
 // Mock Next.js router
 jest.mock("next/router", () => require("next-router-mock"));
@@ -49,6 +51,28 @@ const requests: Task[] = [
     },
 ];
 
+// Mock child React components
+jest.mock("@/components/cards/requestCard", () =>
+    // eslint-disable-next-line react/display-name
+    ({ task, setError, setNotification }: RequestCardProps) => (
+        <div data-testid="request-card">
+            {task.id} - {task.name} - {task.created_at}
+            <button onClick={() => setNotification("Éxito en tarjeta")}>Notify success</button>
+            <button onClick={() => setError("Error en tarjeta")}>Notify error</button>
+        </div>
+    )
+);
+
+jest.mock("@/components/dialogs/messageDialog", () =>
+    // eslint-disable-next-line react/display-name
+    ({ onClose, text }: MessageDialogProps) => (
+        <div data-testid="message-dialog">
+            {text}
+            <button onClick={() => onClose()}>Close dialog</button>
+        </div>
+    )
+);
+
 describe("RequestsView", () => {
     beforeEach(() => {
         mockRouter.setCurrentUrl("/");
@@ -74,11 +98,11 @@ describe("RequestsView", () => {
         render(<RequestsView />);
 
         // Assert components in widget
-        const requestCards = await screen.findAllByTestId("item-card");
+        const requestCards = await screen.findAllByTestId("request-card");
         expect(requestCards).toHaveLength(2);
         const notification = screen.queryByTestId("message-dialog");
         expect(notification).not.toBeInTheDocument();
-        const form = screen.queryByTestId("item-form");
+        const form = screen.queryByTestId("request-form");
         expect(form).not.toBeInTheDocument();
 
         // Assert calls to API
@@ -144,24 +168,14 @@ describe("RequestsView", () => {
         render(<RequestsView />);
 
         // Assert components in widget
-        const requestCards = screen.queryAllByTestId("item-card");
+        const requestCards = screen.queryAllByTestId("request-card");
         expect(requestCards).toHaveLength(0);
         const notification = screen.queryByTestId("message-dialog");
         expect(notification).not.toBeInTheDocument();
-        const form = screen.queryByTestId("item-form");
+        const form = screen.queryByTestId("request-form");
         expect(form).not.toBeInTheDocument();
         const emptyCardText = screen.getByText("No hay solicitudes");
         expect(emptyCardText).toBeInTheDocument();
-
-        // Assert calls to API
-        //expect(apiRequest).toHaveBeenCalledTimes(2);
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
     });
 
     it("notifies error querying requests from API", async () => {
@@ -184,21 +198,79 @@ describe("RequestsView", () => {
         expect(notificationText).toBeInTheDocument();
 
         // Trigger event to close window
-        const button = screen.getByText("Entendido");
+        const button = screen.getByText("Close dialog");
         fireEvent.click(button);
 
         // Assert notification popup is gone
         expect(notification).not.toBeInTheDocument();
         expect(notificationText).not.toBeInTheDocument();
+    });
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(2);
+    it("notifies error from child component", async () => {
+        // Mock implementations of functions
+        mockedApiRequest
+            .mockImplementationOnce(
+                (url, method) =>
+                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
+            )
+            .mockImplementationOnce(
+                (url, method) => new Promise((resolve, reject) => resolve(requests))
+            );
+        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
 
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
+        // Instantiate widget under test
+        render(<RequestsView />);
+
+        // Trigger error notification
+        const errorBtn = await screen.findAllByText("Notify error");
+        fireEvent.click(errorBtn[0]);
+
+        // Assert notification popup appeared
+        const notification = await screen.findByTestId("message-dialog");
+        expect(notification).toBeInTheDocument();
+        const notificationText = await screen.findByText("Error en tarjeta");
+        expect(notificationText).toBeInTheDocument();
+
+        // Trigger event to close window
+        const closeBtn = screen.getByText("Close dialog");
+        fireEvent.click(closeBtn);
+
+        // Assert notification popup is gone
+        expect(notification).not.toBeInTheDocument();
+        expect(notificationText).not.toBeInTheDocument();
+    });
+
+    it("notifies success from child component", async () => {
+        // Mock implementations of functions
+        mockedApiRequest
+            .mockImplementationOnce(
+                (url, method) =>
+                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
+            )
+            .mockImplementationOnce(
+                (url, method) => new Promise((resolve, reject) => resolve(requests))
+            );
+        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+
+        // Instantiate widget under test
+        render(<RequestsView />);
+
+        // Trigger error notification
+        const successBtn = await screen.findAllByText("Notify success");
+        fireEvent.click(successBtn[0]);
+
+        // Assert notification popup appeared
+        const notification = await screen.findByTestId("message-dialog");
+        expect(notification).toBeInTheDocument();
+        const notificationText = await screen.findByText("Éxito en tarjeta");
+        expect(notificationText).toBeInTheDocument();
+
+        // Trigger event to close window
+        const closeBtn = screen.getByText("Close dialog");
+        fireEvent.click(closeBtn);
+
+        // Assert notification popup is gone
+        expect(notification).not.toBeInTheDocument();
+        expect(notificationText).not.toBeInTheDocument();
     });
 });

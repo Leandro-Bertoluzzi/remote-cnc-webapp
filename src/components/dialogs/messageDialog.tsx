@@ -9,10 +9,7 @@ export default function MessageDialog(props: MessageDialogProps) {
     return (
         <Modal dismissible show={true} size="md" onClose={onClose} popup>
             <Modal.Body>
-                <div
-                    data-testid="message-dialog"
-                    className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4"
-                >
+                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-center">
                         {type == "info" && (
                             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
