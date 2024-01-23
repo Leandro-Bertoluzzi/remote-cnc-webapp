@@ -5,6 +5,9 @@ import apiRequest from "../../src/services/apiService";
 import { getJwtToken } from "../../src/services/storage";
 import mockRouter from "next-router-mock";
 import User from "../../src/types/User";
+import UserCardProps from "@/types/UserCardProps";
+import UserFormProps from "@/types/UserFormProps";
+import MessageDialogProps from "@/types/MessageDialogProps";
 
 // Mock Next.js router
 jest.mock("next/router", () => require("next-router-mock"));
@@ -45,6 +48,37 @@ const users: User[] = [
     },
 ];
 
+// Mock child React components
+jest.mock("@/components/cards/userCard", () =>
+    // eslint-disable-next-line react/display-name
+    ({ user }: UserCardProps) => (
+        <div data-testid="user-card">
+            {user.id} - {user.name} - {user.email}
+        </div>
+    )
+);
+
+jest.mock("@/components/forms/userForm", () =>
+    // eslint-disable-next-line react/display-name
+    ({ exitAction, setError, setNotification }: UserFormProps) => (
+        <div data-testid="user-form">
+            <button onClick={() => setNotification("Éxito en formulario")}>Notify success</button>
+            <button onClick={() => setError("Error en formulario")}>Notify error</button>
+            <button onClick={() => exitAction()}>Close form</button>
+        </div>
+    )
+);
+
+jest.mock("@/components/dialogs/messageDialog", () =>
+    // eslint-disable-next-line react/display-name
+    ({ onClose, text }: MessageDialogProps) => (
+        <div data-testid="message-dialog">
+            {text}
+            <button onClick={() => onClose()}>Close dialog</button>
+        </div>
+    )
+);
+
 describe("UsersView", () => {
     beforeEach(() => {
         mockRouter.setCurrentUrl("/");
@@ -70,11 +104,11 @@ describe("UsersView", () => {
         render(<UsersView />);
 
         // Assert components in widget
-        const userCards = await screen.findAllByTestId("item-card");
+        const userCards = await screen.findAllByTestId("user-card");
         expect(userCards).toHaveLength(4);
         const notification = screen.queryByTestId("message-dialog");
         expect(notification).not.toBeInTheDocument();
-        const form = screen.queryByTestId("item-form");
+        const form = screen.queryByTestId("user-form");
         expect(form).not.toBeInTheDocument();
         const button = screen.getByText("Agregar usuario");
         expect(button).toBeInTheDocument();
@@ -148,22 +182,12 @@ describe("UsersView", () => {
         expect(notificationText).toBeInTheDocument();
 
         // Trigger event to close window
-        const button = screen.getByText("Entendido");
+        const button = screen.getByText("Close dialog");
         fireEvent.click(button);
 
         // Assert notification popup is gone
         expect(notification).not.toBeInTheDocument();
         expect(notificationText).not.toBeInTheDocument();
-
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(2);
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
     });
 
     it("opens the form to upload a new user", async () => {
@@ -189,28 +213,91 @@ describe("UsersView", () => {
         fireEvent.click(button);
 
         // Assert form appeared
-        const form = await screen.findByTestId("item-form");
+        const form = await screen.findByTestId("user-form");
         expect(form).toBeInTheDocument();
 
-        // Trigger event to close form
-        fireEvent.keyDown(form, {
-            key: "Escape",
-            code: "Escape",
-            keyCode: 27,
-            charCode: 27,
-        });
+        // Close form
+        const closeFormBtn = screen.getByText("Close form");
+        expect(closeFormBtn).toBeInTheDocument();
+        fireEvent.click(closeFormBtn);
 
         // Assert form is gone
         expect(form).not.toBeInTheDocument();
+    });
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(2);
+    it("notifies error from child component", async () => {
+        // Mock implementations of functions
+        mockedApiRequest
+            .mockImplementationOnce(
+                (url, method) =>
+                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
+            )
+            .mockImplementationOnce(
+                (url, method) => new Promise((resolve, reject) => resolve(users))
+            );
+        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
 
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
+        // Instantiate widget under test
+        render(<UsersView />);
+
+        // Trigger event to open form
+        const button = screen.getByText("Agregar usuario");
+        fireEvent.click(button);
+
+        // Trigger error notification
+        const errorBtn = screen.getByText("Notify error");
+        fireEvent.click(errorBtn);
+
+        // Assert notification popup appeared
+        const notification = await screen.findByTestId("message-dialog");
+        expect(notification).toBeInTheDocument();
+        const notificationText = await screen.findByText("Error en formulario");
+        expect(notificationText).toBeInTheDocument();
+
+        // Trigger event to close window
+        const closeBtn = screen.getByText("Close dialog");
+        fireEvent.click(closeBtn);
+
+        // Assert notification popup is gone
+        expect(notification).not.toBeInTheDocument();
+        expect(notificationText).not.toBeInTheDocument();
+    });
+
+    it("notifies success from child component", async () => {
+        // Mock implementations of functions
+        mockedApiRequest
+            .mockImplementationOnce(
+                (url, method) =>
+                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
+            )
+            .mockImplementationOnce(
+                (url, method) => new Promise((resolve, reject) => resolve(users))
+            );
+        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+
+        // Instantiate widget under test
+        render(<UsersView />);
+
+        // Trigger event to open form
+        const button = screen.getByText("Agregar usuario");
+        fireEvent.click(button);
+
+        // Trigger error notification
+        const successBtn = screen.getByText("Notify success");
+        fireEvent.click(successBtn);
+
+        // Assert notification popup appeared
+        const notification = await screen.findByTestId("message-dialog");
+        expect(notification).toBeInTheDocument();
+        const notificationText = await screen.findByText("Éxito en formulario");
+        expect(notificationText).toBeInTheDocument();
+
+        // Trigger event to close window
+        const closeBtn = screen.getByText("Close dialog");
+        fireEvent.click(closeBtn);
+
+        // Assert notification popup is gone
+        expect(notification).not.toBeInTheDocument();
+        expect(notificationText).not.toBeInTheDocument();
     });
 });

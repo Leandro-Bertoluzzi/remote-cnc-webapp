@@ -36,7 +36,7 @@ export default async function apiRequest(
     if (!response.ok) {
         const res = await response.json();
         const detail = res.detail ? `: ${res.detail}` : "";
-        throw Error(`${response.status} ${response.statusText} ${detail}`);
+        throw Error(`${response.status} ${response.statusText}${detail}`);
     }
     return await response.json();
 }

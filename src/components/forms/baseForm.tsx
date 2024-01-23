@@ -8,7 +8,7 @@ export default function BaseForm(props: BaseFormProps) {
     return (
         <Modal dismissible show={true} onClose={() => exitAction()}>
             <Modal.Header>
-                <div data-testid="item-form" className="w-auto p-2">
+                <div className="w-auto p-2">
                     <h3 className="font-heading mb-1 text-lg font-semibold text-neutral-600">
                         {title}
                     </h3>
