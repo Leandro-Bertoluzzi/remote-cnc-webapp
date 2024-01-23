@@ -4,6 +4,7 @@ import apiRequest from "../services/apiService";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { setJwtToken } from "../services/storage";
 import LoginForm from "@/components/forms/loginForm";
+import Head from "next/head";
 
 export default function Login() {
     // Hooks for state variables
@@ -47,6 +48,10 @@ export default function Login() {
 
     return (
         <>
+            <Head>
+                <title>Login</title>
+                <meta name="description" content="Please log in before using the app" />
+            </Head>
             <section className="bg-gradient-gray2 relative overflow-hidden">
                 <div className="container relative z-10 mx-auto px-4">
                     <div className="flex flex-wrap">
