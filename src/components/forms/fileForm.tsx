@@ -77,7 +77,7 @@ export default function FileForm(props: FileFormProps) {
                 <div className="mb-5 w-full overflow-x-auto">
                     <LabeledFileInput
                         label="Archivo"
-                        name="file-name"
+                        name="file-upload"
                         handleChange={handleFileChange}
                         helperText=""
                         accept=".gcode, .nc, .txt"

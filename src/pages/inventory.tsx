@@ -13,6 +13,7 @@ import { MessageDialogType } from "@/types/MessageDialogProps";
 import Tool from "../types/Tool";
 import ToolCard from "../components/cards/toolCard";
 import ToolForm from "../components/forms/toolForm";
+import Head from "next/head";
 
 export default function InventoryView() {
     // Hooks for state variables
@@ -125,6 +126,10 @@ export default function InventoryView() {
 
     return (
         <>
+            <Head>
+                <title>Inventory</title>
+                <meta name="description" content="Inventory management" />
+            </Head>
             <CardsList
                 title="Herramientas"
                 addItemBtnText="Agregar herramienta"

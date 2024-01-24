@@ -34,27 +34,47 @@ export default defineConfig({
     projects: [
         {
             name: "chromium",
-            use: { ...devices["Desktop Chrome"] },
+            use: {
+                ...devices["Desktop Chrome"],
+                // Use prepared auth state.
+                storageState: "playwright/.auth/user.json",
+            },
         },
 
         {
             name: "firefox",
-            use: { ...devices["Desktop Firefox"] },
+            use: {
+                ...devices["Desktop Firefox"],
+                // Use prepared auth state.
+                storageState: "playwright/.auth/user.json",
+            },
         },
 
         {
             name: "webkit",
-            use: { ...devices["Desktop Safari"] },
+            use: {
+                ...devices["Desktop Safari"],
+                // Use prepared auth state.
+                storageState: "playwright/.auth/user.json",
+            },
         },
 
         /* Test against mobile viewports. */
         {
             name: "Mobile Chrome",
-            use: { ...devices["Pixel 5"] },
+            use: {
+                ...devices["Pixel 5"],
+                // Use prepared auth state.
+                storageState: "playwright/.auth/user.json",
+            },
         },
         {
             name: "Mobile Safari",
-            use: { ...devices["iPhone 12"] },
+            use: {
+                ...devices["iPhone 12"],
+                // Use prepared auth state.
+                storageState: "playwright/.auth/user.json",
+            },
         },
 
         /* Test against branded browsers. */
@@ -70,7 +90,8 @@ export default defineConfig({
 
     /* Run your local dev server before starting the tests */
     webServer: {
-        command: "npm run start",
+        //command: "npm run start", // needs to run <npm run build> after each change in code
+        command: "npm run dev",
         url: "http://127.0.0.1:3000",
         reuseExistingServer: !process.env.CI,
     },

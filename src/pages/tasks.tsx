@@ -14,6 +14,7 @@ import TaskCard from "../components/cards/taskCard";
 import TasksFilter from "../components/discrete/tasksFilter";
 import TaskForm from "../components/forms/taskForm";
 import Tool from "../types/Tool";
+import Head from "next/head";
 
 const DEFAULT_TASK_TYPES = ["on_hold", "in_progress"];
 
@@ -142,6 +143,10 @@ export default function TasksView() {
 
     return (
         <>
+            <Head>
+                <title>Tasks</title>
+                <meta name="description" content="Tasks management" />
+            </Head>
             <CardsList
                 title="Tareas"
                 addItemBtnText="Solicitar pedido"

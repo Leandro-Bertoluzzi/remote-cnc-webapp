@@ -12,7 +12,8 @@
         "format:check": "prettier --check --ignore-path .gitignore .",
         "format:fix": "prettier --write --ignore-path .gitignore .",
         "test:unit": "jest",
-        "test:e2e": "npx playwright test"
+        "test:e2e": "npx playwright test",
+        "test:e2e:report": "npx playwright show-report"
     },
     "dependencies": {
         "@heroicons/react": "^2.1.1",
