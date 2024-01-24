@@ -10,6 +10,7 @@ import FileForm from "../components/forms/fileForm";
 import FileInfo from "../types/FileInfo";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
+import Head from "next/head";
 
 export default function FilesView() {
     // Hooks for state variables
@@ -100,6 +101,10 @@ export default function FilesView() {
 
     return (
         <>
+            <Head>
+                <title>Files</title>
+                <meta name="description" content="Files management" />
+            </Head>
             <CardsList
                 title="Archivos"
                 addItemBtnText="Subir archivo"

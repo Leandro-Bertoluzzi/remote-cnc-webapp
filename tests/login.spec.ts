@@ -1,6 +1,9 @@
 import { faker } from "@faker-js/faker/locale/en";
 import { test, expect } from "@playwright/test";
 
+// Reset storage state for this file to avoid being authenticated
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe("Login page", () => {
     test("Renders correctly", async ({ page }) => {
         await page.goto("/login");

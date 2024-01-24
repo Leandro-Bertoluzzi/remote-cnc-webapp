@@ -9,6 +9,7 @@ import User from "../types/User";
 import UserCard from "../components/cards/userCard";
 import UserForm from "../components/forms/userForm";
 import { MessageDialogType } from "@/types/MessageDialogProps";
+import Head from "next/head";
 
 export default function UsersView() {
     // Hooks for state variables
@@ -99,6 +100,10 @@ export default function UsersView() {
 
     return (
         <>
+            <Head>
+                <title>Users</title>
+                <meta name="description" content="Users management" />
+            </Head>
             <CardsList
                 title="Usuarios"
                 addItemBtnText="Agregar usuario"

@@ -9,6 +9,7 @@ import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
 import Task from "../types/Task";
 import RequestCard from "../components/cards/requestCard";
+import Head from "next/head";
 
 export default function RequestsView() {
     // Hooks for state variables
@@ -85,29 +86,35 @@ export default function RequestsView() {
     }
 
     return (
-        <CardsList title="Solicitudes">
-            {tasks.length === 0 ? (
-                <EmptyCard itemName="solicitudes" />
-            ) : (
-                <>
-                    {tasks.map((task) => (
-                        <RequestCard
-                            key={task.id}
-                            task={task}
-                            setError={showErrorDialog}
-                            setNotification={showNotification}
-                        />
-                    ))}
-                </>
-            )}
-            {showMessageDialog && (
-                <MessageDialog
-                    onClose={hideMessageDialog}
-                    type={messageType}
-                    title={messageTitle}
-                    text={notification}
-                />
-            )}
-        </CardsList>
+        <>
+            <Head>
+                <title>Requests</title>
+                <meta name="description" content="Requests management" />
+            </Head>
+            <CardsList title="Solicitudes">
+                {tasks.length === 0 ? (
+                    <EmptyCard itemName="solicitudes" />
+                ) : (
+                    <>
+                        {tasks.map((task) => (
+                            <RequestCard
+                                key={task.id}
+                                task={task}
+                                setError={showErrorDialog}
+                                setNotification={showNotification}
+                            />
+                        ))}
+                    </>
+                )}
+                {showMessageDialog && (
+                    <MessageDialog
+                        onClose={hideMessageDialog}
+                        type={messageType}
+                        title={messageTitle}
+                        text={notification}
+                    />
+                )}
+            </CardsList>
+        </>
     );
 }

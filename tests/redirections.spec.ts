@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
 
+// Reset storage state for this file to avoid being authenticated
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe("Redirect to login page", () => {
     const pages = ["", "files", "inventory", "requests", "tasks", "users"];
     for (const page_name of pages) {
