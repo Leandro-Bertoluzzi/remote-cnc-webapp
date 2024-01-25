@@ -1,0 +1,29 @@
+# Documentation
+README.md
+
+# Git related files
+.git/
+
+# Docker related files
+Dockerfile
+.dockerignore
+
+# Configuration
+.editorconfig
+
+# dependencies
+/node_modules
+/.swc
+
+# testing
+/coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# next.js
+/.next/
+
+# vercel
+.vercel
