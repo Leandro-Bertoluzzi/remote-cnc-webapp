@@ -88,10 +88,14 @@ export default defineConfig({
         // },
     ],
 
-    /* Run your local dev server before starting the tests */
+    /* USEFUL FOR LOCAL TESTING:
+        Run your local dev server before starting the tests
+    */
     webServer: {
-        //command: "npm run start", // needs to run <npm run build> after each change in code
-        command: "npm run dev",
+        // When using "npm run dev", give it a (much) larger timeout, depending on your dev server speed.
+        //command: "npm run dev", timeout: 1200000,
+        // When using "npm run start", you have to run <npm run build> after each change in code
+        command: "npm run start",
         url: "http://127.0.0.1:3000",
         reuseExistingServer: !process.env.CI,
     },

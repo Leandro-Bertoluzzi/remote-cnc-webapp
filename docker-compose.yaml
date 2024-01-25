@@ -1,0 +1,12 @@
+services:
+  app:
+    image: remote-cnc-app-image
+    build:
+      context: .
+      target: development
+    ports:
+      - 3000:3000
+    pull_policy: never
+    volumes:
+      - ./:/app
+    container_name: remote-cnc-app
