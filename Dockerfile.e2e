@@ -1,0 +1,19 @@
+FROM node:18
+
+WORKDIR /app
+
+# Add npm script needed to launch server
+RUN touch package.json
+RUN echo '{"scripts": { "start": "next start" }}' > package.json
+
+# Installed neccessary node packages
+RUN npm install next@13.3.0
+RUN npm install --save-dev @playwright/test
+RUN npm install --save-dev @faker-js/faker
+
+# Copy configuration files
+COPY playwright/.auth/user.json ./playwright/.auth/user.json
+COPY playwright.config.ts ./playwright.config.ts
+
+# Install browsers and additional dependencies for E2E testing
+RUN npx -y playwright@1.41.1 install --with-deps

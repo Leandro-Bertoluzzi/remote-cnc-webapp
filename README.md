@@ -128,7 +128,20 @@ $ docker exec -it remote-cnc-app npm run test:unit
 $ docker exec -it remote-cnc-app npm run build
 ```
 
-The great exception are E2E (end-to-end) tests, which can't be run from inside a container yet.
+The great exception are E2E (end-to-end) tests, which need a dedicated Docker image:
+
+```bash
+$ docker build --tag remote-cnc-app-e2e --file Dockerfile.e2e .
+$ docker run --rm -it -v /$(pwd)/out:/app/out -v /$(pwd)/.next:/app/.next -v /$(pwd)/tests:/app/tests remote-cnc-app-e2e npx playwright test
+```
+
+**NOTE:** `$(pwd)` is valid for Linux, in Windows you have to use `"%cd%"` instead.
+
+```bash
+$ docker run --rm -it -v "%cd%"/out:/app/out -v "%cd%"/.next:/app/.next -v "%cd%"/tests:/app/tests remote-cnc-app-e2e npx playwright test
+```
+
+**NOTE:** Before running the container for E2E tests, be sure to update the `build` output (`npm run build`).
 
 ## :checkered_flag: Deployment
 
