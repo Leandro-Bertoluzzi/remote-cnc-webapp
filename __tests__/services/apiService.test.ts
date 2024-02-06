@@ -6,8 +6,7 @@ import { getJwtToken } from "../../src/services/storage";
 jest.mock("@/config", () => ({
     __esModule: true, // this property makes it work
     default: {
-        API_PORT: "8000",
-        API_HOST: "api-host",
+        API_URL: "http://api-baseurl",
     },
 }));
 
@@ -34,7 +33,7 @@ describe("api service", () => {
         // Assertions
         expect(response).toStrictEqual({ data: "fake response" });
         expect(global.fetch).toHaveBeenCalledTimes(1);
-        expect(global.fetch).toHaveBeenCalledWith("http://api-host:8000/path?token=VALID_TOKEN", {
+        expect(global.fetch).toHaveBeenCalledWith("http://api-baseurl/path?token=VALID_TOKEN", {
             method: "GET",
             headers: undefined,
             body: undefined,
@@ -60,7 +59,7 @@ describe("api service", () => {
         expect(response).toStrictEqual({ data: "fake response" });
         expect(global.fetch).toHaveBeenCalledTimes(1);
         expect(global.fetch).toHaveBeenCalledWith(
-            "http://api-host:8000/path?query=value&token=VALID_TOKEN",
+            "http://api-baseurl/path?query=value&token=VALID_TOKEN",
             {
                 method: "GET",
                 headers: undefined,
@@ -87,7 +86,7 @@ describe("api service", () => {
         // Assertions
         expect(response).toStrictEqual({ data: "fake response" });
         expect(global.fetch).toHaveBeenCalledTimes(1);
-        expect(global.fetch).toHaveBeenCalledWith("http://api-host:8000/path?token=VALID_TOKEN", {
+        expect(global.fetch).toHaveBeenCalledWith("http://api-baseurl/path?token=VALID_TOKEN", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -115,7 +114,7 @@ describe("api service", () => {
         // Assertions
         expect(response).toStrictEqual({ data: "fake response" });
         expect(global.fetch).toHaveBeenCalledTimes(1);
-        expect(global.fetch).toHaveBeenCalledWith("http://api-host:8000/path?token=VALID_TOKEN", {
+        expect(global.fetch).toHaveBeenCalledWith("http://api-baseurl/path?token=VALID_TOKEN", {
             method: "POST",
             headers: undefined,
             body: { data: "fake body" },
