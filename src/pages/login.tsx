@@ -63,9 +63,8 @@ export default function Login() {
                                 <p className="mb-11 text-lg text-gray-500">¡Bienvenido!</p>
                                 <LoginForm btnSubmitAction={handleUploadClick} />
                                 <p className="text-base text-gray-600">
-                                    <span>¿No tiene cuenta?</span>
+                                    <span>¿No tiene cuenta? </span>
                                     <a className="text-blue-900 hover:text-blue-400" href="#">
-                                        {" "}
                                         Contáctenos
                                     </a>
                                 </p>

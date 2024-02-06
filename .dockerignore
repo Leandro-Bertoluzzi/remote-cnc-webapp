@@ -5,25 +5,26 @@ README.md
 .git/
 
 # Docker related files
+docker-compose.yml
 Dockerfile
 .dockerignore
 
 # Configuration
 .editorconfig
 
-# dependencies
+# Dependencies
 /node_modules
 /.swc
 
-# testing
+# Test related files
 /coverage
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 
-# next.js
+# Next.js auto-generated files
 /.next/
 
-# vercel
+# Vercel
 .vercel

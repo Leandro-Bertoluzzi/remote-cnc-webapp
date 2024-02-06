@@ -10,11 +10,11 @@ export default async function apiRequest(
     body?: any,
     json = false
 ): Promise<any> {
-    const { API_PORT, API_HOST } = config;
+    const { API_URL } = config;
 
     // Adds the JWT token to the URL as a query parameter
     const token = (relativeUrl.includes("?") ? "&" : "?") + "token=" + getJwtToken();
-    const apiUrl = `http://${API_HOST}:${API_PORT}/${relativeUrl}${token}`;
+    const apiUrl = `${API_URL}/${relativeUrl}${token}`;
 
     let response;
 
