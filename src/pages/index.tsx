@@ -28,11 +28,6 @@ const options: MenuOption[] = [
         path: "#",
     },
     {
-        name: "Administrar solicitudes",
-        description: "",
-        path: "/requests",
-    },
-    {
         name: "Administrar usuarios",
         description: "",
         path: "/users",
