@@ -3,7 +3,6 @@ type TaskStatus =
     | "on_hold"
     | "in_progress"
     | "finished"
-    | "rejected"
     | "cancelled";
 
 export default interface Task {

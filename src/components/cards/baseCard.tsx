@@ -6,7 +6,6 @@ export const BUTTON_DOWNLOAD = "descargar";
 export const BUTTON_EDIT = "editar";
 export const BUTTON_REMOVE = "eliminar";
 export const BUTTON_APPROVE = "aprobar";
-export const BUTTON_REJECT = "rechazar";
 export const BUTTON_CANCEL = "cancelar";
 
 const BUTTON_COLOR_MAP: AssociativeArray = {
@@ -14,7 +13,6 @@ const BUTTON_COLOR_MAP: AssociativeArray = {
     [BUTTON_EDIT]: "indigo",
     [BUTTON_REMOVE]: "red",
     [BUTTON_APPROVE]: "green",
-    [BUTTON_REJECT]: "red",
     [BUTTON_CANCEL]: "red",
 };
 

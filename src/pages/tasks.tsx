@@ -149,7 +149,7 @@ export default function TasksView() {
             </Head>
             <CardsList
                 title="Tareas"
-                addItemBtnText="Solicitar pedido"
+                addItemBtnText="Crear tarea"
                 addItemBtnAction={showCreateTaskFormModal}
                 showAddItemBtn
             >
