@@ -153,7 +153,7 @@ describe("TasksView", () => {
         expect(notification).not.toBeInTheDocument();
         const form = screen.queryByTestId("task-form");
         expect(form).not.toBeInTheDocument();
-        const button = screen.getByText("Solicitar pedido");
+        const button = screen.getByText("Crear tarea");
         expect(button).toBeInTheDocument();
 
         // Assert calls to API
@@ -281,7 +281,7 @@ describe("TasksView", () => {
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");
         expect(taskCards).toHaveLength(3);
-        const button = screen.getByText("Solicitar pedido");
+        const button = screen.getByText("Crear tarea");
         expect(button).toBeInTheDocument();
 
         // Trigger event to open form
@@ -319,7 +319,7 @@ describe("TasksView", () => {
         render(<TasksView />);
 
         // Trigger event to open form
-        const button = screen.getByText("Solicitar pedido");
+        const button = screen.getByText("Crear tarea");
         fireEvent.click(button);
 
         // Trigger error notification
@@ -360,7 +360,7 @@ describe("TasksView", () => {
         render(<TasksView />);
 
         // Trigger event to open form
-        const button = screen.getByText("Solicitar pedido");
+        const button = screen.getByText("Crear tarea");
         fireEvent.click(button);
 
         // Trigger error notification

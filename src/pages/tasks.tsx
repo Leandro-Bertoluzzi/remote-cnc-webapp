@@ -16,7 +16,7 @@ import TaskForm from "../components/forms/taskForm";
 import Tool from "../types/Tool";
 import Head from "next/head";
 
-const DEFAULT_TASK_TYPES = ["on_hold", "in_progress"];
+const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 
 export default function TasksView() {
     // Hooks for state variables
