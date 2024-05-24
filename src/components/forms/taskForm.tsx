@@ -118,7 +118,7 @@ export default function TaskForm(props: TaskFormProps) {
 
     return (
         <BaseForm
-            title={create ? "Nuevo pedido" : "Editar pedido"}
+            title={create ? "Nueva tarea" : "Editar tarea"}
             subtitle=""
             exitAction={exitAction}
             btnSubmitAction={create ? handleUploadClick : handleUpdateClick}

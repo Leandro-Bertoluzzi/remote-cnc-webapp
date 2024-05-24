@@ -23,10 +23,6 @@ test.describe("MainMenu", () => {
         },
         //{ name: "Control manual y calibración", path: "#", },
         {
-            name: "Administrar solicitudes",
-            path: "/requests",
-        },
-        {
             name: "Administrar usuarios",
             path: "/users",
         },

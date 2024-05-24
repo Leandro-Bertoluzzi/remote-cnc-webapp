@@ -42,7 +42,6 @@ describe("MainMenu", () => {
             "Monitorizar equipo",
             "Administrar archivos",
             "Control manual y calibración",
-            "Administrar solicitudes",
             "Administrar usuarios",
             "Administrar inventario",
         ];

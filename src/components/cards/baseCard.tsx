@@ -1,33 +1,8 @@
-import AssociativeArray from "../../types/AssociativeArray";
+import ButtonGroup from "../containers/buttonGroup";
 import CardProps from "../../types/CardProps";
-import { Button } from "flowbite-react";
-
-export const BUTTON_DOWNLOAD = "descargar";
-export const BUTTON_EDIT = "editar";
-export const BUTTON_REMOVE = "eliminar";
-export const BUTTON_APPROVE = "aprobar";
-export const BUTTON_CANCEL = "cancelar";
-
-const BUTTON_COLOR_MAP: AssociativeArray = {
-    [BUTTON_DOWNLOAD]: "teal",
-    [BUTTON_EDIT]: "indigo",
-    [BUTTON_REMOVE]: "red",
-    [BUTTON_APPROVE]: "green",
-    [BUTTON_CANCEL]: "red",
-};
 
 export default function BaseCard(props: CardProps) {
-    // Props
     const { mainText, additionalText, buttons } = props;
-
-    // Auxiliary methods
-    const computeColor = (type: string): string => {
-        return BUTTON_COLOR_MAP[type.toLowerCase()];
-    };
-
-    const computeText = (type: string): string => {
-        return type.charAt(0).toUpperCase() + type.slice(1);
-    };
 
     return (
         <div className="w-full border-t p-3">
@@ -44,19 +19,7 @@ export default function BaseCard(props: CardProps) {
                         </div>
                     </div>
                 </div>
-                {buttons && (
-                    <Button.Group>
-                        {buttons.map((button, key: number) => (
-                            <Button
-                                key={key}
-                                color={computeColor(button.type)}
-                                onClick={button.action}
-                            >
-                                {computeText(button.type)}
-                            </Button>
-                        ))}
-                    </Button.Group>
-                )}
+                <ButtonGroup buttons={buttons} />
             </div>
         </div>
     );

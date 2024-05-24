@@ -38,7 +38,7 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
 
     return (
         <BaseForm
-            title="Cancelar pedido"
+            title="Cancelar tarea"
             subtitle=""
             exitAction={exitAction}
             btnSubmitAction={cancelTask}

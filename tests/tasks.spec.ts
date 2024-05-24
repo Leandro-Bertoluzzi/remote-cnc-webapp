@@ -120,17 +120,17 @@ test.describe("Tasks page", () => {
         ).toBeVisible();
 
         // Click button to add a new entry
-        const addButton = page.getByRole("button", { name: "Solicitar pedido" });
+        const addButton = page.getByRole("button", { name: "Crear tarea" });
         await expect(addButton).toBeVisible();
         await addButton.click();
 
         // Expect form to appear
-        await expect(page.getByText("Nuevo pedido")).toBeVisible();
+        await expect(page.getByText("Nueva tarea")).toBeVisible();
 
         // Fill form fields
         const name = faker.lorem.sentence({ min: 3, max: 5 });
         await page.getByLabel("Nombre").fill(name);
-        const file = faker.helpers.arrayElement(["file_1.gcode", "file_1.gcode"]);
+        const file = faker.helpers.arrayElement(["file_1.gcode", "file_2.gcode"]);
         await page.getByLabel("Archivo").selectOption({ label: file });
         const material = faker.helpers.arrayElement(["Material 1", "Material 2"]);
         await page.getByLabel("Material").selectOption({ label: material });
@@ -160,15 +160,6 @@ test.describe("Tasks page", () => {
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Tareas", exact: true })).toBeVisible();
-        await expect(page.getByRole("heading", { name: "Task 1" })).not.toBeVisible(); // Due to filter
-        await expect(page.getByRole("heading", { name: "Task 2" })).toBeVisible();
-
-        // Update filter
-        await page.getByText("Filtrar estados").click();
-        await page.getByLabel("Pending approval").check();
-        await page.getByText("Filtrar estados").click();
-
-        // Expect items list to update
         await expect(page.getByRole("heading", { name: "Task 1" })).toBeVisible();
         await expect(page.getByRole("heading", { name: "Task 2" })).toBeVisible();
 
@@ -180,6 +171,15 @@ test.describe("Tasks page", () => {
         // Expect items list to update
         await expect(page.getByRole("heading", { name: "Task 1" })).toBeVisible();
         await expect(page.getByRole("heading", { name: "Task 2" })).not.toBeVisible();
+
+        // Update filter
+        await page.getByText("Filtrar estados").click();
+        await page.getByLabel("On hold").check();
+        await page.getByText("Filtrar estados").click();
+
+        // Expect items list to update
+        await expect(page.getByRole("heading", { name: "Task 1" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Task 2" })).toBeVisible();
     });
 
     test("Edit existing tasks", async ({ page }) => {
@@ -196,7 +196,7 @@ test.describe("Tasks page", () => {
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Tareas", exact: true })).toBeVisible();
-        await expect(page.getByRole("heading", { name: "Task 1" })).not.toBeVisible(); // Due to filter
+        await expect(page.getByRole("heading", { name: "Task 1" })).toBeVisible();
         await expect(page.getByRole("heading", { name: "Task 2" })).toBeVisible();
 
         // Click button to edit an entry
@@ -204,12 +204,12 @@ test.describe("Tasks page", () => {
         await editButton.click();
 
         // Expect form to appear
-        await expect(page.getByText("Editar pedido")).toBeVisible();
+        await expect(page.getByText("Editar tarea")).toBeVisible();
 
         // Fill form fields
         const name = faker.lorem.sentence({ min: 3, max: 5 });
         await page.getByLabel("Nombre").fill(name);
-        const file = faker.helpers.arrayElement(["file_1.gcode", "file_1.gcode"]);
+        const file = faker.helpers.arrayElement(["file_1.gcode", "file_2.gcode"]);
         await page.getByLabel("Archivo").selectOption({ label: file });
         const material = faker.helpers.arrayElement(["Material 1", "Material 2"]);
         await page.getByLabel("Material").selectOption({ label: material });
@@ -228,7 +228,7 @@ test.describe("Tasks page", () => {
         await cancelButton.click();
 
         // Expect form to appear
-        await expect(page.getByText("Cancelar pedido")).toBeVisible();
+        await expect(page.getByText("Cancelar tarea")).toBeVisible();
 
         // Fill form fields
         const cancellationReason = faker.lorem.paragraph({ min: 1, max: 3 });
@@ -254,7 +254,7 @@ test.describe("Tasks page", () => {
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Tareas", exact: true })).toBeVisible();
-        await expect(page.getByRole("heading", { name: "Task 1" })).not.toBeVisible(); // Due to filter
+        await expect(page.getByRole("heading", { name: "Task 1" })).toBeVisible();
         await expect(page.getByRole("heading", { name: "Task 2" })).toBeVisible();
 
         // Click button to edit an entry
@@ -262,12 +262,12 @@ test.describe("Tasks page", () => {
         await editButton.click();
 
         // Expect form to appear
-        await expect(page.getByText("Editar pedido")).toBeVisible();
+        await expect(page.getByText("Editar tarea")).toBeVisible();
 
         // Fill form fields
         const name = faker.lorem.sentence({ min: 3, max: 5 });
         await page.getByLabel("Nombre").fill(name);
-        const file = faker.helpers.arrayElement(["file_1.gcode", "file_1.gcode"]);
+        const file = faker.helpers.arrayElement(["file_1.gcode", "file_2.gcode"]);
         await page.getByLabel("Archivo").selectOption({ label: file });
         const material = faker.helpers.arrayElement(["Material 1", "Material 2"]);
         await page.getByLabel("Material").selectOption({ label: material });
@@ -279,8 +279,8 @@ test.describe("Tasks page", () => {
         // Click cancel button
         await page.getByLabel("Close").click();
 
-        // Expect items to be unchanged
-        await expect(page.getByRole("heading", { name: "Task 1" })).not.toBeVisible(); // Due to filter
+        // Expect items to be unchangedt
+        await expect(page.getByRole("heading", { name: "Task 1" })).toBeVisible();
         await expect(page.getByRole("heading", { name: "Task 2" })).toBeVisible();
 
         // Click button to remove an entry
@@ -288,7 +288,7 @@ test.describe("Tasks page", () => {
         await cancelButton.click();
 
         // Expect form to appear
-        await expect(page.getByText("Cancelar pedido")).toBeVisible();
+        await expect(page.getByText("Cancelar tarea")).toBeVisible();
 
         // Fill form fields
         const cancellationReason = faker.lorem.paragraph({ min: 1, max: 3 });
@@ -298,7 +298,7 @@ test.describe("Tasks page", () => {
         await page.getByLabel("Close").click();
 
         // Expect items to be unchanged
-        await expect(page.getByRole("heading", { name: "Task 1" })).not.toBeVisible(); // Due to filter
+        await expect(page.getByRole("heading", { name: "Task 1" })).toBeVisible();
         await expect(page.getByRole("heading", { name: "Task 2" })).toBeVisible();
     });
 });

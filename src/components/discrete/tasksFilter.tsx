@@ -12,7 +12,7 @@ const TASK_STATUSES = [
     "on_hold",
     "in_progress",
     "finished",
-    "rejected",
+    "failed",
     "cancelled",
 ];
 

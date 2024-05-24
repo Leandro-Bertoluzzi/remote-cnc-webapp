@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BUTTON_EDIT, BUTTON_REMOVE } from "../cards/baseCard";
+import { BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
 import apiRequest from "../../services/apiService";
 import ButtonInfo from "../../types/ButtonInfo";
 import BaseCard from "./baseCard";
