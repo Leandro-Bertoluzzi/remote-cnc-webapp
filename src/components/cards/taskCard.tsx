@@ -83,9 +83,7 @@ export default function TaskCard(props: TaskCardProps) {
     };
     const btnRun: ButtonInfo = {
         type: BUTTON_RUN,
-        action: () => {
-            return;
-        },
+        action: showRunConfirmationModal,
     };
     const btnPause: ButtonInfo = {
         //('Retomar' if self.paused else 'Pausar', self.pauseTask)
@@ -149,12 +147,27 @@ export default function TaskCard(props: TaskCardProps) {
     };
 
     /*  Function: removeTask
-     *   Description: Removes the current task
+     *   Description: Requests the API to remove the task
      */
     const removeTask = () => {
         const url = `tasks/${task.id}`;
 
         apiRequest(url, "DELETE")
+            .then((response) => {
+                setNotification(response.success);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
+    };
+
+    /*  Function: runTask
+     *   Description: Requests the API to execute the task
+     */
+    const runTask = () => {
+        const url = `worker/task/${task.id}`;
+
+        apiRequest(url, "POST")
             .then((response) => {
                 setNotification(response.success);
             })
@@ -246,6 +259,16 @@ export default function TaskCard(props: TaskCardProps) {
         setConfirmDialogTitle("Eliminar tarea");
         setConfirmDialogText("¿Realmente desea eliminar la tarea?");
         setOnConfirmMethod(() => () => removeTask());
+        setShowConfirmation(true);
+    }
+
+    /*  Function: showRunConfirmationModal
+        *   Description: Enables the modal to confirm the execution
+        */
+    function showRunConfirmationModal() {
+        setConfirmDialogTitle("Ejecutar tarea");
+        setConfirmDialogText("¿Desea ejecutar la tarea ahora?");
+        setOnConfirmMethod(() => () => runTask());
         setShowConfirmation(true);
     }
 
