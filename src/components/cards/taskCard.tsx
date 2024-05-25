@@ -88,9 +88,7 @@ export default function TaskCard(props: TaskCardProps) {
     const btnPause: ButtonInfo = {
         //('Retomar' if self.paused else 'Pausar', self.pauseTask)
         type: BUTTON_PAUSE,
-        action: () => {
-            return;
-        },
+        action: togglePausedTask,
     };
 
     const button_info: ButtonInfoArray = {
@@ -174,6 +172,22 @@ export default function TaskCard(props: TaskCardProps) {
             .catch((err) => {
                 setError(err.message);
             });
+    };
+
+    /*  Function: togglePausedTask
+     *   Description: Requests the API to pause or resume the task
+     */
+    async function togglePausedTask() {
+        try {
+            const r = await apiRequest('worker/pause', "GET");
+            const url = `worker/pause/${r.paused ? 0 : 1}`;
+            const response = await apiRequest(url, "PUT");
+            setNotification(response.success);
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            }
+        }
     };
 
     /*  Function: approveTask
