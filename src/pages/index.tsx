@@ -15,7 +15,7 @@ const options: MenuOption[] = [
     {
         name: "Monitorizar equipo",
         description: "",
-        path: "#",
+        path: "/monitor",
     },
     {
         name: "Administrar archivos",
