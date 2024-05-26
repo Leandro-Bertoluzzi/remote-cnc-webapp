@@ -79,8 +79,24 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### With Docker
 
 ```bash
-$ docker compose up
+$ docker compose --profile=ui up
 ```
+
+### Initiate mocked camera stream
+
+You can start a mocked version of the camera web server, which streams the test file `/camera/video/mock.mp4` in a loop.
+
+```bash
+$ cp camera/.env.dist camera/.env
+$ docker compose --profile=camera up
+```
+
+if you want both ui and camera:
+```bash
+$ docker compose --profile=all up
+```
+
+You can validate the camera web server works properly by visiting `http://localhost:8081` in your web browser.
 
 ## :wrench: Running tests
 

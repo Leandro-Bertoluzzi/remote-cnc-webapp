@@ -1,3 +1,5 @@
+name: cnc-webapp
+
 services:
     app:
         image: remote-cnc-app-image
@@ -6,7 +8,21 @@ services:
             target: development
         ports:
             - 3000:3000
+        profiles: ["ui", "all"]
         pull_policy: never
         volumes:
             - ./:/app
         container_name: remote-cnc-app
+
+    camera:
+        image: motionproject/motion
+        env_file:
+        - ./camera/.env
+        ports:
+        - 8081:8081
+        profiles: ["camera", "all"]
+        volumes:
+        - ./camera/motion/config:/usr/local/etc/motion
+        - ./camera/motion/storage:/var/lib/motion
+        - ./camera/video:/media/video
+        container_name: remote-cnc-camera
