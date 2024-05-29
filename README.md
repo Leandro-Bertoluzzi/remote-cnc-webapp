@@ -92,6 +92,7 @@ $ docker compose --profile=camera up
 ```
 
 if you want both ui and camera:
+
 ```bash
 $ docker compose --profile=all up
 ```

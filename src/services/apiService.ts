@@ -40,3 +40,14 @@ export default async function apiRequest(
     }
     return await response.json();
 }
+
+export function getEventSource(channel: string): EventSource {
+    const { API_URL } = config;
+
+    // Generate URL and add the JWT token as a query parameter
+    const relativeUrl = "monitor/stream/" + channel;
+    const token = getJwtToken();
+    const apiUrl = `${API_URL}/${relativeUrl}?token=${token}`;
+
+    return new EventSource(apiUrl);
+}

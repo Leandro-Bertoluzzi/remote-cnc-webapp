@@ -5,7 +5,7 @@ export default function LogsViewer(props: LogsViewerProps) {
     const { logs } = props;
 
     return (
-        <div className="overflow-x-auto">
+        <div className="max-h-[85vh] overflow-x-auto">
             <Table striped className="text-xs">
                 <Table.Head>
                     <Table.HeadCell>Hora y fecha</Table.HeadCell>
@@ -15,7 +15,10 @@ export default function LogsViewer(props: LogsViewerProps) {
                 </Table.Head>
                 <Table.Body className="divide-y">
                     {logs.map((log, key) => (
-                        <Table.Row key={key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Row
+                            key={key}
+                            className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                        >
                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                 {log.datetime}
                             </Table.Cell>
@@ -23,11 +26,9 @@ export default function LogsViewer(props: LogsViewerProps) {
                             {/*<Table.Cell>{log.type}</Table.Cell>*/}
                             <Table.Cell>{log.message}</Table.Cell>
                         </Table.Row>
-                    )
-                    )}
+                    ))}
                 </Table.Body>
             </Table>
         </div>
     );
 }
-

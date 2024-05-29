@@ -1,5 +1,5 @@
-import Log from "./Log"
+import Log from "./Log";
 
 export default interface LogsViewerProps {
-    logs: Log[]
+    logs: Log[];
 }

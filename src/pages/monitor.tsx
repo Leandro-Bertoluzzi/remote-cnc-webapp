@@ -3,12 +3,14 @@ import { useRouter } from "next/router";
 
 import apiRequest from "@/services/apiService";
 import CameraWidget from "@/components/discrete/cameraWidget";
+import ControllerStatus from "@/components/controllerStatus";
 import { getJwtToken } from "@/services/storage";
 import Head from "next/head";
 import Log from "@/types/Log";
 import LogsViewer from "@/components/discrete/logsViewer";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
+import Terminal from "@/components/terminal";
 
 export default function MonitorView() {
     const [isValidated, setIsValidated] = useState<boolean>(false);
@@ -77,16 +79,15 @@ export default function MonitorView() {
                 <title>Monitor</title>
                 <meta name="description" content="Files management" />
             </Head>
-            <section
-                data-section-id="1"
-                className="overflow-hidden py-4"
-            >
+            <section data-section-id="1" className="overflow-hidden py-4">
                 <div className="container mx-auto px-4">
                     <div className="rounded-xl border bg-white p-4">
-                        <h2 className="mb-4 text-3xl text-center font-semibold">Monitor</h2>
-                        <div className="grid md:grid-cols-2 gap-2">
-                            <CameraWidget />
+                        <h2 className="mb-4 text-center text-3xl font-semibold">Monitor</h2>
+                        <div className="grid gap-2 md:grid-cols-2">
+                            <ControllerStatus />
                             <LogsViewer logs={logs} />
+                            <CameraWidget />
+                            <Terminal />
                         </div>
                     </div>
                 </div>

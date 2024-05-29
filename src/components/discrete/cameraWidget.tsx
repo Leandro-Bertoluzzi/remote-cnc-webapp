@@ -7,7 +7,7 @@ export default function CameraWidget() {
         <iframe
             src={CAMERA_URL}
             allow="fullscreen"
-            className="rounded-2xl border border-slate-300 w-full aspect-video"
+            className="aspect-video w-full rounded-2xl border border-slate-300"
         />
     );
 }
