@@ -17,12 +17,12 @@ services:
     camera:
         image: motionproject/motion
         env_file:
-        - ./camera/.env
+            - ./camera/.env
         ports:
-        - 8081:8081
+            - 8081:8081
         profiles: ["camera", "all"]
         volumes:
-        - ./camera/motion/config:/usr/local/etc/motion
-        - ./camera/motion/storage:/var/lib/motion
-        - ./camera/video:/media/video
+            - ./camera/motion/config:/usr/local/etc/motion
+            - ./camera/motion/storage:/var/lib/motion
+            - ./camera/video:/media/video
         container_name: remote-cnc-camera

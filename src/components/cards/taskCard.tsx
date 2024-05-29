@@ -179,7 +179,7 @@ export default function TaskCard(props: TaskCardProps) {
      */
     async function togglePausedTask() {
         try {
-            const r = await apiRequest('worker/pause', "GET");
+            const r = await apiRequest("worker/pause", "GET");
             const url = `worker/pause/${r.paused ? 0 : 1}`;
             const response = await apiRequest(url, "PUT");
             setNotification(response.success);
@@ -188,7 +188,7 @@ export default function TaskCard(props: TaskCardProps) {
                 setError(error.message);
             }
         }
-    };
+    }
 
     /*  Function: approveTask
      *   Description: Approves the current request
@@ -277,8 +277,8 @@ export default function TaskCard(props: TaskCardProps) {
     }
 
     /*  Function: showRunConfirmationModal
-        *   Description: Enables the modal to confirm the execution
-        */
+     *   Description: Enables the modal to confirm the execution
+     */
     function showRunConfirmationModal() {
         setConfirmDialogTitle("Ejecutar tarea");
         setConfirmDialogText("¿Desea ejecutar la tarea ahora?");
