@@ -5,7 +5,7 @@ export default function LogsViewer(props: LogsViewerProps) {
     const { logs } = props;
 
     return (
-        <div className="max-h-[85vh] overflow-x-auto">
+        <div className="md:aspect-video max-h-[60vh] md:max-h-full overflow-x-auto">
             <Table striped className="text-xs">
                 <Table.Head>
                     <Table.HeadCell>Hora y fecha</Table.HeadCell>

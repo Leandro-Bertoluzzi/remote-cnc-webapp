@@ -96,7 +96,7 @@ export default function TaskCard(props: TaskCardProps) {
         [TASK_ON_HOLD_STATUS]: [btnCancel, btnRun],
         [TASK_CANCELLED_STATUS]: [btnRemove, btnRestore],
         [TASK_IN_PROGRESS_STATUS]: [btnPause],
-        [TASK_FINISHED_STATUS]: [btnRepeat],
+        [TASK_FINISHED_STATUS]: [btnRepeat, btnRemove],
         [TASK_FAILED_STATUS]: [btnRetry],
     };
 

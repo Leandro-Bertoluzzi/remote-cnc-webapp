@@ -20,7 +20,6 @@ export default function Terminal(props: TerminalProps) {
         es.onerror = (e) => console.log("ERROR!", e);
 
         es.addEventListener("grbl_messages", (event) => {
-            console.log(">>> ", event.data);
             if (event.data) {
                 updateMessages(JSON.parse(event.data));
             }
@@ -31,7 +30,7 @@ export default function Terminal(props: TerminalProps) {
 
     // Actions
     const updateMessages = (data: GrblMessage) => {
-        setMessages([...messages, data.message]);
+        setMessages(oldMessages => [...oldMessages, data.message]);
     };
 
     const sendCommand = () => {
@@ -43,7 +42,7 @@ export default function Terminal(props: TerminalProps) {
 
     // Render
     return (
-        <div className="flex aspect-video flex-col overflow-x-auto rounded-lg bg-black">
+        <div className="flex md:aspect-video max-h-[60vh] md:max-h-full flex-col overflow-x-auto rounded-lg bg-black">
             <div className="m-4 grow overflow-y-scroll text-sm text-lime-600">
                 {messages.length === 0 && <div>Esperando mensajes...</div>}
                 {messages.map((message, key) => (
