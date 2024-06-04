@@ -3,10 +3,13 @@ import GrblMessage from "@/types/GrblMessage";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import TerminalProps from "@/types/TerminalProps";
 import { TextInput, Button } from "flowbite-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Terminal(props: TerminalProps) {
     const { sender } = props;
+
+    // Referencies
+    const messagesContainer = useRef<HTMLDivElement>(null);
 
     // State
     const [messages, setMessages] = useState<string[]>([]);
@@ -31,6 +34,9 @@ export default function Terminal(props: TerminalProps) {
     // Actions
     const updateMessages = (data: GrblMessage) => {
         setMessages(oldMessages => [...oldMessages, data.message]);
+
+        // Scroll terminal up to last added element
+        messagesContainer.current?.scrollTo(0, messagesContainer.current?.scrollHeight);
     };
 
     const sendCommand = () => {
@@ -43,10 +49,10 @@ export default function Terminal(props: TerminalProps) {
     // Render
     return (
         <div className="flex md:aspect-video max-h-[60vh] md:max-h-full flex-col overflow-x-auto rounded-lg bg-black">
-            <div className="m-4 grow overflow-y-scroll text-sm text-lime-600">
+            <div ref={messagesContainer} className="m-4 grow overflow-y-scroll text-sm text-lime-600">
                 {messages.length === 0 && <div>Esperando mensajes...</div>}
-                {messages.map((message, key) => (
-                    <div key={key}>{`> ${message}`}</div>
+                {messages.map((message, index) => (
+                    <div key={index}>{`> ${message}`}</div>
                 ))}
             </div>
             {sender && (
