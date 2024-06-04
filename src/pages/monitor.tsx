@@ -83,11 +83,11 @@ export default function MonitorView() {
                 <div className="container mx-auto px-4">
                     <div className="rounded-xl border bg-white p-4">
                         <h2 className="mb-4 text-center text-3xl font-semibold">Monitor</h2>
-                        <div className="grid gap-2 md:grid-cols-2">
+                        <div className="grid gap-2 lg:grid-cols-2">
                             <ControllerStatus />
-                            <LogsViewer logs={logs} />
-                            <CameraWidget />
                             <Terminal />
+                            <CameraWidget />
+                            <LogsViewer logs={logs} />
                         </div>
                     </div>
                 </div>

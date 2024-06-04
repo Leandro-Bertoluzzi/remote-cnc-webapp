@@ -29,6 +29,9 @@ export default function ControllerStatus() {
     const [tool, setTool] = useState<string>("");
     const [feedrate, setFeedrate] = useState<number>(0.0);
     const [spindle, setSpindle] = useState<number>(0.0);
+    const [totalLines, setTotalLines] = useState<number>(0);
+    const [sentLines, setSentLines] = useState<number>(0);
+    const [processedLines, setProcessedLines] = useState<number>(0);
 
     useEffect(() => {
         const es = getEventSource("grbl_status");
@@ -37,7 +40,6 @@ export default function ControllerStatus() {
         es.onerror = (e) => console.log("ERROR!", e);
 
         es.addEventListener("grbl_status", (event) => {
-            console.log(">>> ", event.data);
             if (event.data) {
                 updateStatus(JSON.parse(event.data));
             }
@@ -51,6 +53,16 @@ export default function ControllerStatus() {
             setStatus(data.status.activeState);
             setMpos(data.status.mpos);
             setWpos(data.status.wpos);
+        }
+
+        if (data.sent_lines) {
+            setSentLines(data.sent_lines);
+        }
+        if (data.processed_lines) {
+            setProcessedLines(data.processed_lines);
+        }
+        if (data.total_lines) {
+            setTotalLines(data.total_lines);
         }
 
         if (data.parserstate) {
@@ -93,8 +105,8 @@ export default function ControllerStatus() {
                     <div>{`Velocidad de husillo: ${spindle}`}</div>
                 </div>
             </div>
-            <ProgressBar value={50} label="Enviado" />
-            <ProgressBar value={15} label="Procesado" />
+            <ProgressBar value={sentLines} total={totalLines} label="Enviado" />
+            <ProgressBar value={processedLines} total={totalLines} label="Procesado" />
             <ModalStatus modal={modal} />
         </div>
     );

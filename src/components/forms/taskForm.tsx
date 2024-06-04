@@ -59,7 +59,7 @@ export default function TaskForm(props: TaskFormProps) {
     };
 
     const handleTaskFileChange = (fileId: number) => {
-        setTaskMaterial(fileId);
+        setTaskFile(fileId);
     };
 
     const handleTaskNoteChange = (taskNote: string) => {
