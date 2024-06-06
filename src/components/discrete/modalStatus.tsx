@@ -24,9 +24,11 @@ export function ModalStatus(props: { modal: ModalState }) {
             <Badge color="indigo" size="sm">
                 {modal.feedrate}
             </Badge>
-            <Badge color="purple" size="sm">
-                {modal.program}
-            </Badge>
+            {modal.program && (
+                <Badge color="purple" size="sm">
+                    {modal.program}
+                </Badge>
+            )}
             <Badge color="pink" size="sm">
                 {modal.spindle}
             </Badge>
