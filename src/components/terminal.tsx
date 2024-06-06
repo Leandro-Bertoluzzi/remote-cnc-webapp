@@ -1,6 +1,6 @@
 import { getEventSource } from "@/services/apiService";
 import GrblMessage from "@/types/GrblMessage";
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { VscSend } from "react-icons/vsc";
 import TerminalProps from "@/types/TerminalProps";
 import { TextInput, Button } from "flowbite-react";
 import { useState, useEffect, useRef } from "react";
@@ -43,7 +43,6 @@ export default function Terminal(props: TerminalProps) {
         // Send "text"
         console.log(text);
         setText("");
-        return;
     };
 
     // Render
@@ -61,9 +60,13 @@ export default function Terminal(props: TerminalProps) {
                         placeholder="A command..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter")
+                                sendCommand();
+                        }}
                     />
                     <Button className="absolute right-1 top-1 z-10 h-8" onClick={sendCommand}>
-                        <PaperAirplaneIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                        <VscSend className="h-6 w-6 text-white" aria-hidden="true" />
                     </Button>
                 </div>
             )}

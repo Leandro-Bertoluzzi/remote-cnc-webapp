@@ -1,4 +1,4 @@
-import { ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
+import { BsInfoCircle, BsExclamationTriangle } from "react-icons/bs";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import { Modal, Button } from "flowbite-react";
 
@@ -13,24 +13,24 @@ export default function MessageDialog(props: MessageDialogProps) {
                     <div className="sm:flex sm:items-center">
                         {type == "info" && (
                             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <InformationCircleIcon
-                                    className="h-6 w-6 text-blue-600"
+                                <BsInfoCircle
+                                    className="h-5 w-5 text-blue-600"
                                     aria-hidden="true"
                                 />
                             </div>
                         )}
                         {type == "warning" && (
                             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <ExclamationTriangleIcon
-                                    className="h-6 w-6 text-yellow-600"
+                                <BsExclamationTriangle
+                                    className="h-5 w-5 text-yellow-600"
                                     aria-hidden="true"
                                 />
                             </div>
                         )}
                         {type == "error" && (
                             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <ExclamationTriangleIcon
-                                    className="h-6 w-6 text-red-600"
+                                <BsExclamationTriangle
+                                    className="h-5 w-5 text-red-600"
                                     aria-hidden="true"
                                 />
                             </div>

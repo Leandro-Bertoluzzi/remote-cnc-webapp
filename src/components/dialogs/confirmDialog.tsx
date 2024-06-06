@@ -1,4 +1,4 @@
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { BsExclamationTriangle } from "react-icons/bs";
 import ConfirmDialogProps from "@/types/ConfirmDialogProps";
 import { Modal, Button } from "flowbite-react";
 
@@ -12,8 +12,8 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-center">
                         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <ExclamationTriangleIcon
-                                className="h-6 w-6 text-yellow-600"
+                            <BsExclamationTriangle
+                                className="h-5 w-5 text-yellow-600"
                                 aria-hidden="true"
                             />
                         </div>

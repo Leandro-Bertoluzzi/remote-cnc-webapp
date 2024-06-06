@@ -25,7 +25,7 @@ const options: MenuOption[] = [
     {
         name: "Control manual y calibración",
         description: "",
-        path: "#",
+        path: "/control",
     },
     {
         name: "Administrar usuarios",
