@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import apiRequest from "../../services/apiService";
 import BaseForm from "./baseForm";
 import ItemsSelect from "../discrete/itemsSelect";
@@ -19,32 +19,21 @@ export default function TaskForm(props: TaskFormProps) {
         setNotification,
     } = props;
 
+    // Initialization
+    const initialName = taskInfo ? taskInfo.name : "";
+    const initialNote = taskInfo ? taskInfo.note : "";
+    const initialTool = taskInfo ? taskInfo.tool_id : toolsList[0]?.id;
+    const initialMaterial = taskInfo ? taskInfo.material_id : materialsList[0]?.id;
+    const initialFile = taskInfo ? taskInfo.file_id : filesList[0]?.id;
+
     // Hooks for state variables
-    const [taskName, setTaskName] = useState<string>();
-    const [taskTool, setTaskTool] = useState<number>();
-    const [taskMaterial, setTaskMaterial] = useState<number>();
-    const [taskFile, setTaskFile] = useState<number>();
-    const [taskNote, setTaskNote] = useState<string>();
+    const [taskName, setTaskName] = useState<string>(initialName);
+    const [taskNote, setTaskNote] = useState<string>(initialNote);
+    const [taskTool, setTaskTool] = useState<number>(initialTool);
+    const [taskMaterial, setTaskMaterial] = useState<number>(initialMaterial);
+    const [taskFile, setTaskFile] = useState<number>(initialFile);
 
-    // Action to execute at the beginning
-    useEffect(() => {
-        if (taskInfo) {
-            setTaskName(taskInfo.name);
-            setTaskTool(taskInfo.tool_id);
-            setTaskMaterial(taskInfo.material_id);
-            setTaskFile(taskInfo.file_id);
-            return;
-        }
-
-        if (!toolsList[0] || !materialsList[0] || !filesList[0]) {
-            return;
-        }
-
-        setTaskName("");
-        setTaskTool(toolsList[0].id);
-        setTaskMaterial(materialsList[0].id);
-        setTaskFile(filesList[0].id);
-    }, [taskInfo, toolsList, materialsList, filesList]);
+    // Event handlers
 
     const handleTaskNameChange = (taskName: string) => {
         setTaskName(taskName);
