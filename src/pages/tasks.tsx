@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-
 import apiRequest from "../services/apiService";
-import { getJwtToken } from "../services/storage";
 import CardsList from "../components/containers/cardsList";
 import EmptyCard from "../components/cards/emptyCard";
 import FileInfo from "../types/FileInfo";
+import Head from "next/head";
+import Loader from "@/components/discrete/loader";
 import Material from "../types/Material";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
@@ -14,7 +12,8 @@ import TaskCard from "../components/cards/taskCard";
 import TasksFilter from "../components/discrete/tasksFilter";
 import TaskForm from "../components/forms/taskForm";
 import Tool from "../types/Tool";
-import Head from "next/head";
+import useAuth from "@/hooks/useauth";
+import { useState, useEffect } from "react";
 
 const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 
@@ -27,32 +26,13 @@ export default function TasksView() {
 
     const [taskTypes, setTaskTypes] = useState<string[]>(DEFAULT_TASK_TYPES);
     const [showTaskForm, setShowTaskForm] = useState<boolean>(false);
-    const [isValidated, setIsValidated] = useState<boolean>(false);
     const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
     const [notification, setNotification] = useState<string>("");
     const [messageType, setMessageType] = useState<MessageDialogType>("error");
     const [messageTitle, setMessageTitle] = useState<string>("");
 
-    // Other hooks
-    const router = useRouter();
-
-    // Action to execute at the beginning
-    useEffect(() => {
-        const callbackUrl = "tasks";
-        const token = getJwtToken();
-
-        if (!token) {
-            router.push(`/login?callbackUrl=${callbackUrl}`);
-            return;
-        }
-
-        apiRequest("users/auth", "GET")
-            .then(() => {
-                setIsValidated(true);
-            })
-            .catch(() => router.push(`/login?callbackUrl=${callbackUrl}`));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // User authentication
+    const authorized = useAuth();
 
     /*  Function: showCreateTaskFormModal
      *   Description: Enables the modal to upload a new task
@@ -115,10 +95,10 @@ export default function TasksView() {
             }
         }
 
-        if (isValidated) {
+        if (authorized) {
             queryItems();
         }
-    }, [isValidated]);
+    }, [authorized]);
 
     // Methods
     const updateTaskStatusList = (status: string, add: boolean) => {
@@ -147,35 +127,39 @@ export default function TasksView() {
                 <title>Tasks</title>
                 <meta name="description" content="Tasks management" />
             </Head>
-            <CardsList
-                title="Tareas"
-                addItemBtnText="Crear tarea"
-                addItemBtnAction={showCreateTaskFormModal}
-                showAddItemBtn
-            >
-                {tasks.length === 0 ? (
-                    <EmptyCard itemName="tareas programadas" />
-                ) : (
-                    <>
-                        <TasksFilter
-                            filterStatus={taskTypes}
-                            updateTaskStatusList={updateTaskStatusList}
-                        />
-                        {tasks.map((task) => (
-                            <TaskCard
-                                key={task.id}
-                                task={task}
-                                show={taskTypes.includes(task.status)}
-                                toolsList={availableTools}
-                                materialsList={availableMaterials}
-                                filesList={availableFiles}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
+            {authorized ? (
+                <CardsList
+                    title="Tareas"
+                    addItemBtnText="Crear tarea"
+                    addItemBtnAction={showCreateTaskFormModal}
+                    showAddItemBtn
+                >
+                    {tasks.length === 0 ? (
+                        <EmptyCard itemName="tareas programadas" />
+                    ) : (
+                        <>
+                            <TasksFilter
+                                filterStatus={taskTypes}
+                                updateTaskStatusList={updateTaskStatusList}
                             />
-                        ))}
-                    </>
-                )}
-            </CardsList>
+                            {tasks.map((task) => (
+                                <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    show={taskTypes.includes(task.status)}
+                                    toolsList={availableTools}
+                                    materialsList={availableMaterials}
+                                    filesList={availableFiles}
+                                    setError={showErrorDialog}
+                                    setNotification={showNotification}
+                                />
+                            ))}
+                        </>
+                    )}
+                </CardsList>
+            ) : (
+                <Loader />
+            )}
             {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}

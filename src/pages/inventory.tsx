@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-
 import apiRequest from "../services/apiService";
-import { getJwtToken } from "../services/storage";
 import CardsList from "../components/containers/cardsList";
 import EmptyCard from "../components/cards/emptyCard";
+import Head from "next/head";
+import Loader from "@/components/discrete/loader";
 import Material from "../types/Material";
 import MaterialCard from "../components/cards/materialCard";
 import MaterialForm from "../components/forms/materialForm";
@@ -13,7 +11,8 @@ import { MessageDialogType } from "@/types/MessageDialogProps";
 import Tool from "../types/Tool";
 import ToolCard from "../components/cards/toolCard";
 import ToolForm from "../components/forms/toolForm";
-import Head from "next/head";
+import useAuth from "@/hooks/useauth";
+import { useState, useEffect } from "react";
 
 export default function InventoryView() {
     // Hooks for state variables
@@ -21,32 +20,13 @@ export default function InventoryView() {
     const [showToolForm, setShowToolForm] = useState<boolean>(false);
     const [materials, setMaterials] = useState<Material[]>([]);
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
-    const [isValidated, setIsValidated] = useState<boolean>(false);
     const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
     const [notification, setNotification] = useState<string>("");
     const [messageType, setMessageType] = useState<MessageDialogType>("error");
     const [messageTitle, setMessageTitle] = useState<string>("");
 
-    // Other hooks
-    const router = useRouter();
-
-    // Action to execute at the beginning
-    useEffect(() => {
-        const callbackUrl = "inventory";
-        const token = getJwtToken();
-
-        if (!token) {
-            router.push(`/login?callbackUrl=${callbackUrl}`);
-            return;
-        }
-
-        apiRequest("users/auth", "GET")
-            .then(() => {
-                setIsValidated(true);
-            })
-            .catch(() => router.push(`/login?callbackUrl=${callbackUrl}`));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // User authentication
+    const authorized = useAuth();
 
     /*  Function: showCreateToolFormModal
      *   Description: Enables the modal to upload a new tool
@@ -119,10 +99,10 @@ export default function InventoryView() {
             }
         }
 
-        if (isValidated) {
+        if (authorized) {
             queryItems();
         }
-    }, [isValidated]);
+    }, [authorized]);
 
     return (
         <>
@@ -130,49 +110,55 @@ export default function InventoryView() {
                 <title>Inventory</title>
                 <meta name="description" content="Inventory management" />
             </Head>
-            <CardsList
-                title="Herramientas"
-                addItemBtnText="Agregar herramienta"
-                addItemBtnAction={showCreateToolFormModal}
-                showAddItemBtn
-            >
-                {tools.length === 0 ? (
-                    <EmptyCard itemName="herramientas configuradas" />
-                ) : (
-                    <>
-                        {tools.map((tool) => (
-                            <ToolCard
-                                key={tool.id}
-                                tool={tool}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
-                            />
-                        ))}
-                    </>
-                )}
-            </CardsList>
+            {authorized ? (
+                <>
+                    <CardsList
+                        title="Herramientas"
+                        addItemBtnText="Agregar herramienta"
+                        addItemBtnAction={showCreateToolFormModal}
+                        showAddItemBtn
+                    >
+                        {tools.length === 0 ? (
+                            <EmptyCard itemName="herramientas configuradas" />
+                        ) : (
+                            <>
+                                {tools.map((tool) => (
+                                    <ToolCard
+                                        key={tool.id}
+                                        tool={tool}
+                                        setError={showErrorDialog}
+                                        setNotification={showNotification}
+                                    />
+                                ))}
+                            </>
+                        )}
+                    </CardsList>
 
-            <CardsList
-                title="Materiales"
-                addItemBtnText="Agregar material"
-                addItemBtnAction={showCreateMaterialFormModal}
-                showAddItemBtn
-            >
-                {materials.length === 0 ? (
-                    <EmptyCard itemName="materiales guardados" />
-                ) : (
-                    <>
-                        {materials.map((material) => (
-                            <MaterialCard
-                                key={material.id}
-                                material={material}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
-                            />
-                        ))}
-                    </>
-                )}
-            </CardsList>
+                    <CardsList
+                        title="Materiales"
+                        addItemBtnText="Agregar material"
+                        addItemBtnAction={showCreateMaterialFormModal}
+                        showAddItemBtn
+                    >
+                        {materials.length === 0 ? (
+                            <EmptyCard itemName="materiales guardados" />
+                        ) : (
+                            <>
+                                {materials.map((material) => (
+                                    <MaterialCard
+                                        key={material.id}
+                                        material={material}
+                                        setError={showErrorDialog}
+                                        setNotification={showNotification}
+                                    />
+                                ))}
+                            </>
+                        )}
+                    </CardsList>
+                </>
+            ) : (
+                <Loader />
+            )}
             {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
