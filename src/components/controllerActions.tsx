@@ -1,27 +1,37 @@
+import ActionsPanel from "./actionsPanel";
 import { HiAdjustments, HiClipboardList } from "react-icons/hi";
+import Joystick from "./joystick";
 import { MdOutlineGamepad } from "react-icons/md";
+import PortsList from "./discrete/portsList";
 import TabGroup from "./containers/tabGroup";
 
 const tabs = [
     {
         title: "Acciones",
         icon: HiAdjustments,
-        content: <>Acciones de control...</>
+        content: (
+            <>
+                <PortsList />
+                <ActionsPanel />
+            </>
+        ),
     },
     {
         title: "Macros",
         icon: HiClipboardList,
-        content: <>Algunas macros...</>
+        content: <>Algunas macros...</>,
     },
     {
         title: "Joystick",
         icon: MdOutlineGamepad,
-        content: <>Modo jogging...</>
+        content: (
+            <>
+                <Joystick />
+            </>
+        ),
     },
-]
+];
 
 export default function ControllerActions() {
-    return (
-        <TabGroup items={tabs} />
-    );
+    return <TabGroup items={tabs} />;
 }

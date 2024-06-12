@@ -1,3 +1,4 @@
+import apiRequest from "@/services/apiService";
 import { getEventSource } from "@/services/apiService";
 import GrblMessage from "@/types/GrblMessage";
 import { VscSend } from "react-icons/vsc";
@@ -33,22 +34,29 @@ export default function Terminal(props: TerminalProps) {
 
     // Actions
     const updateMessages = (data: GrblMessage) => {
-        setMessages(oldMessages => [...oldMessages, data.message]);
+        setMessages((oldMessages) => [...oldMessages, data.message]);
 
         // Scroll terminal up to last added element
         messagesContainer.current?.scrollTo(0, messagesContainer.current?.scrollHeight);
     };
 
+    /*  Function: sendCommand
+     *   Description: Requests the API to execute the command
+     */
     const sendCommand = () => {
-        // Send "text"
-        console.log(text);
+        apiRequest("cnc/command", "POST", { command: text }, true)
+            .then((response) => console.log("SUCCESS: ", response))
+            .catch((error) => console.log("ERROR: ", error));
         setText("");
     };
 
     // Render
     return (
-        <div className="flex md:aspect-video max-h-[60vh] md:max-h-full flex-col overflow-x-auto rounded-lg bg-black">
-            <div ref={messagesContainer} className="m-4 grow overflow-y-scroll text-sm text-lime-600">
+        <div className="flex max-h-[60vh] flex-col overflow-x-auto rounded-lg bg-black md:aspect-video md:max-h-full">
+            <div
+                ref={messagesContainer}
+                className="m-4 grow overflow-y-scroll text-sm text-lime-600"
+            >
                 {messages.length === 0 && <div>Esperando mensajes...</div>}
                 {messages.map((message, index) => (
                     <div key={index}>{`> ${message}`}</div>
@@ -61,8 +69,7 @@ export default function Terminal(props: TerminalProps) {
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === "Enter")
-                                sendCommand();
+                            if (e.key === "Enter") sendCommand();
                         }}
                     />
                     <Button className="absolute right-1 top-1 z-10 h-8" onClick={sendCommand}>
