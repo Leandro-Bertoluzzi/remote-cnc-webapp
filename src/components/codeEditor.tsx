@@ -8,28 +8,67 @@ import {
 } from "react-icons/md";
 import { RiUploadCloud2Line, RiDownloadCloud2Line } from "react-icons/ri";
 import ToolBar from "./containers/toolBar";
-import { useState } from "react";
+import { useRef, useState, ChangeEvent } from "react";
 
-function CodeEditorToolBar() {
+// Type definitions
+interface CodeEditorToolBarProps {
+    updateContent: (text: string) => void;
+    content: string;
+}
+
+function CodeEditorToolBar(props: CodeEditorToolBarProps) {
+    const { updateContent, content } = props;
+
+    // References
+    const refImport = useRef<HTMLInputElement>(null);
+    const refExport = useRef<HTMLAnchorElement>(null);
+
+    // Handlers
+    function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+        event.stopPropagation();
+        if (event.target.files) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                updateContent(reader.result?.toString() || "");
+            };
+            reader.readAsText(event.target.files[0]);
+        }
+    }
+
     // Actions
     const newFile = () => {
-        console.log("Creado");
+        updateContent("");
     };
+
     const openFile = () => {
         console.log("Abierto");
     };
+
     const saveFile = () => {
         console.log("Guardado");
     };
+
     const saveFileAs = () => {
         console.log("Guardado (como)");
     };
+
     const importFile = () => {
-        console.log("Importado");
+        refImport.current?.click();
     };
+
     const exportFile = () => {
-        console.log("Exportado");
+        const anchor = refExport.current;
+        if (!anchor) return;
+
+        anchor.download = "export.gcode";
+        const blob = new Blob([content]);
+        anchor.href = URL.createObjectURL(blob);
+        anchor.addEventListener("click", () => {
+            setTimeout(() => URL.revokeObjectURL(anchor.href), 30 * 1000);
+        });
+        anchor.click();
     };
+
     const runFile = () => {
         console.log("Ejecutado");
     };
@@ -74,7 +113,13 @@ function CodeEditorToolBar() {
         },
     ];
 
-    return <ToolBar options={options} />;
+    return (
+        <>
+            <ToolBar options={options} />
+            <input ref={refImport} type="file" className="hidden" onChange={handleFileChange} />
+            <a ref={refExport} href="#" className="hidden" />
+        </>
+    );
 }
 
 export default function CodeEditor() {
@@ -86,7 +131,7 @@ export default function CodeEditor() {
 
     return (
         <div className="border border-neutral-500">
-            <CodeEditorToolBar />
+            <CodeEditorToolBar updateContent={handleChange} content={value} />
             <CodeMirror
                 value={value}
                 height="300px"
