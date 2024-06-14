@@ -1,5 +1,5 @@
 import { Navbar, Tooltip } from "flowbite-react";
-import { MouseEvent, ReactNode } from "react";
+import { ReactNode } from "react";
 
 // Type definitions
 interface ToolBarItemProps {
@@ -14,13 +14,12 @@ interface ToolBarItemProps {
 function ToolBarItem(props: ToolBarItemProps) {
     const { action, children, tooltip, disabled } = props;
 
-    const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault();
+    const handleClick = () => {
         action();
     };
 
     return (
-        <Navbar.Link href="#" onClick={handleClick} disabled={disabled}>
+        <Navbar.Link href="javascript:void(0);" onClick={handleClick} disabled={disabled}>
             <Tooltip content={tooltip}>{children}</Tooltip>
         </Navbar.Link>
     );
