@@ -5,19 +5,27 @@ import {
     MdSave,
     MdSaveAs,
     MdPlayCircleOutline,
+    MdPauseCircleOutline,
+    MdOutlineStopCircle
 } from "react-icons/md";
 import { RiUploadCloud2Line, RiDownloadCloud2Line } from "react-icons/ri";
 import ToolBar from "./containers/toolBar";
 import { useRef, useState, ChangeEvent } from "react";
+import apiRequest from "@/services/apiService";
 
 // Type definitions
 interface CodeEditorToolBarProps {
     updateContent: (text: string) => void;
+    setContentLocked: (locked: boolean) => void;
     content: string;
 }
 
 function CodeEditorToolBar(props: CodeEditorToolBarProps) {
-    const { updateContent, content } = props;
+    const { updateContent, setContentLocked, content } = props;
+
+    // State
+    const [paused, setPaused] = useState<boolean>(false);
+    const [running, setRunning] = useState<boolean>(false);
 
     // References
     const refImport = useRef<HTMLInputElement>(null);
@@ -34,6 +42,13 @@ function CodeEditorToolBar(props: CodeEditorToolBarProps) {
             reader.readAsText(event.target.files[0]);
         }
     }
+
+    // Auxiliary methods
+    const runFile = async () => {
+        for (const line of content.split(/\r?\n/)) {
+            await apiRequest("cnc/command", "POST", { command: line }, true);
+        }
+    };
 
     // Actions
     const newFile = () => {
@@ -69,8 +84,34 @@ function CodeEditorToolBar(props: CodeEditorToolBarProps) {
         anchor.click();
     };
 
-    const runFile = () => {
-        console.log("Ejecutado");
+    const startRunFile = () => {
+        setContentLocked(true);
+        setRunning(true);
+
+        runFile()
+            .then(() => {
+                console.log("Terminada la ejecución!");
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                setContentLocked(false);
+                setRunning(false);
+                setPaused(false);
+            });
+    };
+
+    const pauseRunFile = () => {
+        setPaused(true);
+        console.log("Pausado!");
+    };
+
+    const resumeRunFile = () => {
+        setPaused(false);
+        console.log("Retomado!");
+    };
+
+    const stopRunFile = () => {
+        console.log("Detenido!");
     };
 
     // Options
@@ -106,10 +147,15 @@ function CodeEditorToolBar(props: CodeEditorToolBarProps) {
             tooltip: "Exportar",
         },
         {
-            action: runFile,
-            children: <MdPlayCircleOutline size={20} />,
-            tooltip: "Ejecutar",
-            disabled: true,
+            action: running ? (paused ? resumeRunFile : pauseRunFile) : startRunFile,
+            children: running ? (paused ? <MdPlayCircleOutline size={20} /> : <MdPauseCircleOutline size={20} />) : <MdPlayCircleOutline size={20} />,
+            tooltip: running ? (paused ? "Retomar" : "Pausar") : "Ejecutar",
+        },
+        {
+            action: stopRunFile,
+            children: <MdOutlineStopCircle size={20} />,
+            tooltip: "Detener",
+            disabled: !running,
         },
     ];
 
@@ -123,15 +169,20 @@ function CodeEditorToolBar(props: CodeEditorToolBarProps) {
 }
 
 export default function CodeEditor() {
+    const [readonly, setReadOnly] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
 
     const handleChange = (text: string) => {
         setValue(text);
     };
 
+    const handleLockContent = (locked: boolean) => {
+        setReadOnly(locked);
+    };
+
     return (
         <div className="border border-neutral-500">
-            <CodeEditorToolBar updateContent={handleChange} content={value} />
+            <CodeEditorToolBar updateContent={handleChange} setContentLocked={handleLockContent} content={value} />
             <CodeMirror
                 value={value}
                 height="300px"
@@ -140,6 +191,7 @@ export default function CodeEditor() {
                     indentOnInput: false,
                 }}
                 onChange={handleChange}
+                readOnly={readonly}
             />
         </div>
     );

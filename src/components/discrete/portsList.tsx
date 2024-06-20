@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function PortsList() {
     const [connected, setConnected] = useState<boolean>(false);
+    const [waiting, setWaiting] = useState<boolean>(false);
     const [selectedPort, setSelectedPort] = useState<string>("");
 
     const ports = ["/dev/ttyUSB0", "/dev/example", "/dev/invalid"];
@@ -15,16 +16,20 @@ export default function PortsList() {
     };
 
     const handleConnect = () => {
+        setWaiting(true);
+
         if (connected) {
             apiRequest("cnc/server", "DELETE")
                 .then(() => setConnected(false))
-                .catch((error) => console.log("Hubo un error: ", error.message));
+                .catch((error) => console.log("Hubo un error: ", error.message))
+                .finally(() => setWaiting(false));
             return;
         }
 
         apiRequest("cnc/server", "POST")
             .then(() => setConnected(true))
-            .catch((error) => console.log("Hubo un error: ", error.message));
+            .catch((error) => console.log("Hubo un error: ", error.message))
+            .finally(() => setWaiting(false));
     };
 
     return (
@@ -38,7 +43,7 @@ export default function PortsList() {
             </Dropdown>
             <Button
                 color={connected ? "failure" : "success"}
-                disabled={!selectedPort}
+                disabled={!selectedPort || waiting}
                 onClick={() => handleConnect()}
                 size="md"
             >
