@@ -8,10 +8,6 @@ export default function LabeledTextArea(props: LabeledTextAreaProps) {
 
     // Methods
     const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        if (!e.target.value) {
-            return;
-        }
-
         handleChange(e.target.value);
     };
 

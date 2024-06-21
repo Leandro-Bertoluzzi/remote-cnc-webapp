@@ -8,10 +8,6 @@ export default function LabeledTextInput(props: LabeledTextInputProps) {
 
     // Methods
     const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.value) {
-            return;
-        }
-
         handleChange(e.target.value);
     };
 
