@@ -6,7 +6,7 @@ import {
     MdSaveAs,
     MdPlayCircleOutline,
     MdPauseCircleOutline,
-    MdOutlineStopCircle
+    MdOutlineStopCircle,
 } from "react-icons/md";
 import { RiUploadCloud2Line, RiDownloadCloud2Line } from "react-icons/ri";
 import ToolBar from "./containers/toolBar";
@@ -148,7 +148,15 @@ function CodeEditorToolBar(props: CodeEditorToolBarProps) {
         },
         {
             action: running ? (paused ? resumeRunFile : pauseRunFile) : startRunFile,
-            children: running ? (paused ? <MdPlayCircleOutline size={20} /> : <MdPauseCircleOutline size={20} />) : <MdPlayCircleOutline size={20} />,
+            children: running ? (
+                paused ? (
+                    <MdPlayCircleOutline size={20} />
+                ) : (
+                    <MdPauseCircleOutline size={20} />
+                )
+            ) : (
+                <MdPlayCircleOutline size={20} />
+            ),
             tooltip: running ? (paused ? "Retomar" : "Pausar") : "Ejecutar",
         },
         {
@@ -182,7 +190,11 @@ export default function CodeEditor() {
 
     return (
         <div className="border border-neutral-500">
-            <CodeEditorToolBar updateContent={handleChange} setContentLocked={handleLockContent} content={value} />
+            <CodeEditorToolBar
+                updateContent={handleChange}
+                setContentLocked={handleLockContent}
+                content={value}
+            />
             <CodeMirror
                 value={value}
                 height="300px"

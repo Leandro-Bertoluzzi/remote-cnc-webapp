@@ -15,10 +15,12 @@ export default function BaseForm(props: BaseFormProps) {
                     {subtitle && <p className="text-sm font-medium text-neutral-400">{subtitle}</p>}
                 </div>
             </Modal.Header>
-            <Modal.Body>{props.children}</Modal.Body>
-            <Modal.Footer>
-                <Button onClick={btnSubmitAction}>{btnSubmitText}</Button>
-            </Modal.Footer>
+            <Modal.Body>
+                <form onSubmit={btnSubmitAction} className="mx-auto flex max-w-md flex-col">
+                    {props.children}
+                    <Button type="submit">{btnSubmitText}</Button>
+                </form>
+            </Modal.Body>
         </Modal>
     );
 }
