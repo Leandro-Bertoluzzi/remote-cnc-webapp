@@ -1,7 +1,7 @@
 import { useState } from "react";
 import apiRequest from "../../services/apiService";
 import BaseForm from "./baseForm";
-import ItemsSelect from "../discrete/itemsSelect";
+import LabeledSelect from "../discrete/labeledSelect";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import TaskFormProps from "../../types/TaskFormProps";
@@ -39,16 +39,16 @@ export default function TaskForm(props: TaskFormProps) {
         setTaskName(taskName);
     };
 
-    const handleTaskToolChange = (toolId: number) => {
-        setTaskTool(toolId);
+    const handleTaskToolChange = (toolId: string) => {
+        setTaskTool(parseInt(toolId));
     };
 
-    const handleTaskMaterialChange = (materialId: number) => {
-        setTaskMaterial(materialId);
+    const handleTaskMaterialChange = (materialId: string) => {
+        setTaskMaterial(parseInt(materialId));
     };
 
-    const handleTaskFileChange = (fileId: number) => {
-        setTaskFile(fileId);
+    const handleTaskFileChange = (fileId: string) => {
+        setTaskFile(parseInt(fileId));
     };
 
     const handleTaskNoteChange = (taskNote: string) => {
@@ -123,30 +123,30 @@ export default function TaskForm(props: TaskFormProps) {
                 />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <ItemsSelect
+                <LabeledSelect
                     label="Herramienta"
                     name="task-tool"
-                    selectedOption={taskTool}
+                    initialValue={taskTool}
                     handleChange={handleTaskToolChange}
-                    items={toolsList}
+                    options={toolsList.map((tool) => {return {label: tool.name, value: tool.id}})}
                 />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <ItemsSelect
+                <LabeledSelect
                     label="Material"
                     name="task-material"
-                    selectedOption={taskMaterial}
+                    initialValue={taskMaterial}
                     handleChange={handleTaskMaterialChange}
-                    items={materialsList}
+                    options={materialsList.map((mat) => {return {label: mat.name, value: mat.id}})}
                 />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
-                <ItemsSelect
+                <LabeledSelect
                     label="Archivo"
                     name="task-file"
-                    selectedOption={taskFile}
+                    initialValue={taskFile}
                     handleChange={handleTaskFileChange}
-                    items={filesList}
+                    options={filesList.map((file) => {return {label: file.name, value: file.id}})}
                 />
             </div>
             <div className="mb-5 w-full overflow-x-auto">

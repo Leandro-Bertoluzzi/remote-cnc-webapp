@@ -4,7 +4,7 @@ import LabeledSelectProps from "../../types/LabeledSelectProps";
 
 export default function LabeledSelect(props: LabeledSelectProps) {
     // Props
-    const { handleChange, name, label, options, selectedOption } = props;
+    const { handleChange, name, label, options, initialValue } = props;
 
     // Methods
     const handleOptionChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -22,13 +22,13 @@ export default function LabeledSelect(props: LabeledSelectProps) {
             </div>
             <Select
                 id={`select-${name}`}
-                value={selectedOption}
+                value={initialValue}
                 onChange={handleOptionChange}
                 required
             >
                 {options.map((option) => (
-                    <option key={option} value={option}>
-                        {option}
+                    <option key={option.value} value={option.value}>
+                        {option.label}
                     </option>
                 ))}
             </Select>

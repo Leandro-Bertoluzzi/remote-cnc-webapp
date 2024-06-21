@@ -112,9 +112,12 @@ export default function UserForm(props: UserFormProps) {
                 <LabeledSelect
                     label="Rol de usuario"
                     name="user-role"
-                    selectedOption={userRole}
+                    initialValue={userRole}
                     handleChange={handleUserRoleChange}
-                    options={["user", "admin"]}
+                    options={[
+                        {label: "user", value: "user"},
+                        {label: "admin", value: "admin"}
+                    ]}
                 />
             </div>
         </BaseForm>
