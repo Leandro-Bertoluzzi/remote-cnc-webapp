@@ -8,10 +8,6 @@ export default function LabeledNumberInput(props: LabeledNumberInputProps) {
 
     // Methods
     const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.value) {
-            return;
-        }
-
         handleChange(parseFloat(e.target.value));
     };
 
