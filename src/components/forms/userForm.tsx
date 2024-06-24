@@ -115,8 +115,8 @@ export default function UserForm(props: UserFormProps) {
                     initialValue={userRole}
                     handleChange={handleUserRoleChange}
                     options={[
-                        {label: "user", value: "user"},
-                        {label: "admin", value: "admin"}
+                        { label: "user", value: "user" },
+                        { label: "admin", value: "admin" },
                     ]}
                 />
             </div>

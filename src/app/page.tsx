@@ -1,6 +1,8 @@
+"use client";
+
 import { Card } from "flowbite-react";
 import Loader from "@/components/discrete/loader";
-import MenuOption from "../types/MenuOption";
+import MenuOption from "@/types/MenuOption";
 import useAuth from "@/hooks/useauth";
 
 const options: MenuOption[] = [

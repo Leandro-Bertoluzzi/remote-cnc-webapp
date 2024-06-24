@@ -1,10 +1,11 @@
-import apiRequest from "../services/apiService";
-import CardsList from "../components/containers/cardsList";
-import EmptyCard from "../components/cards/emptyCard";
-import FileCard from "../components/cards/fileCard";
-import FileForm from "../components/forms/fileForm";
-import FileInfo from "../types/FileInfo";
-import Head from "next/head";
+"use client";
+
+import apiRequest from "@/services/apiService";
+import CardsList from "@/components/containers/cardsList";
+import EmptyCard from "@/components/cards/emptyCard";
+import FileCard from "@/components/cards/fileCard";
+import FileForm from "@/components/forms/fileForm";
+import FileInfo from "@/types/FileInfo";
 import Loader from "@/components/discrete/loader";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
@@ -81,10 +82,6 @@ export default function FilesView() {
 
     return (
         <>
-            <Head>
-                <title>Files</title>
-                <meta name="description" content="Files management" />
-            </Head>
             {authorized ? (
                 <CardsList
                     title="Archivos"

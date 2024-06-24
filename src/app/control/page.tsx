@@ -1,7 +1,8 @@
+"use client";
+
 import CodeEditor from "@/components/codeEditor";
 import ControllerActions from "@/components/controllerActions";
 import ControllerStatus from "@/components/controllerStatus";
-import Head from "next/head";
 import Loader from "@/components/discrete/loader";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
@@ -40,10 +41,6 @@ export default function ControlView() {
 
     return (
         <>
-            <Head>
-                <title>Control manual</title>
-                <meta name="description" content="Files management" />
-            </Head>
             <section data-section-id="1" className="overflow-hidden py-4">
                 <div className="container mx-auto px-4">
                     <div className="rounded-xl border bg-white p-4">

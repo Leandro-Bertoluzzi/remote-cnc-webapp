@@ -1,7 +1,8 @@
+"use client";
+
 import apiRequest from "@/services/apiService";
 import CameraWidget from "@/components/discrete/cameraWidget";
 import ControllerStatus from "@/components/controllerStatus";
-import Head from "next/head";
 import Loader from "@/components/discrete/loader";
 import Log from "@/types/Log";
 import LogsViewer from "@/components/discrete/logsViewer";
@@ -55,10 +56,6 @@ export default function MonitorView() {
 
     return (
         <>
-            <Head>
-                <title>Monitor</title>
-                <meta name="description" content="Files management" />
-            </Head>
             {authorized ? (
                 <section data-section-id="1" className="overflow-hidden py-4">
                     <div className="container mx-auto px-4">
