@@ -1,16 +1,17 @@
-import apiRequest from "../services/apiService";
-import CardsList from "../components/containers/cardsList";
-import EmptyCard from "../components/cards/emptyCard";
-import Head from "next/head";
+"use client";
+
+import apiRequest from "@/services/apiService";
+import CardsList from "@/components/containers/cardsList";
+import EmptyCard from "@/components/cards/emptyCard";
 import Loader from "@/components/discrete/loader";
-import Material from "../types/Material";
-import MaterialCard from "../components/cards/materialCard";
-import MaterialForm from "../components/forms/materialForm";
+import Material from "@/types/Material";
+import MaterialCard from "@/components/cards/materialCard";
+import MaterialForm from "@/components/forms/materialForm";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
-import Tool from "../types/Tool";
-import ToolCard from "../components/cards/toolCard";
-import ToolForm from "../components/forms/toolForm";
+import Tool from "@/types/Tool";
+import ToolCard from "@/components/cards/toolCard";
+import ToolForm from "@/components/forms/toolForm";
 import useAuth from "@/hooks/useauth";
 import { useState, useEffect } from "react";
 
@@ -106,10 +107,6 @@ export default function InventoryView() {
 
     return (
         <>
-            <Head>
-                <title>Inventory</title>
-                <meta name="description" content="Inventory management" />
-            </Head>
             {authorized ? (
                 <>
                     <CardsList

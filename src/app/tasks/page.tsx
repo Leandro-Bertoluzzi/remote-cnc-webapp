@@ -1,17 +1,18 @@
-import apiRequest from "../services/apiService";
-import CardsList from "../components/containers/cardsList";
-import EmptyCard from "../components/cards/emptyCard";
-import FileInfo from "../types/FileInfo";
-import Head from "next/head";
+"use client";
+
+import apiRequest from "@/services/apiService";
+import CardsList from "@/components/containers/cardsList";
+import EmptyCard from "@/components/cards/emptyCard";
+import FileInfo from "@/types/FileInfo";
 import Loader from "@/components/discrete/loader";
-import Material from "../types/Material";
+import Material from "@/types/Material";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { MessageDialogType } from "@/types/MessageDialogProps";
-import Task from "../types/Task";
-import TaskCard from "../components/cards/taskCard";
-import TasksFilter from "../components/discrete/tasksFilter";
-import TaskForm from "../components/forms/taskForm";
-import Tool from "../types/Tool";
+import Task from "@/types/Task";
+import TaskCard from "@/components/cards/taskCard";
+import TasksFilter from "@/components/discrete/tasksFilter";
+import TaskForm from "@/components/forms/taskForm";
+import Tool from "@/types/Tool";
 import useAuth from "@/hooks/useauth";
 import { useState, useEffect } from "react";
 
@@ -123,10 +124,6 @@ export default function TasksView() {
 
     return (
         <>
-            <Head>
-                <title>Tasks</title>
-                <meta name="description" content="Tasks management" />
-            </Head>
             {authorized ? (
                 <CardsList
                     title="Tareas"

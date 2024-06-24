@@ -128,7 +128,9 @@ export default function TaskForm(props: TaskFormProps) {
                     name="task-tool"
                     initialValue={taskTool}
                     handleChange={handleTaskToolChange}
-                    options={toolsList.map((tool) => {return {label: tool.name, value: tool.id}})}
+                    options={toolsList.map((tool) => {
+                        return { label: tool.name, value: tool.id };
+                    })}
                 />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
@@ -137,7 +139,9 @@ export default function TaskForm(props: TaskFormProps) {
                     name="task-material"
                     initialValue={taskMaterial}
                     handleChange={handleTaskMaterialChange}
-                    options={materialsList.map((mat) => {return {label: mat.name, value: mat.id}})}
+                    options={materialsList.map((mat) => {
+                        return { label: mat.name, value: mat.id };
+                    })}
                 />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
@@ -146,7 +150,9 @@ export default function TaskForm(props: TaskFormProps) {
                     name="task-file"
                     initialValue={taskFile}
                     handleChange={handleTaskFileChange}
-                    options={filesList.map((file) => {return {label: file.name, value: file.id}})}
+                    options={filesList.map((file) => {
+                        return { label: file.name, value: file.id };
+                    })}
                 />
             </div>
             <div className="mb-5 w-full overflow-x-auto">
