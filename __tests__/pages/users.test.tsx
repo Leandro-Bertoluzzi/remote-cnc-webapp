@@ -1,24 +1,20 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import UsersView from "@/pages/users";
-import apiRequest from "../../src/services/apiService";
-import { getJwtToken } from "../../src/services/storage";
-import mockRouter from "next-router-mock";
-import User from "../../src/types/User";
+import UsersView from "@/app/users/page";
+import apiRequest from "@/services/apiService";
+import User from "@/types/User";
 import UserCardProps from "@/types/UserCardProps";
 import UserFormProps from "@/types/UserFormProps";
 import MessageDialogProps from "@/types/MessageDialogProps";
+import useAuth from "@/hooks/useauth";
 
-// Mock Next.js router
-jest.mock("next/router", () => require("next-router-mock"));
+// Mock authentication
+jest.mock("@/hooks/useauth");
+const mockedAuth = jest.mocked(useAuth);
 
 // Mock apiRequest import
-jest.mock("../../src/services/apiService");
-const mockedApiRequest = apiRequest as jest.MockedFunction<typeof apiRequest>;
-
-// Mock getJwtToken import
-jest.mock("../../src/services/storage");
-const mockedGetJwtToken = getJwtToken as jest.MockedFunction<typeof getJwtToken>;
+jest.mock("@/services/apiService");
+const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const users: User[] = [
@@ -81,7 +77,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 
 describe("UsersView", () => {
     beforeEach(() => {
-        mockRouter.setCurrentUrl("/");
+        mockedAuth.mockImplementation(() => true);
     });
 
     afterEach(() => {
@@ -89,16 +85,8 @@ describe("UsersView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(users))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
         render(<UsersView />);
@@ -114,63 +102,27 @@ describe("UsersView", () => {
         expect(button).toBeInTheDocument();
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(2);
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
-    });
-
-    it("redirects to login because of no token", () => {
-        // Mock implementations of functions
-        mockedGetJwtToken.mockImplementation(() => "");
-
-        // Instantiate widget under test
-        render(<UsersView />);
-
-        // Assert calls to API
-        expect(apiRequest).not.toHaveBeenCalled();
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=users",
-            pathname: "/login",
-            query: { callbackUrl: "users" },
-        });
-    });
-
-    it("redirects to login because of auth fails", async () => {
-        // Mock implementations of functions
-        mockedApiRequest.mockRejectedValue(new Error("Token inválido, vuelva a loguearse"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
-
-        // Instantiate widget under test
-        render(<UsersView />);
-
-        // Assert calls to API
         expect(apiRequest).toHaveBeenCalledTimes(1);
-        await expect(apiRequest).rejects.toEqual(Error("Token inválido, vuelva a loguearse"));
+    });
 
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=users",
-            pathname: "/login",
-            query: { callbackUrl: "users" },
-        });
+    it("renders the load screen before authenticating", async () => {
+        // Mock authentication hook
+        mockedAuth.mockReturnValue(false);
+
+        // Instantiate widget under test
+        render(<UsersView />);
+
+        // Assert components in widget
+        const loader = screen.queryByTestId("loader");
+        expect(loader).toBeInTheDocument();
+
+        // Assert calls to API
+        expect(apiRequest).toHaveBeenCalledTimes(0);
     });
 
     it("notifies error querying users from API", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockRejectedValueOnce(new Error("Error retornando usuarios"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando usuarios"));
 
         // Instantiate widget under test
         render(<UsersView />);
@@ -191,16 +143,8 @@ describe("UsersView", () => {
     });
 
     it("opens the form to upload a new user", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(users))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
         render(<UsersView />);
@@ -226,16 +170,8 @@ describe("UsersView", () => {
     });
 
     it("notifies error from child component", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(users))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
         render(<UsersView />);
@@ -264,16 +200,8 @@ describe("UsersView", () => {
     });
 
     it("notifies success from child component", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(users))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
         render(<UsersView />);

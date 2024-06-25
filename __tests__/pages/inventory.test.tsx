@@ -1,27 +1,23 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import InventoryView from "@/pages/inventory";
-import apiRequest from "../../src/services/apiService";
-import { getJwtToken } from "../../src/services/storage";
-import mockRouter from "next-router-mock";
-import Tool from "../../src/types/Tool";
-import Material from "../../src/types/Material";
+import InventoryView from "@/app/inventory/page";
+import apiRequest from "@/services/apiService";
+import Tool from "@/types/Tool";
+import Material from "@/types/Material";
 import MaterialCardProps from "@/types/MaterialCardProps";
 import MaterialFormProps from "@/types/MaterialFormProps";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import ToolCardProps from "@/types/ToolCardProps";
 import ToolFormProps from "@/types/ToolFormProps";
+import useAuth from "@/hooks/useauth";
 
-// Mock Next.js router
-jest.mock("next/router", () => require("next-router-mock"));
+// Mock authentication
+jest.mock("@/hooks/useauth");
+const mockedAuth = jest.mocked(useAuth);
 
 // Mock apiRequest import
-jest.mock("../../src/services/apiService");
-const mockedApiRequest = apiRequest as jest.MockedFunction<typeof apiRequest>;
-
-// Mock getJwtToken import
-jest.mock("../../src/services/storage");
-const mockedGetJwtToken = getJwtToken as jest.MockedFunction<typeof getJwtToken>;
+jest.mock("@/services/apiService");
+const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const tools: Tool[] = [
@@ -123,7 +119,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 
 describe("InventoryView", () => {
     beforeEach(() => {
-        mockRouter.setCurrentUrl("/");
+        mockedAuth.mockReturnValue(true);
     });
 
     afterEach(() => {
@@ -131,19 +127,8 @@ describe("InventoryView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(materials))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tools))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
         render(<InventoryView />);
@@ -168,66 +153,27 @@ describe("InventoryView", () => {
         expect(buttonTool).toBeInTheDocument();
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(3);
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
+        expect(apiRequest).toHaveBeenCalledTimes(2);
     });
 
-    it("redirects to login because of no token", () => {
-        // Mock implementations of functions
-        mockedGetJwtToken.mockImplementation(() => "");
+    it("renders the load screen before authenticating", async () => {
+        // Mock authentication hook
+        mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
         render(<InventoryView />);
 
-        // Assert calls to API
-        expect(apiRequest).not.toHaveBeenCalled();
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=inventory",
-            pathname: "/login",
-            query: { callbackUrl: "inventory" },
-        });
-    });
-
-    it("redirects to login because of auth fails", async () => {
-        // Mock implementations of functions
-        mockedApiRequest.mockRejectedValue(new Error("Token inválido, vuelva a loguearse"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
-
-        // Instantiate widget under test
-        render(<InventoryView />);
+        // Assert components in widget
+        const loader = screen.queryByTestId("loader");
+        expect(loader).toBeInTheDocument();
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(1);
-        await expect(apiRequest).rejects.toEqual(Error("Token inválido, vuelva a loguearse"));
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=inventory",
-            pathname: "/login",
-            query: { callbackUrl: "inventory" },
-        });
+        expect(apiRequest).toHaveBeenCalledTimes(0);
     });
 
     it("renders the view with no tools", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(materials))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce([]);
 
         // Instantiate widget under test
         render(<InventoryView />);
@@ -242,17 +188,8 @@ describe("InventoryView", () => {
     });
 
     it("renders the view with no materials", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tools))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce([]).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
         render(<InventoryView />);
@@ -267,14 +204,8 @@ describe("InventoryView", () => {
     });
 
     it("notifies error querying items from API", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockRejectedValueOnce(new Error("Error retornando materiales"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando materiales"));
 
         // Instantiate widget under test
         render(<InventoryView />);
@@ -295,19 +226,8 @@ describe("InventoryView", () => {
     });
 
     it("opens the form to upload a new tool", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(materials))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tools))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
         render(<InventoryView />);
@@ -333,19 +253,8 @@ describe("InventoryView", () => {
     });
 
     it("opens the form to upload a new material", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(materials))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tools))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
         render(<InventoryView />);
@@ -371,19 +280,8 @@ describe("InventoryView", () => {
     });
 
     it("notifies error from child component", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(materials))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tools))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
         render(<InventoryView />);
@@ -412,19 +310,8 @@ describe("InventoryView", () => {
     });
 
     it("notifies success from child component", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(materials))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tools))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
         render(<InventoryView />);

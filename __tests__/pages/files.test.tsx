@@ -1,24 +1,20 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import FilesView from "@/pages/files";
-import apiRequest from "../../src/services/apiService";
-import { getJwtToken } from "../../src/services/storage";
-import mockRouter from "next-router-mock";
-import FileInfo from "../../src/types/FileInfo";
+import FilesView from "@/app/files/page";
+import apiRequest from "@/services/apiService";
+import FileInfo from "@/types/FileInfo";
 import FileCardProps from "@/types/FileCardProps";
 import FileFormProps from "@/types/FileFormProps";
 import MessageDialogProps from "@/types/MessageDialogProps";
+import useAuth from "@/hooks/useauth";
 
-// Mock Next.js router
-jest.mock("next/router", () => require("next-router-mock"));
+// Mock authentication
+jest.mock("@/hooks/useauth");
+const mockedAuth = jest.mocked(useAuth);
 
 // Mock apiRequest import
-jest.mock("../../src/services/apiService");
-const mockedApiRequest = apiRequest as jest.MockedFunction<typeof apiRequest>;
-
-// Mock getJwtToken import
-jest.mock("../../src/services/storage");
-const mockedGetJwtToken = getJwtToken as jest.MockedFunction<typeof getJwtToken>;
+jest.mock("@/services/apiService");
+const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const files: FileInfo[] = [
@@ -77,7 +73,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 
 describe("FilesView", () => {
     beforeEach(() => {
-        mockRouter.setCurrentUrl("/");
+        mockedAuth.mockReturnValue(true);
     });
 
     afterEach(() => {
@@ -85,16 +81,8 @@ describe("FilesView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(files))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(files);
 
         // Instantiate widget under test
         render(<FilesView />);
@@ -110,63 +98,27 @@ describe("FilesView", () => {
         expect(button).toBeInTheDocument();
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(2);
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
-    });
-
-    it("redirects to login because of no token", () => {
-        // Mock implementations of functions
-        mockedGetJwtToken.mockImplementation(() => "");
-
-        // Instantiate widget under test
-        render(<FilesView />);
-
-        // Assert calls to API
-        expect(apiRequest).not.toHaveBeenCalled();
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=files",
-            pathname: "/login",
-            query: { callbackUrl: "files" },
-        });
-    });
-
-    it("redirects to login because of auth fails", async () => {
-        // Mock implementations of functions
-        mockedApiRequest.mockRejectedValue(new Error("Token inválido, vuelva a loguearse"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
-
-        // Instantiate widget under test
-        render(<FilesView />);
-
-        // Assert calls to API
         expect(apiRequest).toHaveBeenCalledTimes(1);
-        await expect(apiRequest).rejects.toEqual(Error("Token inválido, vuelva a loguearse"));
+    });
 
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=files",
-            pathname: "/login",
-            query: { callbackUrl: "files" },
-        });
+    it("renders the load screen before authenticating", async () => {
+        // Mock authentication hook
+        mockedAuth.mockReturnValue(false);
+
+        // Instantiate widget under test
+        render(<FilesView />);
+
+        // Assert components in widget
+        const loader = screen.queryByTestId("loader");
+        expect(loader).toBeInTheDocument();
+
+        // Assert calls to API
+        expect(apiRequest).toHaveBeenCalledTimes(0);
     });
 
     it("renders the view with no files", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce([]);
 
         // Instantiate widget under test
         render(<FilesView />);
@@ -183,14 +135,8 @@ describe("FilesView", () => {
     });
 
     it("notifies error querying files from API", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockRejectedValueOnce(new Error("Error retornando archivos"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando archivos"));
 
         // Instantiate widget under test
         render(<FilesView />);
@@ -211,16 +157,8 @@ describe("FilesView", () => {
     });
 
     it("opens the form to upload a new file", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(files))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(files);
 
         // Instantiate widget under test
         render(<FilesView />);
@@ -245,27 +183,12 @@ describe("FilesView", () => {
         expect(form).not.toBeInTheDocument();
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(2);
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
+        expect(apiRequest).toHaveBeenCalledTimes(1);
     });
 
     it("notifies error from child component", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(files))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(files);
 
         // Instantiate widget under test
         render(<FilesView />);
@@ -294,16 +217,8 @@ describe("FilesView", () => {
     });
 
     it("notifies success from child component", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(files))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockResolvedValueOnce(files);
 
         // Instantiate widget under test
         render(<FilesView />);
@@ -312,7 +227,7 @@ describe("FilesView", () => {
         const button = screen.getByText("Subir archivo");
         fireEvent.click(button);
 
-        // Trigger error notification
+        // Trigger success notification
         const successBtn = screen.getByText("Notify success");
         fireEvent.click(successBtn);
 

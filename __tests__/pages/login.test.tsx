@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import Login from "@/pages/login";
-import apiRequest from "../../src/services/apiService";
-import { setJwtToken } from "../../src/services/storage";
+import Login from "@/app/login/page";
+import apiRequest from "@/services/apiService";
+import { setJwtToken } from "@/services/storage";
 import mockRouter from "next-router-mock";
 import MessageDialogProps from "@/types/MessageDialogProps";
 
@@ -10,11 +10,11 @@ import MessageDialogProps from "@/types/MessageDialogProps";
 jest.mock("next/router", () => require("next-router-mock"));
 
 // Mock apiRequest import
-jest.mock("../../src/services/apiService");
+jest.mock("@/services/apiService");
 const mockedApiRequest = apiRequest as jest.MockedFunction<typeof apiRequest>;
 
 // Mock getJwtToken import
-jest.mock("../../src/services/storage");
+jest.mock("@/services/storage");
 const mockedSetJwtToken = setJwtToken as jest.MockedFunction<typeof setJwtToken>;
 
 // Mock child React components
@@ -57,7 +57,7 @@ describe("Login", () => {
     });
 
     it("notifies error querying the API", async () => {
-        // Mock implementations of functions
+        // Mock API calls
         mockedApiRequest.mockRejectedValue(new Error("Error durante login"));
 
         // Instantiate widget under test
@@ -93,7 +93,7 @@ describe("Login", () => {
     });
 
     test.each(["", "files"])("login success with callback URL %p", async (callbackUrl) => {
-        // Mock implementations of functions
+        // Mock API calls
         mockedApiRequest.mockImplementation(
             (url, method) =>
                 new Promise((resolve, reject) =>
