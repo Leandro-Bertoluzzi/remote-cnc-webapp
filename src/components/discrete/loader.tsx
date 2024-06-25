@@ -1,6 +1,6 @@
 export default function Loader() {
     return (
-        <div className="h-[32rem]">
+        <div data-testid="loader" className="h-[32rem]">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 200 200"

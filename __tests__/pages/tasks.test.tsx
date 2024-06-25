@@ -1,24 +1,20 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import TasksView from "@/pages/tasks";
-import apiRequest from "../../src/services/apiService";
-import { getJwtToken } from "../../src/services/storage";
-import mockRouter from "next-router-mock";
-import Task from "../../src/types/Task";
+import TasksView from "@/app/tasks/page";
+import apiRequest from "@/services/apiService";
+import Task from "@/types/Task";
 import TaskCardProps from "@/types/TaskCardProps";
 import TaskFormProps from "@/types/TaskFormProps";
 import MessageDialogProps from "@/types/MessageDialogProps";
+import useAuth from "@/hooks/useauth";
 
-// Mock Next.js router
-jest.mock("next/router", () => require("next-router-mock"));
+// Mock authentication
+jest.mock("@/hooks/useauth");
+const mockedAuth = jest.mocked(useAuth);
 
 // Mock apiRequest import
-jest.mock("../../src/services/apiService");
-const mockedApiRequest = apiRequest as jest.MockedFunction<typeof apiRequest>;
-
-// Mock getJwtToken import
-jest.mock("../../src/services/storage");
-const mockedGetJwtToken = getJwtToken as jest.MockedFunction<typeof getJwtToken>;
+jest.mock("@/services/apiService");
+const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const tasks: Task[] = [
@@ -121,7 +117,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 
 describe("TasksView", () => {
     beforeEach(() => {
-        mockRouter.setCurrentUrl("/");
+        mockedAuth.mockReturnValue(true);
     });
 
     afterEach(() => {
@@ -129,26 +125,19 @@ describe("TasksView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock implementations of functions
+        // Mock API calls
         mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tasks))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+            .mockResolvedValueOnce([]) // files
+            .mockResolvedValueOnce([]) // materials
+            .mockResolvedValueOnce([]) // tools
+            .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
         render(<TasksView />);
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");
-        expect(taskCards).toHaveLength(3); // There should be 3 because of filter
+        expect(taskCards).toHaveLength(4);
         const notification = screen.queryByTestId("message-dialog");
         expect(notification).not.toBeInTheDocument();
         const form = screen.queryByTestId("task-form");
@@ -157,66 +146,31 @@ describe("TasksView", () => {
         expect(button).toBeInTheDocument();
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(5);
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
+        expect(apiRequest).toHaveBeenCalledTimes(4);
     });
 
-    it("redirects to login because of no token", () => {
-        // Mock implementations of functions
-        mockedGetJwtToken.mockImplementation(() => "");
+    it("renders the load screen before authenticating", async () => {
+        // Mock authentication hook
+        mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
         render(<TasksView />);
 
-        // Assert calls to API
-        expect(apiRequest).not.toHaveBeenCalled();
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=tasks",
-            pathname: "/login",
-            query: { callbackUrl: "tasks" },
-        });
-    });
-
-    it("redirects to login because of auth fails", async () => {
-        // Mock implementations of functions
-        mockedApiRequest.mockRejectedValue(new Error("Token inválido, vuelva a loguearse"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
-
-        // Instantiate widget under test
-        render(<TasksView />);
+        // Assert components in widget
+        const loader = screen.queryByTestId("loader");
+        expect(loader).toBeInTheDocument();
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(1);
-        await expect(apiRequest).rejects.toEqual(Error("Token inválido, vuelva a loguearse"));
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/login?callbackUrl=tasks",
-            pathname: "/login",
-            query: { callbackUrl: "tasks" },
-        });
+        expect(apiRequest).toHaveBeenCalledTimes(0);
     });
 
     it("renders the view with no tasks", async () => {
-        // Mock implementations of functions
+        // Mock API calls
         mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+            .mockResolvedValueOnce([]) // files
+            .mockResolvedValueOnce([]) // materials
+            .mockResolvedValueOnce([]) // tools
+            .mockResolvedValueOnce([]); // tasks
 
         // Instantiate widget under test
         render(<TasksView />);
@@ -233,14 +187,8 @@ describe("TasksView", () => {
     });
 
     it("notifies error querying items from API", async () => {
-        // Mock implementations of functions
-        mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockRejectedValue(new Error("Error en comunicación con API"));
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        // Mock API calls
+        mockedApiRequest.mockRejectedValue(new Error("Error en comunicación con API"));
 
         // Instantiate widget under test
         render(<TasksView />);
@@ -261,26 +209,19 @@ describe("TasksView", () => {
     });
 
     it("opens the form to upload a new task", async () => {
-        // Mock implementations of functions
+        // Mock API calls
         mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tasks))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+            .mockResolvedValueOnce([]) // files
+            .mockResolvedValueOnce([]) // materials
+            .mockResolvedValueOnce([]) // tools
+            .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
         render(<TasksView />);
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");
-        expect(taskCards).toHaveLength(3);
+        expect(taskCards).toHaveLength(4);
         const button = screen.getByText("Crear tarea");
         expect(button).toBeInTheDocument();
 
@@ -301,19 +242,12 @@ describe("TasksView", () => {
     });
 
     it("notifies error from child component", async () => {
-        // Mock implementations of functions
+        // Mock API calls
         mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tasks))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+            .mockResolvedValueOnce([]) // files
+            .mockResolvedValueOnce([]) // materials
+            .mockResolvedValueOnce([]) // tools
+            .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
         render(<TasksView />);
@@ -342,19 +276,12 @@ describe("TasksView", () => {
     });
 
     it("notifies success from child component", async () => {
-        // Mock implementations of functions
+        // Mock API calls
         mockedApiRequest
-            .mockImplementationOnce(
-                (url, method) =>
-                    new Promise((resolve, reject) => resolve("Mocked response from the API"))
-            )
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce((url, method) => new Promise((resolve, reject) => resolve([])))
-            .mockImplementationOnce(
-                (url, method) => new Promise((resolve, reject) => resolve(tasks))
-            );
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+            .mockResolvedValueOnce([]) // files
+            .mockResolvedValueOnce([]) // materials
+            .mockResolvedValueOnce([]) // tools
+            .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
         render(<TasksView />);

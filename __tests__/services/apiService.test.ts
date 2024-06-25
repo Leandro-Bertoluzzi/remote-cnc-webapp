@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import apiRequest from "@/services/apiService";
-import { getJwtToken } from "../../src/services/storage";
+import { getJwtToken } from "@/services/storage";
 
 // Mock config module
 jest.mock("@/config", () => ({
@@ -11,7 +11,7 @@ jest.mock("@/config", () => ({
 }));
 
 // Mock getJwtToken import
-jest.mock("../../src/services/storage");
+jest.mock("@/services/storage");
 const mockedGetJwtToken = getJwtToken as jest.MockedFunction<typeof getJwtToken>;
 
 describe("api service", () => {
