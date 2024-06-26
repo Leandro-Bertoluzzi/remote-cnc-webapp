@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import apiRequest from "@/services/apiService";
 import MessageDialog from "@/components/dialogs/messageDialog";
 import { setJwtToken } from "@/services/storage";
@@ -12,9 +12,12 @@ export default function Login() {
     const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
     const [notification, setNotification] = useState<string>("");
 
-    // Additional variables
+    // Navigation hooks
     const router = useRouter();
-    const callbackUrl = (router.query?.callbackUrl as string) ?? "/";
+    const searchParams = useSearchParams();
+
+    // Additional variables
+    const callbackUrl = searchParams.get("callbackUrl") ?? "/";
 
     const handleUploadClick = (email: string, password: string) => {
         const data = {

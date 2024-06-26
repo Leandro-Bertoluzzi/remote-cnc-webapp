@@ -77,7 +77,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 
 describe("UsersView", () => {
     beforeEach(() => {
-        mockedAuth.mockImplementation(() => true);
+        mockedAuth.mockReturnValue(true);
     });
 
     afterEach(() => {

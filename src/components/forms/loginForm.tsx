@@ -24,7 +24,11 @@ export default function LoginForm(props: LoginFormProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mx-auto mb-5 flex max-w-md flex-col">
+        <form
+            data-testid="login-form"
+            onSubmit={handleSubmit}
+            className="mx-auto mb-5 flex max-w-md flex-col"
+        >
             <TextInput
                 className="my-2"
                 onChange={handleEmailChange}
