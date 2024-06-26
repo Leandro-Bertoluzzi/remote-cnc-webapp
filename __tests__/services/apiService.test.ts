@@ -12,7 +12,7 @@ jest.mock("@/config", () => ({
 
 // Mock getJwtToken import
 jest.mock("@/services/storage");
-const mockedGetJwtToken = getJwtToken as jest.MockedFunction<typeof getJwtToken>;
+const mockedGetJwtToken = jest.mocked(getJwtToken);
 
 describe("api service", () => {
     it("successfull GET request", async () => {
@@ -25,7 +25,7 @@ describe("api service", () => {
                 json: () => Promise.resolve(mockResponse),
             })
         ) as jest.Mock;
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
 
         // Invoke function under test
         const response = await apiRequest("path", "GET");
@@ -50,7 +50,7 @@ describe("api service", () => {
                 json: () => Promise.resolve(mockResponse),
             })
         ) as jest.Mock;
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
 
         // Invoke function under test
         const response = await apiRequest("path?query=value", "GET");
@@ -78,7 +78,7 @@ describe("api service", () => {
                 json: () => Promise.resolve(mockResponse),
             })
         ) as jest.Mock;
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
 
         // Invoke function under test
         const response = await apiRequest("path", "POST", { data: "fake body" }, true);
@@ -106,7 +106,7 @@ describe("api service", () => {
                 json: () => Promise.resolve(mockResponse),
             })
         ) as jest.Mock;
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
 
         // Invoke function under test
         const response = await apiRequest("path", "POST", { data: "fake body" }, false);
@@ -124,7 +124,7 @@ describe("api service", () => {
     it("error during request", async () => {
         // Mock involved functions
         global.fetch = jest.fn(() => Promise.reject("An error")) as jest.Mock;
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
 
         // Invoke function under test and assert error
         await expect(apiRequest("path", "GET")).rejects.toEqual(
@@ -143,7 +143,7 @@ describe("api service", () => {
                 json: () => Promise.resolve(mockResponse),
             })
         ) as jest.Mock;
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
 
         // Invoke function under test and assert error
         await expect(apiRequest("path", "GET")).rejects.toEqual(
@@ -161,7 +161,7 @@ describe("api service", () => {
                 json: () => Promise.resolve({}),
             })
         ) as jest.Mock;
-        mockedGetJwtToken.mockImplementation(() => "VALID_TOKEN");
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
 
         // Invoke function under test and assert error
         await expect(apiRequest("path", "GET")).rejects.toEqual(Error("404 Not found"));

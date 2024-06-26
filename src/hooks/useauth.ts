@@ -12,7 +12,7 @@ export default function useAuth() {
 
     useEffect(() => {
         // Get JWT token and the current URL without the initial slash (/)
-        const callbackUrl = path?.substring(1) || "";
+        const callbackUrl = path.substring(1) || "";
         const token = getJwtToken();
 
         if (!token) {

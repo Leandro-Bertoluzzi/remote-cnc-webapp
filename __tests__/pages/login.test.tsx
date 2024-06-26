@@ -3,19 +3,32 @@ import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import Login from "@/app/login/page";
 import apiRequest from "@/services/apiService";
 import { setJwtToken } from "@/services/storage";
-import mockRouter from "next-router-mock";
 import MessageDialogProps from "@/types/MessageDialogProps";
+import { useRouter } from "next/navigation";
 
-// Mock Next.js router
-jest.mock("next/router", () => require("next-router-mock"));
+// Mock navigation hooks
+const mockRouterPush = jest.fn();
+const mockGetSearchParams = jest.fn().mockReturnValue("");
+jest.mock("next/navigation", () => {
+    return {
+        __esModule: true,
+        useRouter: () => ({
+            push: mockRouterPush,
+            replace: jest.fn(),
+            prefetch: jest.fn(),
+        }),
+        useSearchParams: () => ({
+            get: mockGetSearchParams,
+        }),
+    };
+});
 
 // Mock apiRequest import
 jest.mock("@/services/apiService");
-const mockedApiRequest = apiRequest as jest.MockedFunction<typeof apiRequest>;
+const mockedApiRequest = jest.mocked(apiRequest);
 
-// Mock getJwtToken import
+// Mock local storage methods
 jest.mock("@/services/storage");
-const mockedSetJwtToken = setJwtToken as jest.MockedFunction<typeof setJwtToken>;
 
 // Mock child React components
 jest.mock("@/components/dialogs/messageDialog", () =>
@@ -29,10 +42,6 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 );
 
 describe("Login", () => {
-    beforeEach(() => {
-        mockRouter.setCurrentUrl("/");
-    });
-
     afterEach(() => {
         cleanup();
     });
@@ -47,13 +56,6 @@ describe("Login", () => {
 
         // Assert calls to API
         expect(apiRequest).not.toHaveBeenCalled();
-
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
     });
 
     it("notifies error querying the API", async () => {
@@ -64,8 +66,8 @@ describe("Login", () => {
         render(<Login />);
 
         // Trigger event to query API
-        const submitBtn = screen.getByText("Enviar");
-        fireEvent.click(submitBtn);
+        const form = screen.getByTestId("login-form");
+        fireEvent.submit(form);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -84,36 +86,29 @@ describe("Login", () => {
         // Assert calls to API
         expect(apiRequest).toHaveBeenCalled();
 
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: "/",
-            pathname: "/",
-            query: {},
-        });
+        // Assert calls to router
+        expect(mockRouterPush).not.toHaveBeenCalled();
     });
 
     test.each(["", "files"])("login success with callback URL %p", async (callbackUrl) => {
         // Mock API calls
-        mockedApiRequest.mockImplementation(
-            (url, method) =>
-                new Promise((resolve, reject) =>
-                    resolve({
-                        data: {
-                            token: "a-valid-token",
-                        },
-                    })
-                )
-        );
-        // Mock router
-        const routerUrl = callbackUrl ? `/login?callbackUrl=${callbackUrl}` : "/login";
-        mockRouter.setCurrentUrl(routerUrl);
+        mockedApiRequest.mockResolvedValueOnce({
+            data: {
+                token: "a-valid-token",
+            },
+        });
+        // Mock navigation
+        mockGetSearchParams.mockImplementation((key: string) => {
+            if (key === "callbackUrl") return callbackUrl;
+            return "";
+        });
 
         // Instantiate widget under test
         render(<Login />);
 
         // Trigger event to query API
-        const submitBtn = screen.getByText("Enviar");
-        fireEvent.click(submitBtn);
+        const form = screen.getByTestId("login-form");
+        fireEvent.submit(form);
 
         // Wait for promises to resolve
         await new Promise(process.nextTick);
@@ -125,11 +120,8 @@ describe("Login", () => {
         expect(setJwtToken).toHaveBeenCalled();
         expect(setJwtToken).toHaveBeenCalledWith("a-valid-token");
 
-        // Assert status of router
-        expect(mockRouter).toMatchObject({
-            asPath: `/${callbackUrl}`,
-            pathname: `/${callbackUrl}`,
-            query: {},
-        });
+        // Assert calls to router
+        expect(mockRouterPush).toHaveBeenCalled();
+        expect(mockRouterPush).toHaveBeenCalledWith(callbackUrl);
     });
 });
