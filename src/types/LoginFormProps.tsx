@@ -1,5 +1,5 @@
-type btnActionType = (email: string, password: string) => void;
+type onErrorActionType = (message: string) => void;
 
 export default interface LoginFormProps {
-    btnSubmitAction: btnActionType;
+    onErrorAction: onErrorActionType;
 }
