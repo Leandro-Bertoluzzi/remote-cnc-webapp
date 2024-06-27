@@ -1,14 +1,21 @@
+import apiRequest from "@/services/apiService";
 import { Button, TextInput } from "flowbite-react";
 import LoginFormProps from "@/types/LoginFormProps";
 import React, { FormEvent, ChangeEvent, useState } from "react";
+import { setJwtToken } from "@/services/storage";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginForm(props: LoginFormProps) {
     // Props
-    const { btnSubmitAction } = props;
+    const { onErrorAction } = props;
 
     // Hooks for state variables
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+
+    // Navigation hooks
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -18,15 +25,28 @@ export default function LoginForm(props: LoginFormProps) {
         setPassword(e.target.value);
     };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleLogin = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        btnSubmitAction(email, password);
+        const data = {
+            email,
+            password,
+        };
+
+        apiRequest("users/login", "POST", data, true)
+            .then((response) => {
+                const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+                setJwtToken(response.data.token);
+                router.push(callbackUrl);
+            })
+            .catch((error) => {
+                onErrorAction(error.message);
+            });
     };
 
     return (
         <form
             data-testid="login-form"
-            onSubmit={handleSubmit}
+            onSubmit={handleLogin}
             className="mx-auto mb-5 flex max-w-md flex-col"
         >
             <TextInput

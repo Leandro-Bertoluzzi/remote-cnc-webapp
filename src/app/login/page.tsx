@@ -1,39 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import apiRequest from "@/services/apiService";
+import { Suspense, useState } from "react";
 import MessageDialog from "@/components/dialogs/messageDialog";
-import { setJwtToken } from "@/services/storage";
 import LoginForm from "@/components/forms/loginForm";
+import { Skeleton } from "@/components/discrete/skeleton";
 
 export default function Login() {
     // Hooks for state variables
     const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
     const [notification, setNotification] = useState<string>("");
-
-    // Navigation hooks
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
-    // Additional variables
-    const callbackUrl = searchParams.get("callbackUrl") ?? "/";
-
-    const handleUploadClick = (email: string, password: string) => {
-        const data = {
-            email: email,
-            password: password,
-        };
-
-        apiRequest("users/login", "POST", data, true)
-            .then((response) => {
-                setJwtToken(response.data.token);
-                router.push(callbackUrl);
-            })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
-    };
 
     /*  Function: showErrorDialog
      *   Description: Shows a dialog with information about the error
@@ -61,7 +36,9 @@ export default function Login() {
                                     Identificación de usuario
                                 </h2>
                                 <p className="mb-11 text-lg text-gray-500">¡Bienvenido!</p>
-                                <LoginForm btnSubmitAction={handleUploadClick} />
+                                <Suspense fallback={<Skeleton />}>
+                                    <LoginForm onErrorAction={showErrorDialog} />
+                                </Suspense>
                                 <p className="text-base text-gray-600">
                                     <span>¿No tiene cuenta? </span>
                                     <a className="text-blue-900 hover:text-blue-400" href="#">
