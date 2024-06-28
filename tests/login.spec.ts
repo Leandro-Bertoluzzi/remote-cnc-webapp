@@ -9,7 +9,7 @@ test.describe("Login page", () => {
         await page.goto("/login");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Login/);
+        await expect(page).toHaveTitle("Acceso");
 
         // Expect elements to appear
         await expect(
@@ -17,7 +17,7 @@ test.describe("Login page", () => {
         ).toBeVisible();
         await expect(page.getByText("¡Bienvenido!")).toBeVisible();
         await expect(page.getByRole("textbox", { name: "email" })).toBeVisible();
-        await expect(page.getByRole("textbox", { name: "password" })).toBeVisible();
+        await expect(page.getByTestId("input-password")).toBeVisible();
         await expect(page.getByText("¿No tiene cuenta? Contáctenos")).toBeVisible();
         await expect(page.getByRole("button", { name: "Enviar" })).toBeVisible();
     });
@@ -41,7 +41,7 @@ test.describe("Login page", () => {
         const password = faker.internet.password({ length: 10 });
         const correctPassword = password[0].toUpperCase() + password.slice(1) + "@123";
         await page.getByRole("textbox", { name: "email" }).fill(email);
-        await page.getByRole("textbox", { name: "password" }).fill(correctPassword);
+        await page.getByTestId("input-password").fill(correctPassword);
 
         // Click submit button
         await page.getByRole("button", { name: "Enviar" }).click();
@@ -72,7 +72,7 @@ test.describe("Login page", () => {
             const password = faker.internet.password({ length: 10 });
             const correctPassword = password[0].toUpperCase() + password.slice(1) + "@123";
             await page.getByRole("textbox", { name: "email" }).fill(email);
-            await page.getByRole("textbox", { name: "password" }).fill(correctPassword);
+            await page.getByTestId("input-password").fill(correctPassword);
 
             // Click submit button
             await page.getByRole("button", { name: "Enviar" }).click();

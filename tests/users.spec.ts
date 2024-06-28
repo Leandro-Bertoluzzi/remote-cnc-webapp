@@ -37,7 +37,7 @@ test.describe("Users page", () => {
         await page.goto("/users");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Users/);
+        await expect(page).toHaveTitle("Usuarios");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Usuarios", exact: true })).toBeVisible();
@@ -80,7 +80,7 @@ test.describe("Users page", () => {
         await page.goto("/users");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Users/);
+        await expect(page).toHaveTitle("Usuarios");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Usuarios", exact: true })).toBeVisible();
@@ -132,7 +132,7 @@ test.describe("Users page", () => {
         await page.goto("/users");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Users/);
+        await expect(page).toHaveTitle("Usuarios");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Usuarios", exact: true })).toBeVisible();

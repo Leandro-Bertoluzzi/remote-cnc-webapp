@@ -59,7 +59,7 @@ test.describe("Inventory page", () => {
         await page.goto("/inventory");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Inventory/);
+        await expect(page).toHaveTitle("Inventario");
 
         // Expect elements to appear
         await expect(
@@ -127,7 +127,7 @@ test.describe("Inventory page", () => {
         await page.goto("/inventory");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Inventory/);
+        await expect(page).toHaveTitle("Inventario");
 
         // Expect elements to appear
         await expect(
@@ -213,7 +213,7 @@ test.describe("Inventory page", () => {
         await page.goto("/inventory");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Inventory/);
+        await expect(page).toHaveTitle("Inventario");
 
         // Expect elements to appear
         await expect(

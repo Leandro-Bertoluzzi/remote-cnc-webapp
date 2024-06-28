@@ -39,7 +39,7 @@ test.describe("Files page", () => {
         await page.goto("/files");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Files/);
+        await expect(page).toHaveTitle("Archivos");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Archivos", exact: true })).toBeVisible();
@@ -83,7 +83,7 @@ test.describe("Files page", () => {
         await page.goto("/files");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Files/);
+        await expect(page).toHaveTitle("Archivos");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Archivos", exact: true })).toBeVisible();
@@ -133,7 +133,7 @@ test.describe("Files page", () => {
         await page.goto("/files");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Files/);
+        await expect(page).toHaveTitle("Archivos");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Archivos", exact: true })).toBeVisible();
