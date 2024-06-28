@@ -23,18 +23,9 @@ export default function UsersView() {
     // User authentication
     const authorized = useAuth();
 
-    /*  Function: showCreateUserFormModal
-     *   Description: Enables the modal to upload a new user
-     */
-    function showCreateUserFormModal() {
-        setShowUserForm(true);
-    }
-
-    /*  Function: hideUserFormModal
-     *   Description: Disables the modal to upload a new user
-     */
-    function hideUserFormModal() {
-        setShowUserForm(false);
+    // Actions
+    const toggleFormModal = (show: boolean) => {
+        setShowUserForm(show);
     }
 
     /*  Function: showErrorDialog
@@ -79,27 +70,27 @@ export default function UsersView() {
             });
     }, [authorized]);
 
+    if (!authorized) {
+        return <Loader />;
+    }
+
     return (
         <>
-            {authorized ? (
-                <CardsList
-                    title="Usuarios"
-                    addItemBtnText="Agregar usuario"
-                    addItemBtnAction={showCreateUserFormModal}
-                    showAddItemBtn
-                >
-                    {users.map((user) => (
-                        <UserCard
-                            key={user.id}
-                            user={user}
-                            setError={showErrorDialog}
-                            setNotification={showNotification}
-                        />
-                    ))}
-                </CardsList>
-            ) : (
-                <Loader />
-            )}
+            <CardsList
+                title="Usuarios"
+                addItemBtnText="Agregar usuario"
+                addItemBtnAction={() => toggleFormModal(true)}
+                showAddItemBtn
+            >
+                {users.map((user) => (
+                    <UserCard
+                        key={user.id}
+                        user={user}
+                        setError={showErrorDialog}
+                        setNotification={showNotification}
+                    />
+                ))}
+            </CardsList>
             {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
@@ -110,7 +101,7 @@ export default function UsersView() {
             )}
             {showUserForm && (
                 <UserForm
-                    exitAction={hideUserFormModal}
+                    exitAction={() => toggleFormModal(false)}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}

@@ -35,18 +35,9 @@ export default function TasksView() {
     // User authentication
     const authorized = useAuth();
 
-    /*  Function: showCreateTaskFormModal
-     *   Description: Enables the modal to upload a new task
-     */
-    function showCreateTaskFormModal() {
-        setShowTaskForm(true);
-    }
-
-    /*  Function: hideTaskFormModal
-     *   Description: Disables the modal to upload a new task
-     */
-    function hideTaskFormModal() {
-        setShowTaskForm(false);
+    // Actions
+    const toggleFormModal = (show: boolean) => {
+        setShowTaskForm(show);
     }
 
     /*  Function: showErrorDialog
@@ -122,41 +113,41 @@ export default function TasksView() {
         setTaskTypes((prevStatuses) => prevStatuses.filter((element) => element !== status));
     };
 
+    if (!authorized) {
+        return <Loader />;
+    }
+
     return (
         <>
-            {authorized ? (
-                <CardsList
-                    title="Tareas"
-                    addItemBtnText="Crear tarea"
-                    addItemBtnAction={showCreateTaskFormModal}
-                    showAddItemBtn
-                >
-                    {tasks.length === 0 ? (
-                        <EmptyCard itemName="tareas programadas" />
-                    ) : (
-                        <>
-                            <TasksFilter
-                                filterStatus={taskTypes}
-                                updateTaskStatusList={updateTaskStatusList}
+            <CardsList
+                title="Tareas"
+                addItemBtnText="Crear tarea"
+                addItemBtnAction={() => toggleFormModal(true)}
+                showAddItemBtn
+            >
+                {tasks.length === 0 ? (
+                    <EmptyCard itemName="tareas programadas" />
+                ) : (
+                    <>
+                        <TasksFilter
+                            filterStatus={taskTypes}
+                            updateTaskStatusList={updateTaskStatusList}
+                        />
+                        {tasks.map((task) => (
+                            <TaskCard
+                                key={task.id}
+                                task={task}
+                                show={taskTypes.includes(task.status)}
+                                toolsList={availableTools}
+                                materialsList={availableMaterials}
+                                filesList={availableFiles}
+                                setError={showErrorDialog}
+                                setNotification={showNotification}
                             />
-                            {tasks.map((task) => (
-                                <TaskCard
-                                    key={task.id}
-                                    task={task}
-                                    show={taskTypes.includes(task.status)}
-                                    toolsList={availableTools}
-                                    materialsList={availableMaterials}
-                                    filesList={availableFiles}
-                                    setError={showErrorDialog}
-                                    setNotification={showNotification}
-                                />
-                            ))}
-                        </>
-                    )}
-                </CardsList>
-            ) : (
-                <Loader />
-            )}
+                        ))}
+                    </>
+                )}
+            </CardsList>
             {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
@@ -167,7 +158,7 @@ export default function TasksView() {
             )}
             {showTaskForm && (
                 <TaskForm
-                    exitAction={hideTaskFormModal}
+                    exitAction={() => toggleFormModal(false)}
                     create={true}
                     toolsList={availableTools}
                     materialsList={availableMaterials}

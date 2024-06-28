@@ -18,8 +18,8 @@ import { useState, useEffect } from "react";
 export default function InventoryView() {
     // Hooks for state variables
     const [tools, setTools] = useState<Tool[]>([]);
-    const [showToolForm, setShowToolForm] = useState<boolean>(false);
     const [materials, setMaterials] = useState<Material[]>([]);
+    const [showToolForm, setShowToolForm] = useState<boolean>(false);
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
     const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
     const [notification, setNotification] = useState<string>("");
@@ -29,32 +29,13 @@ export default function InventoryView() {
     // User authentication
     const authorized = useAuth();
 
-    /*  Function: showCreateToolFormModal
-     *   Description: Enables the modal to upload a new tool
-     */
-    function showCreateToolFormModal() {
-        setShowToolForm(true);
-    }
-
-    /*  Function: hideToolFormModal
-     *   Description: Disables the modal to upload a new tool
-     */
-    function hideToolFormModal() {
-        setShowToolForm(false);
-    }
-
-    /*  Function: showCreateMaterialFormModal
-     *   Description: Enables the modal to upload a new material
-     */
-    function showCreateMaterialFormModal() {
-        setShowMaterialForm(true);
-    }
-
-    /*  Function: hideMaterialFormModal
-     *   Description: Disables the modal to upload a new material
-     */
-    function hideMaterialFormModal() {
-        setShowMaterialForm(false);
+    // Actions
+    const toggleFormModal = (formType: 'tool' | 'material', show: boolean) => {
+        if (formType === 'tool') {
+            setShowToolForm(show);
+        } else {
+            setShowMaterialForm(show);
+        }
     }
 
     /*  Function: showErrorDialog
@@ -105,57 +86,55 @@ export default function InventoryView() {
         }
     }, [authorized]);
 
+    if (!authorized) {
+        return <Loader />;
+    }
+
     return (
         <>
-            {authorized ? (
-                <>
-                    <CardsList
-                        title="Herramientas"
-                        addItemBtnText="Agregar herramienta"
-                        addItemBtnAction={showCreateToolFormModal}
-                        showAddItemBtn
-                    >
-                        {tools.length === 0 ? (
-                            <EmptyCard itemName="herramientas configuradas" />
-                        ) : (
-                            <>
-                                {tools.map((tool) => (
-                                    <ToolCard
-                                        key={tool.id}
-                                        tool={tool}
-                                        setError={showErrorDialog}
-                                        setNotification={showNotification}
-                                    />
-                                ))}
-                            </>
-                        )}
-                    </CardsList>
+            <CardsList
+                title="Herramientas"
+                addItemBtnText="Agregar herramienta"
+                addItemBtnAction={() => toggleFormModal('tool', true)}
+                showAddItemBtn
+            >
+                {tools.length === 0 ? (
+                    <EmptyCard itemName="herramientas configuradas" />
+                ) : (
+                    <>
+                        {tools.map((tool) => (
+                            <ToolCard
+                                key={tool.id}
+                                tool={tool}
+                                setError={showErrorDialog}
+                                setNotification={showNotification}
+                            />
+                        ))}
+                    </>
+                )}
+            </CardsList>
 
-                    <CardsList
-                        title="Materiales"
-                        addItemBtnText="Agregar material"
-                        addItemBtnAction={showCreateMaterialFormModal}
-                        showAddItemBtn
-                    >
-                        {materials.length === 0 ? (
-                            <EmptyCard itemName="materiales guardados" />
-                        ) : (
-                            <>
-                                {materials.map((material) => (
-                                    <MaterialCard
-                                        key={material.id}
-                                        material={material}
-                                        setError={showErrorDialog}
-                                        setNotification={showNotification}
-                                    />
-                                ))}
-                            </>
-                        )}
-                    </CardsList>
-                </>
-            ) : (
-                <Loader />
-            )}
+            <CardsList
+                title="Materiales"
+                addItemBtnText="Agregar material"
+                addItemBtnAction={() => toggleFormModal('material', true)}
+                showAddItemBtn
+            >
+                {materials.length === 0 ? (
+                    <EmptyCard itemName="materiales guardados" />
+                ) : (
+                    <>
+                        {materials.map((material) => (
+                            <MaterialCard
+                                key={material.id}
+                                material={material}
+                                setError={showErrorDialog}
+                                setNotification={showNotification}
+                            />
+                        ))}
+                    </>
+                )}
+            </CardsList>
             {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
@@ -166,7 +145,7 @@ export default function InventoryView() {
             )}
             {showToolForm && (
                 <ToolForm
-                    exitAction={hideToolFormModal}
+                    exitAction={() => toggleFormModal('tool', false)}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}
@@ -174,7 +153,7 @@ export default function InventoryView() {
             )}
             {showMaterialForm && (
                 <MaterialForm
-                    exitAction={hideMaterialFormModal}
+                    exitAction={() => toggleFormModal('material', false)}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}
