@@ -24,18 +24,9 @@ export default function FilesView() {
     // User authentication
     const authorized = useAuth();
 
-    /*  Function: showCreateFileFormModal
-     *   Description: Enables the modal to upload a new file
-     */
-    function showCreateFileFormModal() {
-        setShowFileForm(true);
-    }
-
-    /*  Function: hideFileFormModal
-     *   Description: Disables the modal to upload a new file
-     */
-    function hideFileFormModal() {
-        setShowFileForm(false);
+    // Actions
+    const toggleFormModal = (show: boolean) => {
+        setShowFileForm(show);
     }
 
     /*  Function: showErrorDialog
@@ -80,33 +71,33 @@ export default function FilesView() {
             });
     }, [authorized]);
 
+    if (!authorized) {
+        return <Loader />;
+    }
+
     return (
         <>
-            {authorized ? (
-                <CardsList
-                    title="Archivos"
-                    addItemBtnText="Subir archivo"
-                    addItemBtnAction={showCreateFileFormModal}
-                    showAddItemBtn
-                >
-                    {files.length === 0 ? (
-                        <EmptyCard itemName="archivos guardados" />
-                    ) : (
-                        <>
-                            {files.map((file) => (
-                                <FileCard
-                                    key={file.id}
-                                    file={file}
-                                    setError={showErrorDialog}
-                                    setNotification={showNotification}
-                                />
-                            ))}
-                        </>
-                    )}
-                </CardsList>
-            ) : (
-                <Loader />
-            )}
+            <CardsList
+                title="Archivos"
+                addItemBtnText="Subir archivo"
+                addItemBtnAction={() => toggleFormModal(true)}
+                showAddItemBtn
+            >
+                {files.length === 0 ? (
+                    <EmptyCard itemName="archivos guardados" />
+                ) : (
+                    <>
+                        {files.map((file) => (
+                            <FileCard
+                                key={file.id}
+                                file={file}
+                                setError={showErrorDialog}
+                                setNotification={showNotification}
+                            />
+                        ))}
+                    </>
+                )}
+            </CardsList>
             {showMessageDialog && (
                 <MessageDialog
                     onClose={hideMessageDialog}
@@ -117,7 +108,7 @@ export default function FilesView() {
             )}
             {showFileForm && (
                 <FileForm
-                    exitAction={hideFileFormModal}
+                    exitAction={() => toggleFormModal(false)}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}
