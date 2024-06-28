@@ -111,7 +111,7 @@ test.describe("Tasks page", () => {
         await page.goto("/tasks");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Tasks/);
+        await expect(page).toHaveTitle("Tareas");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Tareas", exact: true })).toBeVisible();
@@ -156,7 +156,7 @@ test.describe("Tasks page", () => {
         await page.goto("/tasks");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Tasks/);
+        await expect(page).toHaveTitle("Tareas");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Tareas", exact: true })).toBeVisible();
@@ -192,7 +192,7 @@ test.describe("Tasks page", () => {
         await page.goto("/tasks");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Tasks/);
+        await expect(page).toHaveTitle("Tareas");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Tareas", exact: true })).toBeVisible();
@@ -250,7 +250,7 @@ test.describe("Tasks page", () => {
         await page.goto("/tasks");
 
         // Expect the page title "to contain" a substring.
-        await expect(page).toHaveTitle(/Tasks/);
+        await expect(page).toHaveTitle("Tareas");
 
         // Expect elements to appear
         await expect(page.getByRole("heading", { name: "Tareas", exact: true })).toBeVisible();

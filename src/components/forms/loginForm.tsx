@@ -63,6 +63,7 @@ export default function LoginForm(props: LoginFormProps) {
                 className="my-2"
                 onChange={handlePasswordChange}
                 id="password2"
+                data-testid="input-password"
                 type="password"
                 name="password"
                 required
