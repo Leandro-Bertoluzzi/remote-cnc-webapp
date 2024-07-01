@@ -134,7 +134,7 @@ describe("api service", () => {
 
     it("unsuccessfull GET request", async () => {
         // Mock involved functions
-        const mockResponse = { detail: "This is a mocked error" };
+        const mockResponse = { detail: [{ msg: "This is a mocked error" }] };
         global.fetch = jest.fn(() =>
             Promise.resolve({
                 ok: false,
@@ -147,7 +147,7 @@ describe("api service", () => {
 
         // Invoke function under test and assert error
         await expect(apiRequest("path", "GET")).rejects.toEqual(
-            Error("404 Not found: This is a mocked error")
+            Error("404 Not found: This is a mocked error\n")
         );
     });
 
