@@ -81,14 +81,53 @@ describe("use auth hook", () => {
         }
     );
 
-    it("successfull authentication", async () => {
+    it("redirects to index due to lack of permissions", async () => {
         // Mock dependencies
-        mockedApiRequest.mockResolvedValue("Mocked response from the API");
+        mockedApiRequest.mockResolvedValue({
+            message: "Mocked response from the API",
+            data: {
+                id: 1,
+                name: "User",
+                email: "user@test.com",
+                role: "user",
+            },
+        });
         mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
         mockPathName.mockReturnValue("");
 
         // Use hook under test
-        const { result } = renderHook(() => useAuth());
+        const { result } = renderHook(() => useAuth(true));
+
+        // Assert result
+        await waitFor(() => {
+            expect(result.current).toBeFalsy();
+        });
+
+        // Assert calls to API
+        expect(apiRequest).toHaveBeenCalled();
+
+        // Assert navigation
+        expect(mockRouterPush).toHaveBeenCalledWith("/");
+    });
+
+    test.each([false, true])(
+        "successfull authentication",
+        async (admin) => {
+        // Mock dependencies
+        mockedApiRequest.mockResolvedValue({
+            message: "Mocked response from the API",
+            data: {
+                id: 2,
+                name: "Admin",
+                email: "admin@test.com",
+                role: "admin",
+            },
+        });
+        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
+        mockPathName.mockReturnValue("");
+
+        // Use hook under test
+        const { result } = renderHook(() => useAuth(admin));
 
         // Assert result
         await waitFor(() => {

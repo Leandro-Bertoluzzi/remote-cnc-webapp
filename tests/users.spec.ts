@@ -1,6 +1,16 @@
 import { faker } from "@faker-js/faker/locale/en";
 import { test, expect } from "@playwright/test";
 
+const authed_json = {
+    message: "Mocked response from the API",
+    data: {
+        id: 2,
+        name: "Admin",
+        email: "admin@test.com",
+        role: "admin",
+    }
+}
+
 const test_users = [
     {
         id: 1,
@@ -20,10 +30,7 @@ test.describe("Users page", () => {
     test.beforeEach(async ({ page }) => {
         // Mock auth API request
         await page.route(/.*\/users\/auth/, async (route) => {
-            const json = {
-                data: "user_data",
-            };
-            await route.fulfill({ json });
+            await route.fulfill({ json: authed_json });
         });
     });
 

@@ -27,7 +27,7 @@ export default function InventoryView() {
     const [messageTitle, setMessageTitle] = useState<string>("");
 
     // User authentication
-    const authorized = useAuth();
+    const authorized = useAuth(true);
 
     // Actions
     const toggleFormModal = (formType: 'tool' | 'material', show: boolean) => {

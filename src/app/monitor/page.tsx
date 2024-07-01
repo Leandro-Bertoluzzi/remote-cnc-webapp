@@ -20,7 +20,7 @@ export default function MonitorView() {
     const [logs, setLogs] = useState<Log[]>([]);
 
     // User authentication
-    const authorized = useAuth();
+    const authorized = useAuth(true);
 
     /*  Function: showErrorDialog
      *   Description: Shows a dialog with information about the error

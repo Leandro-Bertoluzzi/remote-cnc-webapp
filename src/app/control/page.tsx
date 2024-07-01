@@ -17,7 +17,7 @@ export default function ControlView() {
     const [messageTitle, setMessageTitle] = useState<string>("");
 
     // User authentication
-    const authorized = useAuth();
+    const authorized = useAuth(true);
     if (!authorized) {
         return <Loader />;
     }

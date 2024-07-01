@@ -3,6 +3,16 @@ import { test, expect } from "@playwright/test";
 import Material from "@/types/Material";
 import Tool from "@/types/Tool";
 
+const authed_json = {
+    message: "Mocked response from the API",
+    data: {
+        id: 2,
+        name: "Admin",
+        email: "admin@test.com",
+        role: "admin",
+    }
+}
+
 const test_materials = [
     {
         id: 1,
@@ -37,10 +47,7 @@ test.describe("Inventory page", () => {
     test.beforeEach(async ({ page }) => {
         // Mock auth API request
         await page.route(/.*\/users\/auth/, async (route) => {
-            const json = {
-                data: "user_data",
-            };
-            await route.fulfill({ json });
+            await route.fulfill({ json: authed_json });
         });
     });
 

@@ -21,7 +21,7 @@ export default function UsersView() {
     const [messageTitle, setMessageTitle] = useState<string>("");
 
     // User authentication
-    const authorized = useAuth();
+    const authorized = useAuth(true);
 
     // Actions
     const toggleFormModal = (show: boolean) => {
