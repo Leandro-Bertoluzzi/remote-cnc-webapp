@@ -3,13 +3,12 @@ import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import Tool from "@/types/Tool";
 import LabeledTextInput from "../discrete/labeledTextInput";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface ToolFormProps {
     exitAction: () => void;
     create: boolean;
     toolInfo?: Tool;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 const defaultToolInfo = {
@@ -20,7 +19,10 @@ const defaultToolInfo = {
 
 export default function ToolForm(props: ToolFormProps) {
     // Props
-    const { exitAction, create, setError, setNotification, toolInfo = defaultToolInfo } = props;
+    const { exitAction, create, toolInfo = defaultToolInfo } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [toolName, setToolName] = useState<string>(toolInfo.name);
@@ -42,10 +44,10 @@ export default function ToolForm(props: ToolFormProps) {
 
         apiRequest("tools", "POST", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();
@@ -60,10 +62,10 @@ export default function ToolForm(props: ToolFormProps) {
 
         apiRequest(url, "PUT", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();

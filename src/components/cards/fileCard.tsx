@@ -6,16 +6,18 @@ import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
 import FileForm from "../forms/fileForm";
 import FileInfo from "@/types/FileInfo";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface FileCardProps {
     file: FileInfo;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 export default function FileCard(props: FileCardProps) {
     // Props
-    const { file, setError, setNotification } = props;
+    const { file } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [showFileForm, setShowFileForm] = useState<boolean>(false);
@@ -35,10 +37,10 @@ export default function FileCard(props: FileCardProps) {
 
         apiRequest(url, "DELETE")
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
     };
 
@@ -94,13 +96,7 @@ export default function FileCard(props: FileCardProps) {
                 buttons={[btnDownload, btnEdit, btnRemove]}
             />
             {showFileForm && (
-                <FileForm
-                    exitAction={hideFileFormModal}
-                    create={false}
-                    fileInfo={file}
-                    setError={setError}
-                    setNotification={setNotification}
-                />
+                <FileForm exitAction={hideFileFormModal} create={false} fileInfo={file} />
             )}
             {showRemoveConfirmation && (
                 <ConfirmDialog

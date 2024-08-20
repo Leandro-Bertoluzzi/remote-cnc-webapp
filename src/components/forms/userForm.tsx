@@ -4,13 +4,12 @@ import BaseForm from "./baseForm";
 import User from "@/types/User";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledSelect from "../discrete/labeledSelect";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface UserFormProps {
     exitAction: () => void;
     create: boolean;
     userInfo?: User;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 const defaultUserInfo = {
@@ -22,7 +21,10 @@ const defaultUserInfo = {
 
 export default function UserForm(props: UserFormProps) {
     // Props
-    const { exitAction, create, setError, setNotification, userInfo = defaultUserInfo } = props;
+    const { exitAction, create, userInfo = defaultUserInfo } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);
@@ -56,10 +58,10 @@ export default function UserForm(props: UserFormProps) {
 
         apiRequest("users", "POST", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();
@@ -75,10 +77,10 @@ export default function UserForm(props: UserFormProps) {
 
         apiRequest(url, "PUT", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();

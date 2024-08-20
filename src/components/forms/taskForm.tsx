@@ -5,19 +5,14 @@ import LabeledSelect from "../discrete/labeledSelect";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import TaskFormProps from "@/types/TaskFormProps";
+import { useNotification } from "@/contexts/notificationContext";
 
 export default function TaskForm(props: TaskFormProps) {
     // Props
-    const {
-        exitAction,
-        create,
-        taskInfo,
-        toolsList,
-        materialsList,
-        filesList,
-        setError,
-        setNotification,
-    } = props;
+    const { exitAction, create, taskInfo, toolsList, materialsList, filesList } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Initialization
     const initialName = taskInfo ? taskInfo.name : "";
@@ -65,10 +60,10 @@ export default function TaskForm(props: TaskFormProps) {
 
         apiRequest("tasks", "POST", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();
@@ -96,10 +91,10 @@ export default function TaskForm(props: TaskFormProps) {
         apiRequest(urlUpdateTask, "PUT", dataUpdateTask, true)
             .then(() => apiRequest(urlUpdateStatus, "PUT", dataUpdateStatus, true))
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();

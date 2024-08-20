@@ -6,6 +6,8 @@ import Task from "@/types/Task";
 import TaskCardProps from "@/types/TaskCardProps";
 import TaskFormProps from "@/types/TaskFormProps";
 import MessageDialogProps from "@/types/MessageDialogProps";
+import { NotificationProvider } from "@/contexts/notificationContext";
+import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication
@@ -96,10 +98,8 @@ jest.mock("@/components/cards/taskCard", () =>
 
 jest.mock("@/components/forms/taskForm", () =>
     // eslint-disable-next-line react/display-name
-    ({ exitAction, setError, setNotification }: TaskFormProps) => (
+    ({ exitAction }: TaskFormProps) => (
         <div data-testid="task-form">
-            <button onClick={() => setNotification("Éxito en formulario")}>Notify success</button>
-            <button onClick={() => setError("Error en formulario")}>Notify error</button>
             <button onClick={() => exitAction()}>Close form</button>
         </div>
     )
@@ -133,7 +133,13 @@ describe("TasksView", () => {
             .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
-        render(<TasksView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <TasksView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");
@@ -154,7 +160,13 @@ describe("TasksView", () => {
         mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
-        render(<TasksView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <TasksView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
@@ -173,7 +185,13 @@ describe("TasksView", () => {
             .mockResolvedValueOnce([]); // tasks
 
         // Instantiate widget under test
-        render(<TasksView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <TasksView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const taskCards = screen.queryAllByTestId("task-card");
@@ -191,7 +209,13 @@ describe("TasksView", () => {
         mockedApiRequest.mockRejectedValue(new Error("Error en comunicación con API"));
 
         // Instantiate widget under test
-        render(<TasksView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <TasksView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -217,7 +241,13 @@ describe("TasksView", () => {
             .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
-        render(<TasksView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <TasksView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");
@@ -239,73 +269,5 @@ describe("TasksView", () => {
 
         // Assert form is gone
         expect(form).not.toBeInTheDocument();
-    });
-
-    it("notifies error from child component", async () => {
-        // Mock API calls
-        mockedApiRequest
-            .mockResolvedValueOnce([]) // files
-            .mockResolvedValueOnce([]) // materials
-            .mockResolvedValueOnce([]) // tools
-            .mockResolvedValueOnce(tasks);
-
-        // Instantiate widget under test
-        render(<TasksView />);
-
-        // Trigger event to open form
-        const button = screen.getByText("Crear tarea");
-        fireEvent.click(button);
-
-        // Trigger error notification
-        const errorBtn = screen.getByText("Notify error");
-        fireEvent.click(errorBtn);
-
-        // Assert notification popup appeared
-        const notification = await screen.findByTestId("message-dialog");
-        expect(notification).toBeInTheDocument();
-        const notificationText = await screen.findByText("Error en formulario");
-        expect(notificationText).toBeInTheDocument();
-
-        // Trigger event to close window
-        const closeBtn = screen.getByText("Close dialog");
-        fireEvent.click(closeBtn);
-
-        // Assert notification popup is gone
-        expect(notification).not.toBeInTheDocument();
-        expect(notificationText).not.toBeInTheDocument();
-    });
-
-    it("notifies success from child component", async () => {
-        // Mock API calls
-        mockedApiRequest
-            .mockResolvedValueOnce([]) // files
-            .mockResolvedValueOnce([]) // materials
-            .mockResolvedValueOnce([]) // tools
-            .mockResolvedValueOnce(tasks);
-
-        // Instantiate widget under test
-        render(<TasksView />);
-
-        // Trigger event to open form
-        const button = screen.getByText("Crear tarea");
-        fireEvent.click(button);
-
-        // Trigger error notification
-        const successBtn = screen.getByText("Notify success");
-        fireEvent.click(successBtn);
-
-        // Assert notification popup appeared
-        const notification = await screen.findByTestId("message-dialog");
-        expect(notification).toBeInTheDocument();
-        const notificationText = await screen.findByText("Éxito en formulario");
-        expect(notificationText).toBeInTheDocument();
-
-        // Trigger event to close window
-        const closeBtn = screen.getByText("Close dialog");
-        fireEvent.click(closeBtn);
-
-        // Assert notification popup is gone
-        expect(notification).not.toBeInTheDocument();
-        expect(notificationText).not.toBeInTheDocument();
     });
 });

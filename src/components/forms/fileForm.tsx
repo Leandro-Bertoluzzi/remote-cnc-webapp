@@ -5,14 +5,12 @@ import { voidActionType } from "@/types/Actions";
 import FileInfo from "@/types/FileInfo";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledFileInput from "../discrete/labeledFileInput";
-import { setStringActionType } from "@/types/Actions";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface FileFormProps {
     exitAction: voidActionType;
     create: boolean;
     fileInfo?: FileInfo;
-    setError: setStringActionType;
-    setNotification: setStringActionType;
 }
 
 const defaultFileInfo = {
@@ -23,7 +21,10 @@ const defaultFileInfo = {
 
 export default function FileForm(props: FileFormProps) {
     // Props
-    const { exitAction, create, setError, setNotification, fileInfo = defaultFileInfo } = props;
+    const { exitAction, create, fileInfo = defaultFileInfo } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
@@ -55,10 +56,10 @@ export default function FileForm(props: FileFormProps) {
 
         apiRequest("files", "POST", formData)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();
@@ -72,10 +73,10 @@ export default function FileForm(props: FileFormProps) {
 
         apiRequest(url, "PUT", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();

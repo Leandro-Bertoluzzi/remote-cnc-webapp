@@ -2,15 +2,12 @@ import apiRequest from "@/services/apiService";
 import { Button, TextInput } from "flowbite-react";
 import React, { FormEvent, ChangeEvent, useState } from "react";
 import { setJwtToken } from "@/services/storage";
+import { useNotification } from "@/contexts/notificationContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export interface LoginFormProps {
-    onErrorAction: (message: string) => void;
-}
-
-export default function LoginForm(props: LoginFormProps) {
-    // Props
-    const { onErrorAction } = props;
+export default function LoginForm() {
+    // Context
+    const { showErrorDialog } = useNotification();
 
     // Hooks for state variables
     const [email, setEmail] = useState<string>("");
@@ -42,7 +39,7 @@ export default function LoginForm(props: LoginFormProps) {
                 router.push(callbackUrl);
             })
             .catch((error) => {
-                onErrorAction(error.message);
+                showErrorDialog(error.message);
             });
     };
 
