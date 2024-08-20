@@ -3,8 +3,8 @@ import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import FilesView from "@/app/files/page";
 import apiRequest from "@/services/apiService";
 import FileInfo from "@/types/FileInfo";
-import FileCardProps from "@/types/FileCardProps";
-import FileFormProps from "@/types/FileFormProps";
+import { FileCardProps } from "@/components/cards/fileCard";
+import { FileFormProps } from "@/components/forms/fileForm";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import useAuth from "@/hooks/useauth";
 

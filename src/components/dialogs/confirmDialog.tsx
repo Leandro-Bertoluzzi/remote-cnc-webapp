@@ -1,6 +1,13 @@
 import { BsExclamationTriangle } from "react-icons/bs";
-import ConfirmDialogProps from "@/types/ConfirmDialogProps";
 import { Modal, Button } from "flowbite-react";
+
+interface ConfirmDialogProps {
+    onAccept: () => void;
+    onCancel: () => void;
+    title: string;
+    text: string;
+    confirmText: string;
+}
 
 export default function ConfirmDialog(props: ConfirmDialogProps) {
     // Props

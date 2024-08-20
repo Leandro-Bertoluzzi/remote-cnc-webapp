@@ -1,13 +1,28 @@
 import { useState } from "react";
-import apiRequest from "../../services/apiService";
+import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
-import UserFormProps from "../../types/UserFormProps";
+import User from "@/types/User";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledSelect from "../discrete/labeledSelect";
 
+export interface UserFormProps {
+    exitAction: () => void;
+    create: boolean;
+    userInfo?: User;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
+
+const defaultUserInfo = {
+    id: 0,
+    name: "",
+    email: "",
+    role: "user",
+};
+
 export default function UserForm(props: UserFormProps) {
     // Props
-    const { exitAction, create, userInfo, setError, setNotification } = props;
+    const { exitAction, create, setError, setNotification, userInfo = defaultUserInfo } = props;
 
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);
@@ -123,12 +138,3 @@ export default function UserForm(props: UserFormProps) {
         </BaseForm>
     );
 }
-
-UserForm.defaultProps = {
-    userInfo: {
-        id: 0,
-        name: "",
-        email: "",
-        role: "user",
-    },
-};

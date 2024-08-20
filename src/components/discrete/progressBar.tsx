@@ -1,5 +1,10 @@
 import { Progress } from "flowbite-react";
-import ProgressBarProps from "@/types/ProgressBarProps";
+
+export interface ProgressBarProps {
+    value: number;
+    total: number;
+    label?: string;
+}
 
 export function ProgressBar(props: ProgressBarProps) {
     const { value, total, label } = props;

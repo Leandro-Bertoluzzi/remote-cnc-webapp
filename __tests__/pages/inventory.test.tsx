@@ -4,11 +4,11 @@ import InventoryView from "@/app/inventory/page";
 import apiRequest from "@/services/apiService";
 import Tool from "@/types/Tool";
 import Material from "@/types/Material";
-import MaterialCardProps from "@/types/MaterialCardProps";
-import MaterialFormProps from "@/types/MaterialFormProps";
+import { MaterialCardProps } from "@/components/cards/materialCard";
+import { MaterialFormProps } from "@/components/forms/materialForm";
 import MessageDialogProps from "@/types/MessageDialogProps";
-import ToolCardProps from "@/types/ToolCardProps";
-import ToolFormProps from "@/types/ToolFormProps";
+import { ToolCardProps } from "@/components/cards/toolCard";
+import { ToolFormProps } from "@/components/forms/toolForm";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication

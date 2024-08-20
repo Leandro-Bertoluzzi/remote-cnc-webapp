@@ -1,12 +1,26 @@
 import { useState } from "react";
-import apiRequest from "../../services/apiService";
+import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
-import MaterialFormProps from "../../types/MaterialFormProps";
+import Material from "@/types/Material";
 import LabeledTextInput from "../discrete/labeledTextInput";
+
+export interface MaterialFormProps {
+    exitAction: () => void;
+    create: boolean;
+    materialInfo?: Material;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
+
+const defaultMaterialInfo = {
+    id: 0,
+    name: "",
+    description: "",
+};
 
 export default function MaterialForm(props: MaterialFormProps) {
     // Props
-    const { exitAction, create, materialInfo, setError, setNotification } = props;
+    const { exitAction, create, setError, setNotification, materialInfo = defaultMaterialInfo } = props;
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);
@@ -86,11 +100,3 @@ export default function MaterialForm(props: MaterialFormProps) {
         </BaseForm>
     );
 }
-
-MaterialForm.defaultProps = {
-    materialInfo: {
-        id: 0,
-        name: "",
-        description: "",
-    },
-};

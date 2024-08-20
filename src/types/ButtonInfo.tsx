@@ -1,8 +1,6 @@
-type btnActionType = () => void;
-
 export default interface ButtonInfo {
     type: string;
-    action: btnActionType;
+    action: () => void;
 }
 
 export interface ButtonInfoArray {

@@ -32,7 +32,7 @@
 
 ## :dart: About
 
-Dashboard to interface the [remote-cnc-api](https://github.com/Leandro-Bertoluzzi/remote-cnc-api), to control an Arduino-based CNC machine.
+Dashboard to interface the [remote-cnc](https://github.com/Leandro-Bertoluzzi/remote-cnc) API, to control an Arduino-based CNC machine.
 
 ## :sparkles: Features
 

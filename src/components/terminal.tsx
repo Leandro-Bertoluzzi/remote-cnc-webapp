@@ -2,9 +2,12 @@ import apiRequest from "@/services/apiService";
 import { getEventSource } from "@/services/apiService";
 import GrblMessage from "@/types/GrblMessage";
 import { VscSend } from "react-icons/vsc";
-import TerminalProps from "@/types/TerminalProps";
 import { TextInput, Button } from "flowbite-react";
 import { useState, useEffect, useRef } from "react";
+
+export interface TerminalProps {
+    sender?: boolean;
+}
 
 export default function Terminal(props: TerminalProps) {
     const { sender } = props;

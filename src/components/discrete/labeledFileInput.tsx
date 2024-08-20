@@ -1,6 +1,13 @@
 import { ChangeEvent } from "react";
 import { Label, FileInput } from "flowbite-react";
-import LabeledFileInputProps from "../../types/LabeledFileInputProps";
+
+export interface LabeledFileInputProps {
+    handleChange: (file: File) => void;
+    name: string;
+    label: string;
+    helperText: string;
+    accept: string;
+}
 
 export default function LabeledFileInput(props: LabeledFileInputProps) {
     // Props

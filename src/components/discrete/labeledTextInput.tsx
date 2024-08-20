@@ -1,6 +1,15 @@
 import { ChangeEvent } from "react";
 import { Label, TextInput } from "flowbite-react";
-import LabeledTextInputProps from "../../types/LabeledTextInputProps";
+import { InputType } from "@/types/InputType";
+
+interface LabeledTextInputProps {
+    handleChange: (value: string) => void;
+    name: string;
+    label: string;
+    placeholder: string;
+    value?: string;
+    type?: InputType;
+}
 
 export default function LabeledTextInput(props: LabeledTextInputProps) {
     // Props

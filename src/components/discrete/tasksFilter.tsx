@@ -1,5 +1,4 @@
 import CustomCheckBox from "./customCheckBox";
-import TasksFilterProps from "../../types/TasksFilterProps";
 import { Dropdown } from "flowbite-react";
 
 function getNameFromStatus(status: string) {
@@ -15,6 +14,11 @@ const TASK_STATUSES = [
     "failed",
     "cancelled",
 ];
+
+export interface TasksFilterProps {
+    filterStatus: string[];
+    updateTaskStatusList: (status: string, add: boolean) => void;
+}
 
 export default function TasksFilter(props: TasksFilterProps) {
     // Props

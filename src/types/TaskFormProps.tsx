@@ -3,16 +3,13 @@ import Material from "./Material";
 import Task from "./Task";
 import Tool from "./Tool";
 
-type btnActionType = () => void;
-type setStringActionType = (str: string) => void;
-
 export default interface TaskFormProps {
-    exitAction: btnActionType;
+    exitAction: () => void;
     create: boolean;
     taskInfo?: Task;
     toolsList: Tool[];
     materialsList: Material[];
     filesList: FileInfo[];
-    setError: setStringActionType;
-    setNotification: setStringActionType;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
 }

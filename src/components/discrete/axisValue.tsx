@@ -1,4 +1,8 @@
-import AxisValueProps from "@/types/AxisValueProps";
+export interface AxisValueProps {
+    axis: string;
+    machineCoordinate: number;
+    workCoordinate: number;
+}
 
 export default function AxisValue(props: AxisValueProps) {
     const { axis, machineCoordinate, workCoordinate } = props;

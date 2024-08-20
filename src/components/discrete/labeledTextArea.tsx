@@ -1,6 +1,13 @@
 import { ChangeEvent } from "react";
 import { Label, Textarea } from "flowbite-react";
-import LabeledTextAreaProps from "../../types/LabeledTextAreaProps";
+
+export interface LabeledTextAreaProps {
+    handleChange: (value: string) => void;
+    name: string;
+    label: string;
+    placeholder: string;
+    value?: string;
+}
 
 export default function LabeledTextArea(props: LabeledTextAreaProps) {
     // Props

@@ -1,6 +1,6 @@
-import AssociativeArray from "../../types/AssociativeArray";
+import AssociativeArray from "@/types/AssociativeArray";
 import { Button } from "flowbite-react";
-import ButtonInfo from "../../types/ButtonInfo";
+import ButtonInfo from "@/types/ButtonInfo";
 
 // Constants
 

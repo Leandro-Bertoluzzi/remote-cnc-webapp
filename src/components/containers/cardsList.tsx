@@ -1,8 +1,16 @@
-import CardListProps from "../../types/CardsListProps";
 import { Button } from "flowbite-react";
+import { ReactNode } from "react";
+
+interface CardListProps {
+    title: string;
+    children: ReactNode;
+    showAddItemBtn: boolean;
+    addItemBtnAction?: () => void;
+    addItemBtnText?: string;
+}
 
 export default function CardsList(props: CardListProps) {
-    const { title, showAddItemBtn, addItemBtnText, addItemBtnAction } = props;
+    const { title, showAddItemBtn = false, addItemBtnText, addItemBtnAction } = props;
 
     return (
         <section
@@ -25,7 +33,3 @@ export default function CardsList(props: CardListProps) {
         </section>
     );
 }
-
-CardsList.defaultProps = {
-    showAddItemBtn: false,
-};

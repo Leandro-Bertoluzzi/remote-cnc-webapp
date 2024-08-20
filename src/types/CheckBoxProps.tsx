@@ -1,7 +1,5 @@
-type btnActionType = (id: string, isChecked: boolean) => void;
-
 export default interface CheckBoxProps {
-    handleOnChange: btnActionType;
+    handleOnChange: (id: string, isChecked: boolean) => void;
     isChecked: boolean;
     text: string;
     id: string;

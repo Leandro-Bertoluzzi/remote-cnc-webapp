@@ -1,10 +1,10 @@
 import { useState } from "react";
-import apiRequest from "../../services/apiService";
+import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import LabeledSelect from "../discrete/labeledSelect";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import LabeledTextInput from "../discrete/labeledTextInput";
-import TaskFormProps from "../../types/TaskFormProps";
+import TaskFormProps from "@/types/TaskFormProps";
 
 export default function TaskForm(props: TaskFormProps) {
     // Props

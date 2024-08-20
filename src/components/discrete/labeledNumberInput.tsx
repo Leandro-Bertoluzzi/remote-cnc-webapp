@@ -1,6 +1,15 @@
 import { ChangeEvent } from "react";
 import { Label, TextInput } from "flowbite-react";
-import LabeledNumberInputProps from "@/types/LabeledNumberInputProps";
+
+interface LabeledNumberInputProps {
+    handleChange: (value: number) => void;
+    name: string;
+    label: string;
+    value?: number;
+    min?: number;
+    max?: number;
+    step?: number;
+}
 
 export default function LabeledNumberInput(props: LabeledNumberInputProps) {
     // Props

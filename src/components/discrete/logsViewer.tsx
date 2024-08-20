@@ -1,5 +1,9 @@
-import LogsViewerProps from "@/types/LogsViewerProps";
+import Log from "@/types/Log";
 import { Table } from "flowbite-react";
+
+export interface LogsViewerProps {
+    logs: Log[];
+}
 
 export default function LogsViewer(props: LogsViewerProps) {
     const { logs } = props;

@@ -4,7 +4,12 @@ import { FaArrowAltCircleLeft, FaCircle } from "react-icons/fa";
 import LabeledNumberInput from "./discrete/labeledNumberInput";
 import { useState } from "react";
 
-function JoystickButton(props: { index: number; onclick: () => void }) {
+interface JoystickButtonProps {
+    index: number;
+    onclick: () => void;
+};
+
+function JoystickButton(props: JoystickButtonProps) {
     const { index, onclick } = props;
     const angle = 45 * (index + 1);
 

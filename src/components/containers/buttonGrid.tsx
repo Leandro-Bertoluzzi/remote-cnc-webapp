@@ -1,4 +1,4 @@
-import ButtonInfo from "../../types/ButtonInfo";
+import ButtonInfo from "@/types/ButtonInfo";
 import { Button } from "flowbite-react";
 
 // Types definition
@@ -10,7 +10,7 @@ export interface ButtonGridProps {
 // Component
 
 export default function ButtonGrid(props: ButtonGridProps) {
-    const { buttons } = props;
+    const { buttons = [] } = props;
 
     return (
         <div className="my-4 grid gap-2 md:grid-cols-2">
@@ -22,7 +22,3 @@ export default function ButtonGrid(props: ButtonGridProps) {
         </div>
     );
 }
-
-ButtonGrid.defaultProps = {
-    buttons: [],
-};
