@@ -1,8 +1,15 @@
 import { useState } from "react";
-import apiRequest from "../../services/apiService";
+import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
-import CancelTaskFormProps from "../../types/CancelTaskFormProps";
 import LabeledTextArea from "../discrete/labeledTextArea";
+import Task from "@/types/Task";
+
+export interface CancelTaskFormProps {
+    exitAction: () => void;
+    taskInfo: Task;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
 
 export default function CancelTaskForm(props: CancelTaskFormProps) {
     // Props

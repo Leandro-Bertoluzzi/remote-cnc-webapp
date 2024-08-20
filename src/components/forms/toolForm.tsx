@@ -1,12 +1,26 @@
 import { useState } from "react";
-import apiRequest from "../../services/apiService";
+import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
-import ToolFormProps from "../../types/ToolFormProps";
+import Tool from "@/types/Tool";
 import LabeledTextInput from "../discrete/labeledTextInput";
+
+export interface ToolFormProps {
+    exitAction: () => void;
+    create: boolean;
+    toolInfo?: Tool;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
+
+const defaultToolInfo = {
+    id: 0,
+    name: "",
+    description: "",
+};
 
 export default function ToolForm(props: ToolFormProps) {
     // Props
-    const { exitAction, create, toolInfo, setError, setNotification } = props;
+    const { exitAction, create, setError, setNotification, toolInfo = defaultToolInfo } = props;
 
     // Hooks for state variables
     const [toolName, setToolName] = useState<string>(toolInfo.name);
@@ -84,11 +98,3 @@ export default function ToolForm(props: ToolFormProps) {
         </BaseForm>
     );
 }
-
-ToolForm.defaultProps = {
-    toolInfo: {
-        id: 0,
-        name: "",
-        description: "",
-    },
-};

@@ -4,7 +4,6 @@ import Login from "@/app/login/page";
 import apiRequest from "@/services/apiService";
 import { setJwtToken } from "@/services/storage";
 import MessageDialogProps from "@/types/MessageDialogProps";
-import { useRouter } from "next/navigation";
 
 // Mock navigation hooks
 const mockRouterPush = jest.fn();

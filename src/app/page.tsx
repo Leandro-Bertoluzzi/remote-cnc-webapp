@@ -2,8 +2,13 @@
 
 import { Card } from "flowbite-react";
 import Loader from "@/components/discrete/loader";
-import MenuOption from "@/types/MenuOption";
 import useAuth from "@/hooks/useauth";
+
+interface MenuOption {
+    name: string;
+    description: string;
+    path: string;
+}
 
 const options: MenuOption[] = [
     {

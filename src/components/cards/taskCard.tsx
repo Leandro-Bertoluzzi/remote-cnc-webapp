@@ -10,12 +10,12 @@ import {
     BUTTON_RETRY,
     BUTTON_RUN,
 } from "../discrete/cardButton";
-import apiRequest from "../../services/apiService";
-import ButtonInfo, { ButtonInfoArray } from "../../types/ButtonInfo";
+import apiRequest from "@/services/apiService";
+import ButtonInfo, { ButtonInfoArray } from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
 import CancelTaskForm from "../forms/cancelTaskForm";
 import ConfirmDialog from "../dialogs/confirmDialog";
-import TaskCardProps from "../../types/TaskCardProps";
+import TaskCardProps from "@/types/TaskCardProps";
 import TaskForm from "../forms/taskForm";
 
 // Type definitions

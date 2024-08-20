@@ -1,4 +1,4 @@
-import ButtonInfo from "../../types/ButtonInfo";
+import ButtonInfo from "@/types/ButtonInfo";
 import CardButton from "../discrete/cardButton";
 import { Button } from "flowbite-react";
 
@@ -11,7 +11,7 @@ export interface ButtonGroupProps {
 // Component
 
 export default function ButtonGroup(props: ButtonGroupProps) {
-    const { buttons } = props;
+    const { buttons = [] } = props;
 
     if (!buttons.length) {
         return <></>;
@@ -30,7 +30,3 @@ export default function ButtonGroup(props: ButtonGroupProps) {
         </Button.Group>
     );
 }
-
-ButtonGroup.defaultProps = {
-    buttons: [],
-};

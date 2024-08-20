@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import CheckBoxProps from "../../types/CheckBoxProps";
+import CheckBoxProps from "@/types/CheckBoxProps";
 import { Checkbox, Label } from "flowbite-react";
 
 export default function CustomCheckBox(props: CheckBoxProps) {

@@ -1,9 +1,12 @@
 import apiRequest from "@/services/apiService";
 import { Button, TextInput } from "flowbite-react";
-import LoginFormProps from "@/types/LoginFormProps";
 import React, { FormEvent, ChangeEvent, useState } from "react";
 import { setJwtToken } from "@/services/storage";
 import { useRouter, useSearchParams } from "next/navigation";
+
+export interface LoginFormProps {
+    onErrorAction: (message: string) => void;
+}
 
 export default function LoginForm(props: LoginFormProps) {
     // Props

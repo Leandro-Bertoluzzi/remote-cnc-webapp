@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
-import apiRequest from "../../services/apiService";
-import ButtonInfo from "../../types/ButtonInfo";
+import apiRequest from "@/services/apiService";
+import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
-import FileCardProps from "../../types/FileCardProps";
 import FileForm from "../forms/fileForm";
+import FileInfo from "@/types/FileInfo";
+
+export interface FileCardProps {
+    file: FileInfo;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
 
 export default function FileCard(props: FileCardProps) {
     // Props

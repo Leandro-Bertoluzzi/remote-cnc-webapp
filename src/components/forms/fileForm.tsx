@@ -1,13 +1,29 @@
 import { useState } from "react";
-import apiRequest from "../../services/apiService";
+import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
-import FileFormProps from "../../types/FileFormProps";
+import { voidActionType } from "@/types/Actions";
+import FileInfo from "@/types/FileInfo";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledFileInput from "../discrete/labeledFileInput";
+import { setStringActionType } from "@/types/Actions";
+
+export interface FileFormProps {
+    exitAction: voidActionType;
+    create: boolean;
+    fileInfo?: FileInfo;
+    setError: setStringActionType;
+    setNotification: setStringActionType;
+}
+
+const defaultFileInfo = {
+    id: 0,
+    name: "",
+    created_at: "",
+};
 
 export default function FileForm(props: FileFormProps) {
     // Props
-    const { exitAction, create, fileInfo, setError, setNotification } = props;
+    const { exitAction, create, setError, setNotification, fileInfo = defaultFileInfo } = props;
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
@@ -96,11 +112,3 @@ export default function FileForm(props: FileFormProps) {
         </BaseForm>
     );
 }
-
-FileForm.defaultProps = {
-    fileInfo: {
-        id: 0,
-        name: "",
-        created_at: "",
-    },
-};

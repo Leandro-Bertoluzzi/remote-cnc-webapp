@@ -1,4 +1,6 @@
-import EmptyCardProps from "../../types/EmptyCardProps";
+export interface EmptyCardProps {
+    itemName: string;
+}
 
 export default function EmptyCard(props: EmptyCardProps) {
     const { itemName } = props;

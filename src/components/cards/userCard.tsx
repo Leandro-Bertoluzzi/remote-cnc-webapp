@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
-import apiRequest from "../../services/apiService";
-import ButtonInfo from "../../types/ButtonInfo";
+import apiRequest from "@/services/apiService";
+import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
-import UserCardProps from "../../types/UserCardProps";
+import User from "@/types/User";
 import UserForm from "../forms/userForm";
+
+export interface UserCardProps {
+    user: User;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
 
 export default function UserCard(props: UserCardProps) {
     const { user, setError, setNotification } = props;

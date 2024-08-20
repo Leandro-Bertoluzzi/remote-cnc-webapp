@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
-import apiRequest from "../../services/apiService";
-import ButtonInfo from "../../types/ButtonInfo";
+import apiRequest from "@/services/apiService";
+import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
-import ToolCardProps from "../../types/ToolCardProps";
+import Tool from "@/types/Tool";
 import ToolForm from "../forms/toolForm";
+
+export interface ToolCardProps {
+    tool: Tool;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
 
 export default function ToolCard(props: ToolCardProps) {
     // Props

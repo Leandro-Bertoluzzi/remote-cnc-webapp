@@ -1,5 +1,11 @@
-import ButtonGroup from "../containers/buttonGroup";
-import CardProps from "../../types/CardProps";
+import ButtonGroup from "@/components/containers/buttonGroup";
+import ButtonInfo from "@/types/ButtonInfo";
+
+export interface CardProps {
+    mainText: string;
+    additionalText: string[];
+    buttons: ButtonInfo[];
+}
 
 export default function BaseCard(props: CardProps) {
     const { mainText, additionalText, buttons } = props;

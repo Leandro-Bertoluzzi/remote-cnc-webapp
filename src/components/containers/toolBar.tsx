@@ -12,7 +12,7 @@ interface ToolBarItemProps {
 // TOOL BAR ITEM
 
 function ToolBarItem(props: ToolBarItemProps) {
-    const { action, children, tooltip, disabled } = props;
+    const { action, children, tooltip, disabled = false } = props;
 
     const handleClick = () => {
         action();
@@ -24,10 +24,6 @@ function ToolBarItem(props: ToolBarItemProps) {
         </Navbar.Link>
     );
 }
-
-ToolBarItem.defaultProps = {
-    disabled: false,
-};
 
 // TOOL BAR
 

@@ -3,8 +3,8 @@ import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import UsersView from "@/app/users/page";
 import apiRequest from "@/services/apiService";
 import User from "@/types/User";
-import UserCardProps from "@/types/UserCardProps";
-import UserFormProps from "@/types/UserFormProps";
+import { UserCardProps } from "@/components/cards/userCard";
+import { UserFormProps } from "@/components/forms/userForm";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import useAuth from "@/hooks/useauth";
 

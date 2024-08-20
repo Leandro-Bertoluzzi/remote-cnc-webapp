@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
-import apiRequest from "../../services/apiService";
-import ButtonInfo from "../../types/ButtonInfo";
+import apiRequest from "@/services/apiService";
+import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
-import MaterialCardProps from "../../types/MaterialCardProps";
+import Material from "@/types/Material";
 import MaterialForm from "../forms/materialForm";
+
+export interface MaterialCardProps {
+    material: Material;
+    setError: (message: string) => void;
+    setNotification: (message: string) => void;
+}
 
 export default function MaterialCard(props: MaterialCardProps) {
     // Props

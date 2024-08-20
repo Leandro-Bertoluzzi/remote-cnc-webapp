@@ -1,6 +1,14 @@
 import { ChangeEvent } from "react";
 import { Label, Select } from "flowbite-react";
-import LabeledSelectProps from "../../types/LabeledSelectProps";
+import { SelectOption } from "@/types/SelectProps";
+
+export interface LabeledSelectProps {
+    handleChange: (value: string) => void;
+    name: string;
+    label: string;
+    options: SelectOption[];
+    initialValue?: string | number;
+}
 
 export default function LabeledSelect(props: LabeledSelectProps) {
     // Props

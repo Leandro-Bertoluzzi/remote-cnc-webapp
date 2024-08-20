@@ -1,5 +1,14 @@
-import BaseFormProps from "../../types/BaseFormProps";
 import { Button, Modal } from "flowbite-react";
+import { ReactNode } from "react";
+
+export interface BaseFormProps {
+    title: string;
+    subtitle: string;
+    exitAction: () => void;
+    children: ReactNode;
+    btnSubmitAction: () => void;
+    btnSubmitText: string;
+}
 
 export default function BaseForm(props: BaseFormProps) {
     // Props
