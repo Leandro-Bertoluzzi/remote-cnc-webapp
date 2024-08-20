@@ -38,7 +38,7 @@ export default function TasksView() {
     // Actions
     const toggleFormModal = (show: boolean) => {
         setShowTaskForm(show);
-    }
+    };
 
     /*  Function: showErrorDialog
      *   Description: Shows a dialog with information about the error

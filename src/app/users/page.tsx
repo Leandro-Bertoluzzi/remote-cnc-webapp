@@ -26,7 +26,7 @@ export default function UsersView() {
     // Actions
     const toggleFormModal = (show: boolean) => {
         setShowUserForm(show);
-    }
+    };
 
     /*  Function: showErrorDialog
      *   Description: Shows a dialog with information about the error

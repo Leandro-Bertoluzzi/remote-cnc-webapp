@@ -20,7 +20,13 @@ const defaultMaterialInfo = {
 
 export default function MaterialForm(props: MaterialFormProps) {
     // Props
-    const { exitAction, create, setError, setNotification, materialInfo = defaultMaterialInfo } = props;
+    const {
+        exitAction,
+        create,
+        setError,
+        setNotification,
+        materialInfo = defaultMaterialInfo,
+    } = props;
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);

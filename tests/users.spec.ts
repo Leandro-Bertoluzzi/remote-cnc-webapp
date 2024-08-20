@@ -8,8 +8,8 @@ const authed_json = {
         name: "Admin",
         email: "admin@test.com",
         role: "admin",
-    }
-}
+    },
+};
 
 const test_users = [
     {

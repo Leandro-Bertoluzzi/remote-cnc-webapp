@@ -22,7 +22,7 @@ export default function useAuth(admin = false) {
 
         apiRequest("users/auth", "GET")
             .then((response) => {
-                if (admin && response.data.role != "admin"){
+                if (admin && response.data.role != "admin") {
                     router.push("/");
                     return;
                 }
