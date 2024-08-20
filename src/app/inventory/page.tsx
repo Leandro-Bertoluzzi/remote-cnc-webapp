@@ -30,13 +30,13 @@ export default function InventoryView() {
     const authorized = useAuth(true);
 
     // Actions
-    const toggleFormModal = (formType: 'tool' | 'material', show: boolean) => {
-        if (formType === 'tool') {
+    const toggleFormModal = (formType: "tool" | "material", show: boolean) => {
+        if (formType === "tool") {
             setShowToolForm(show);
         } else {
             setShowMaterialForm(show);
         }
-    }
+    };
 
     /*  Function: showErrorDialog
      *   Description: Shows a dialog with information about the error
@@ -95,7 +95,7 @@ export default function InventoryView() {
             <CardsList
                 title="Herramientas"
                 addItemBtnText="Agregar herramienta"
-                addItemBtnAction={() => toggleFormModal('tool', true)}
+                addItemBtnAction={() => toggleFormModal("tool", true)}
                 showAddItemBtn
             >
                 {tools.length === 0 ? (
@@ -117,7 +117,7 @@ export default function InventoryView() {
             <CardsList
                 title="Materiales"
                 addItemBtnText="Agregar material"
-                addItemBtnAction={() => toggleFormModal('material', true)}
+                addItemBtnAction={() => toggleFormModal("material", true)}
                 showAddItemBtn
             >
                 {materials.length === 0 ? (
@@ -145,7 +145,7 @@ export default function InventoryView() {
             )}
             {showToolForm && (
                 <ToolForm
-                    exitAction={() => toggleFormModal('tool', false)}
+                    exitAction={() => toggleFormModal("tool", false)}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}
@@ -153,7 +153,7 @@ export default function InventoryView() {
             )}
             {showMaterialForm && (
                 <MaterialForm
-                    exitAction={() => toggleFormModal('material', false)}
+                    exitAction={() => toggleFormModal("material", false)}
                     create={true}
                     setError={showErrorDialog}
                     setNotification={showNotification}

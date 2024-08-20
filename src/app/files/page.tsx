@@ -27,7 +27,7 @@ export default function FilesView() {
     // Actions
     const toggleFormModal = (show: boolean) => {
         setShowFileForm(show);
-    }
+    };
 
     /*  Function: showErrorDialog
      *   Description: Shows a dialog with information about the error

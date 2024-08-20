@@ -7,7 +7,7 @@ import { useState } from "react";
 interface JoystickButtonProps {
     index: number;
     onclick: () => void;
-};
+}
 
 function JoystickButton(props: JoystickButtonProps) {
     const { index, onclick } = props;

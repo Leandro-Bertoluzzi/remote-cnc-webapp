@@ -110,9 +110,7 @@ describe("use auth hook", () => {
         expect(mockRouterPush).toHaveBeenCalledWith("/");
     });
 
-    test.each([false, true])(
-        "successfull authentication",
-        async (admin) => {
+    test.each([false, true])("successfull authentication", async (admin) => {
         // Mock dependencies
         mockedApiRequest.mockResolvedValue({
             message: "Mocked response from the API",

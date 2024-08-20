@@ -39,8 +39,8 @@ export default async function apiRequest(
             throw Error(`${response.status} ${response.statusText}`);
         }
         let detail = "";
-        res.detail.forEach((item: {msg: string}) => {
-            detail += (item.msg + "\n");
+        res.detail.forEach((item: { msg: string }) => {
+            detail += item.msg + "\n";
         });
         throw Error(`${response.status} ${response.statusText}: ${detail}`);
     }
