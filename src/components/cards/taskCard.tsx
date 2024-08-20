@@ -17,13 +17,17 @@ import CancelTaskForm from "../forms/cancelTaskForm";
 import ConfirmDialog from "../dialogs/confirmDialog";
 import TaskCardProps from "@/types/TaskCardProps";
 import TaskForm from "../forms/taskForm";
+import { useNotification } from "@/contexts/notificationContext";
 
 // Type definitions
 type actionType = () => void;
 
 export default function TaskCard(props: TaskCardProps) {
     // Props
-    const { task, show, toolsList, materialsList, filesList, setError, setNotification } = props;
+    const { task, show, toolsList, materialsList, filesList } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [showTaskForm, setShowTaskForm] = useState<boolean>(false);
@@ -137,10 +141,10 @@ export default function TaskCard(props: TaskCardProps) {
 
         apiRequest(url, "PUT", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
     };
 
@@ -152,10 +156,10 @@ export default function TaskCard(props: TaskCardProps) {
 
         apiRequest(url, "DELETE")
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
     };
 
@@ -167,10 +171,10 @@ export default function TaskCard(props: TaskCardProps) {
 
         apiRequest(url, "POST")
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
     };
 
@@ -182,10 +186,10 @@ export default function TaskCard(props: TaskCardProps) {
             const r = await apiRequest("worker/pause", "GET");
             const url = `worker/pause/${r.paused ? 0 : 1}`;
             const response = await apiRequest(url, "PUT");
-            setNotification(response.success);
+            showNotification(response.success);
         } catch (error) {
             if (error instanceof Error) {
-                setError(error.message);
+                showErrorDialog(error.message);
             }
         }
     }
@@ -316,17 +320,10 @@ export default function TaskCard(props: TaskCardProps) {
                     toolsList={toolsList}
                     materialsList={materialsList}
                     filesList={filesList}
-                    setError={setError}
-                    setNotification={setNotification}
                 />
             )}
             {showCancelTaskForm && (
-                <CancelTaskForm
-                    exitAction={hideCancelFormModal}
-                    taskInfo={task}
-                    setError={setError}
-                    setNotification={setNotification}
-                />
+                <CancelTaskForm exitAction={hideCancelFormModal} taskInfo={task} />
             )}
             {showConfirmation && (
                 <ConfirmDialog

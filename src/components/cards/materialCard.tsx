@@ -6,16 +6,18 @@ import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
 import Material from "@/types/Material";
 import MaterialForm from "../forms/materialForm";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface MaterialCardProps {
     material: Material;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 export default function MaterialCard(props: MaterialCardProps) {
     // Props
-    const { material, setError, setNotification } = props;
+    const { material } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
@@ -31,10 +33,10 @@ export default function MaterialCard(props: MaterialCardProps) {
 
         apiRequest(url, "DELETE")
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
     };
 
@@ -88,8 +90,6 @@ export default function MaterialCard(props: MaterialCardProps) {
                     exitAction={hideMaterialFormModal}
                     create={false}
                     materialInfo={material}
-                    setError={setError}
-                    setNotification={setNotification}
                 />
             )}
             {showRemoveConfirmation && (

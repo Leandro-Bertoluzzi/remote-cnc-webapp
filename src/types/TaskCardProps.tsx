@@ -9,6 +9,4 @@ export default interface TaskCardProps {
     toolsList: Tool[];
     materialsList: Material[];
     filesList: FileInfo[];
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }

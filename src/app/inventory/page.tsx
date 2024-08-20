@@ -7,12 +7,11 @@ import Loader from "@/components/discrete/loader";
 import Material from "@/types/Material";
 import MaterialCard from "@/components/cards/materialCard";
 import MaterialForm from "@/components/forms/materialForm";
-import MessageDialog from "@/components/dialogs/messageDialog";
-import { MessageDialogType } from "@/types/MessageDialogProps";
 import Tool from "@/types/Tool";
 import ToolCard from "@/components/cards/toolCard";
 import ToolForm from "@/components/forms/toolForm";
 import useAuth from "@/hooks/useauth";
+import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
 
 export default function InventoryView() {
@@ -21,13 +20,12 @@ export default function InventoryView() {
     const [materials, setMaterials] = useState<Material[]>([]);
     const [showToolForm, setShowToolForm] = useState<boolean>(false);
     const [showMaterialForm, setShowMaterialForm] = useState<boolean>(false);
-    const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
-    const [notification, setNotification] = useState<string>("");
-    const [messageType, setMessageType] = useState<MessageDialogType>("error");
-    const [messageTitle, setMessageTitle] = useState<string>("");
 
     // User authentication
     const authorized = useAuth(true);
+
+    // Context
+    const { showErrorDialog } = useNotification();
 
     // Actions
     const toggleFormModal = (formType: "tool" | "material", show: boolean) => {
@@ -37,33 +35,6 @@ export default function InventoryView() {
             setShowMaterialForm(show);
         }
     };
-
-    /*  Function: showErrorDialog
-     *   Description: Shows a dialog with information about the error
-     */
-    function showErrorDialog(message: string) {
-        setNotification(message);
-        setMessageType("error");
-        setMessageTitle("Error de API");
-        setShowMessageDialog(true);
-    }
-
-    /*  Function: showNotification
-     *   Description: Shows a dialog with a notification
-     */
-    function showNotification(message: string) {
-        setNotification(message);
-        setMessageType("info");
-        setMessageTitle("¡Éxito!");
-        setShowMessageDialog(true);
-    }
-
-    /*  Function: hideMessageDialog
-     *   Description: Hides the message dialog
-     */
-    function hideMessageDialog() {
-        setShowMessageDialog(false);
-    }
 
     // Action to execute at the beginning
     useEffect(() => {
@@ -103,12 +74,7 @@ export default function InventoryView() {
                 ) : (
                     <>
                         {tools.map((tool) => (
-                            <ToolCard
-                                key={tool.id}
-                                tool={tool}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
-                            />
+                            <ToolCard key={tool.id} tool={tool} />
                         ))}
                     </>
                 )}
@@ -125,39 +91,16 @@ export default function InventoryView() {
                 ) : (
                     <>
                         {materials.map((material) => (
-                            <MaterialCard
-                                key={material.id}
-                                material={material}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
-                            />
+                            <MaterialCard key={material.id} material={material} />
                         ))}
                     </>
                 )}
             </CardsList>
-            {showMessageDialog && (
-                <MessageDialog
-                    onClose={hideMessageDialog}
-                    type={messageType}
-                    title={messageTitle}
-                    text={notification}
-                />
-            )}
             {showToolForm && (
-                <ToolForm
-                    exitAction={() => toggleFormModal("tool", false)}
-                    create={true}
-                    setError={showErrorDialog}
-                    setNotification={showNotification}
-                />
+                <ToolForm exitAction={() => toggleFormModal("tool", false)} create={true} />
             )}
             {showMaterialForm && (
-                <MaterialForm
-                    exitAction={() => toggleFormModal("material", false)}
-                    create={true}
-                    setError={showErrorDialog}
-                    setNotification={showNotification}
-                />
+                <MaterialForm exitAction={() => toggleFormModal("material", false)} create={true} />
             )}
         </>
     );

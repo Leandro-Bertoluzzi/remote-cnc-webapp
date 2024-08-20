@@ -6,15 +6,17 @@ import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
 import User from "@/types/User";
 import UserForm from "../forms/userForm";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface UserCardProps {
     user: User;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 export default function UserCard(props: UserCardProps) {
-    const { user, setError, setNotification } = props;
+    const { user } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Text
     const roleText = `Role: ${user.role}`;
@@ -33,10 +35,10 @@ export default function UserCard(props: UserCardProps) {
 
         apiRequest(url, "DELETE")
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
     };
 
@@ -86,13 +88,7 @@ export default function UserCard(props: UserCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showUserForm && (
-                <UserForm
-                    exitAction={hideUserFormModal}
-                    create={false}
-                    userInfo={user}
-                    setError={setError}
-                    setNotification={setNotification}
-                />
+                <UserForm exitAction={hideUserFormModal} create={false} userInfo={user} />
             )}
             {showRemoveConfirmation && (
                 <ConfirmDialog

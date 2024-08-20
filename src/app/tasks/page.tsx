@@ -6,14 +6,13 @@ import EmptyCard from "@/components/cards/emptyCard";
 import FileInfo from "@/types/FileInfo";
 import Loader from "@/components/discrete/loader";
 import Material from "@/types/Material";
-import MessageDialog from "@/components/dialogs/messageDialog";
-import { MessageDialogType } from "@/types/MessageDialogProps";
 import Task from "@/types/Task";
 import TaskCard from "@/components/cards/taskCard";
 import TasksFilter from "@/components/discrete/tasksFilter";
 import TaskForm from "@/components/forms/taskForm";
 import Tool from "@/types/Tool";
 import useAuth from "@/hooks/useauth";
+import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
 
 const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
@@ -27,45 +26,17 @@ export default function TasksView() {
 
     const [taskTypes, setTaskTypes] = useState<string[]>(DEFAULT_TASK_TYPES);
     const [showTaskForm, setShowTaskForm] = useState<boolean>(false);
-    const [showMessageDialog, setShowMessageDialog] = useState<boolean>(false);
-    const [notification, setNotification] = useState<string>("");
-    const [messageType, setMessageType] = useState<MessageDialogType>("error");
-    const [messageTitle, setMessageTitle] = useState<string>("");
 
     // User authentication
     const authorized = useAuth();
+
+    // Context
+    const { showErrorDialog } = useNotification();
 
     // Actions
     const toggleFormModal = (show: boolean) => {
         setShowTaskForm(show);
     };
-
-    /*  Function: showErrorDialog
-     *   Description: Shows a dialog with information about the error
-     */
-    function showErrorDialog(message: string) {
-        setNotification(message);
-        setMessageType("error");
-        setMessageTitle("Error de API");
-        setShowMessageDialog(true);
-    }
-
-    /*  Function: showNotification
-     *   Description: Shows a dialog with a notification
-     */
-    function showNotification(message: string) {
-        setNotification(message);
-        setMessageType("info");
-        setMessageTitle("¡Éxito!");
-        setShowMessageDialog(true);
-    }
-
-    /*  Function: hideMessageDialog
-     *   Description: Hides the message dialog
-     */
-    function hideMessageDialog() {
-        setShowMessageDialog(false);
-    }
 
     // Action to execute at the beginning
     useEffect(() => {
@@ -141,21 +112,11 @@ export default function TasksView() {
                                 toolsList={availableTools}
                                 materialsList={availableMaterials}
                                 filesList={availableFiles}
-                                setError={showErrorDialog}
-                                setNotification={showNotification}
                             />
                         ))}
                     </>
                 )}
             </CardsList>
-            {showMessageDialog && (
-                <MessageDialog
-                    onClose={hideMessageDialog}
-                    type={messageType}
-                    title={messageTitle}
-                    text={notification}
-                />
-            )}
             {showTaskForm && (
                 <TaskForm
                     exitAction={() => toggleFormModal(false)}
@@ -163,8 +124,6 @@ export default function TasksView() {
                     toolsList={availableTools}
                     materialsList={availableMaterials}
                     filesList={availableFiles}
-                    setError={showErrorDialog}
-                    setNotification={showNotification}
                 />
             )}
         </>

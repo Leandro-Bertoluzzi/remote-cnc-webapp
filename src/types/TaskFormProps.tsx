@@ -10,6 +10,4 @@ export default interface TaskFormProps {
     toolsList: Tool[];
     materialsList: Material[];
     filesList: FileInfo[];
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }

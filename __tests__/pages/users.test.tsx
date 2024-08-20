@@ -6,6 +6,8 @@ import User from "@/types/User";
 import { UserCardProps } from "@/components/cards/userCard";
 import { UserFormProps } from "@/components/forms/userForm";
 import MessageDialogProps from "@/types/MessageDialogProps";
+import { NotificationProvider } from "@/contexts/notificationContext";
+import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication
@@ -56,10 +58,8 @@ jest.mock("@/components/cards/userCard", () =>
 
 jest.mock("@/components/forms/userForm", () =>
     // eslint-disable-next-line react/display-name
-    ({ exitAction, setError, setNotification }: UserFormProps) => (
+    ({ exitAction }: UserFormProps) => (
         <div data-testid="user-form">
-            <button onClick={() => setNotification("Éxito en formulario")}>Notify success</button>
-            <button onClick={() => setError("Error en formulario")}>Notify error</button>
             <button onClick={() => exitAction()}>Close form</button>
         </div>
     )
@@ -89,7 +89,13 @@ describe("UsersView", () => {
         mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
-        render(<UsersView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <UsersView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const userCards = await screen.findAllByTestId("user-card");
@@ -110,7 +116,13 @@ describe("UsersView", () => {
         mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
-        render(<UsersView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <UsersView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
@@ -125,7 +137,13 @@ describe("UsersView", () => {
         mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando usuarios"));
 
         // Instantiate widget under test
-        render(<UsersView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <UsersView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -147,7 +165,13 @@ describe("UsersView", () => {
         mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
-        render(<UsersView />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <UsersView />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const button = screen.getByText("Agregar usuario");
@@ -167,65 +191,5 @@ describe("UsersView", () => {
 
         // Assert form is gone
         expect(form).not.toBeInTheDocument();
-    });
-
-    it("notifies error from child component", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(users);
-
-        // Instantiate widget under test
-        render(<UsersView />);
-
-        // Trigger event to open form
-        const button = screen.getByText("Agregar usuario");
-        fireEvent.click(button);
-
-        // Trigger error notification
-        const errorBtn = screen.getByText("Notify error");
-        fireEvent.click(errorBtn);
-
-        // Assert notification popup appeared
-        const notification = await screen.findByTestId("message-dialog");
-        expect(notification).toBeInTheDocument();
-        const notificationText = await screen.findByText("Error en formulario");
-        expect(notificationText).toBeInTheDocument();
-
-        // Trigger event to close window
-        const closeBtn = screen.getByText("Close dialog");
-        fireEvent.click(closeBtn);
-
-        // Assert notification popup is gone
-        expect(notification).not.toBeInTheDocument();
-        expect(notificationText).not.toBeInTheDocument();
-    });
-
-    it("notifies success from child component", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(users);
-
-        // Instantiate widget under test
-        render(<UsersView />);
-
-        // Trigger event to open form
-        const button = screen.getByText("Agregar usuario");
-        fireEvent.click(button);
-
-        // Trigger error notification
-        const successBtn = screen.getByText("Notify success");
-        fireEvent.click(successBtn);
-
-        // Assert notification popup appeared
-        const notification = await screen.findByTestId("message-dialog");
-        expect(notification).toBeInTheDocument();
-        const notificationText = await screen.findByText("Éxito en formulario");
-        expect(notificationText).toBeInTheDocument();
-
-        // Trigger event to close window
-        const closeBtn = screen.getByText("Close dialog");
-        fireEvent.click(closeBtn);
-
-        // Assert notification popup is gone
-        expect(notification).not.toBeInTheDocument();
-        expect(notificationText).not.toBeInTheDocument();
     });
 });

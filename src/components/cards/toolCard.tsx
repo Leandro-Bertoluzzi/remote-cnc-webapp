@@ -6,16 +6,18 @@ import BaseCard from "./baseCard";
 import ConfirmDialog from "../dialogs/confirmDialog";
 import Tool from "@/types/Tool";
 import ToolForm from "../forms/toolForm";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface ToolCardProps {
     tool: Tool;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 export default function ToolCard(props: ToolCardProps) {
     // Props
-    const { tool, setError, setNotification } = props;
+    const { tool } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [showToolForm, setShowToolForm] = useState<boolean>(false);
@@ -31,10 +33,10 @@ export default function ToolCard(props: ToolCardProps) {
 
         apiRequest(url, "DELETE")
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
     };
 
@@ -84,13 +86,7 @@ export default function ToolCard(props: ToolCardProps) {
                 buttons={[btnEdit, btnRemove]}
             />
             {showToolForm && (
-                <ToolForm
-                    exitAction={hideToolFormModal}
-                    create={false}
-                    toolInfo={tool}
-                    setError={setError}
-                    setNotification={setNotification}
-                />
+                <ToolForm exitAction={hideToolFormModal} create={false} toolInfo={tool} />
             )}
             {showRemoveConfirmation && (
                 <ConfirmDialog

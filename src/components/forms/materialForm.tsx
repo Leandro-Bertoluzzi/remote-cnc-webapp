@@ -3,13 +3,12 @@ import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import Material from "@/types/Material";
 import LabeledTextInput from "../discrete/labeledTextInput";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface MaterialFormProps {
     exitAction: () => void;
     create: boolean;
     materialInfo?: Material;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 const defaultMaterialInfo = {
@@ -20,13 +19,10 @@ const defaultMaterialInfo = {
 
 export default function MaterialForm(props: MaterialFormProps) {
     // Props
-    const {
-        exitAction,
-        create,
-        setError,
-        setNotification,
-        materialInfo = defaultMaterialInfo,
-    } = props;
+    const { exitAction, create, materialInfo = defaultMaterialInfo } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);
@@ -50,10 +46,10 @@ export default function MaterialForm(props: MaterialFormProps) {
 
         apiRequest("materials", "POST", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();
@@ -68,10 +64,10 @@ export default function MaterialForm(props: MaterialFormProps) {
 
         apiRequest(url, "PUT", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();

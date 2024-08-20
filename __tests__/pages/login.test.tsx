@@ -4,6 +4,8 @@ import Login from "@/app/login/page";
 import apiRequest from "@/services/apiService";
 import { setJwtToken } from "@/services/storage";
 import MessageDialogProps from "@/types/MessageDialogProps";
+import { NotificationProvider } from "@/contexts/notificationContext";
+import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 
 // Mock navigation hooks
 const mockRouterPush = jest.fn();
@@ -47,7 +49,13 @@ describe("Login", () => {
 
     it("renders the login view", () => {
         // Instantiate widget under test
-        render(<Login />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <Login />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Assert components in widget
         const title = screen.getByText("Identificación de usuario");
@@ -62,7 +70,13 @@ describe("Login", () => {
         mockedApiRequest.mockRejectedValue(new Error("Error durante login"));
 
         // Instantiate widget under test
-        render(<Login />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <Login />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Trigger event to query API
         const form = screen.getByTestId("login-form");
@@ -103,7 +117,13 @@ describe("Login", () => {
         });
 
         // Instantiate widget under test
-        render(<Login />);
+        render(
+            <NotificationProvider>
+                <NotificationsWrapper>
+                    <Login />
+                </NotificationsWrapper>
+            </NotificationProvider>
+        );
 
         // Trigger event to query API
         const form = screen.getByTestId("login-form");

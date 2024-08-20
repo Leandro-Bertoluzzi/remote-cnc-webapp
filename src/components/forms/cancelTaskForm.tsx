@@ -3,17 +3,19 @@ import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import Task from "@/types/Task";
+import { useNotification } from "@/contexts/notificationContext";
 
 export interface CancelTaskFormProps {
     exitAction: () => void;
     taskInfo: Task;
-    setError: (message: string) => void;
-    setNotification: (message: string) => void;
 }
 
 export default function CancelTaskForm(props: CancelTaskFormProps) {
     // Props
-    const { exitAction, taskInfo, setError, setNotification } = props;
+    const { exitAction, taskInfo } = props;
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     // Hooks for state variables
     const [cancellationReason, setCancellationReason] = useState<string>("");
@@ -34,10 +36,10 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
 
         apiRequest(url, "PUT", data, true)
             .then((response) => {
-                setNotification(response.success);
+                showNotification(response.success);
             })
             .catch((err) => {
-                setError(err.message);
+                showErrorDialog(err.message);
             });
 
         exitAction();
