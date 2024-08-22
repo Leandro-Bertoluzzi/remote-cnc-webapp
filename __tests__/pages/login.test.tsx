@@ -37,7 +37,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     ({ onClose, text }: MessageDialogProps) => (
         <div data-testid="message-dialog">
             {text}
-            <button onClick={() => onClose()}>Close dialog</button>
+            <button onClick={onClose}>Close dialog</button>
         </div>
     )
 );

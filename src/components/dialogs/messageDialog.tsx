@@ -46,7 +46,7 @@ export default function MessageDialog(props: MessageDialogProps) {
                     </div>
                 </div>
                 <div className="flex justify-center px-4 py-3 sm:px-6">
-                    <Button color="indigo" onClick={() => onClose()}>
+                    <Button color="indigo" onClick={onClose}>
                         Entendido
                     </Button>
                 </div>

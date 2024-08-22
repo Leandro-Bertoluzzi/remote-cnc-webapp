@@ -55,29 +55,21 @@ export default function FileForm(props: FileFormProps) {
         formData.append("file", file, fileName);
 
         apiRequest("files", "POST", formData)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };
 
     const handleUpdateClick = () => {
         const data = {
-            name: fileName,
+            file_name: fileName,
         };
         const url = `files/${fileInfo.id}`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };

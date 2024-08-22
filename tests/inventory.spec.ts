@@ -126,8 +126,14 @@ test.describe("Inventory page", () => {
         await page.route(/.*\/materials\?token=/, async (route) => {
             await route.fulfill({ json: test_materials });
         });
+        await page.route(/.*\/materials\/\d\?token=/, async (route) => {
+            await route.fulfill({ json: { success: "Material actualizado" } });
+        });
         await page.route(/.*\/tools\?token=/, async (route) => {
             await route.fulfill({ json: test_tools });
+        });
+        await page.route(/.*\/tools\/\d\?token=/, async (route) => {
+            await route.fulfill({ json: { success: "Herramienta actualizada" } });
         });
 
         // Go to page under test
@@ -161,6 +167,10 @@ test.describe("Inventory page", () => {
         // Click submit button
         await page.getByRole("button", { name: "Guardar" }).click();
 
+        // Expect notification to appear
+        await expect(page.getByText("Herramienta actualizada")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
+
         // TO DO: Should update the list of inventory
 
         // Click button to remove a tool
@@ -173,6 +183,10 @@ test.describe("Inventory page", () => {
 
         // Click submit button
         await page.getByRole("button", { name: "Eliminar" }).click();
+
+        // Expect notification to appear
+        await expect(page.getByText("Herramienta actualizada")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
 
         // TO DO: Should update the list of inventory
 
@@ -191,9 +205,13 @@ test.describe("Inventory page", () => {
         // Click submit button
         await page.getByRole("button", { name: "Guardar" }).click();
 
+        // Expect notification to appear
+        await expect(page.getByText("Material actualizado")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
+
         // TO DO: Should update the list of inventory
 
-        // Click button to remove a tool
+        // Click button to remove a material
         await page.getByRole("button", { name: "Eliminar" }).nth(2).click();
 
         // Expect dialog to appear
@@ -203,6 +221,10 @@ test.describe("Inventory page", () => {
 
         // Click submit button
         await page.getByRole("button", { name: "Eliminar" }).click();
+
+        // Expect notification to appear
+        await expect(page.getByText("Material actualizado")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
 
         // TO DO: Should update the list of inventory
     });

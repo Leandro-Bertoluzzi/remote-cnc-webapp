@@ -57,12 +57,8 @@ export default function UserForm(props: UserFormProps) {
         };
 
         apiRequest("users", "POST", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };
@@ -76,12 +72,8 @@ export default function UserForm(props: UserFormProps) {
         const url = `users/${userInfo.id}`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };

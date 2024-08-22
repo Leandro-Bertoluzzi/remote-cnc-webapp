@@ -35,12 +35,8 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
         const url = `tasks/${taskInfo.id}/status`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };

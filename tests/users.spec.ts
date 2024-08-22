@@ -82,6 +82,9 @@ test.describe("Users page", () => {
         await page.route(/.*\/users\?token=/, async (route) => {
             await route.fulfill({ json: test_users });
         });
+        await page.route(/.*\/users\/\d\?token=/, async (route) => {
+            await route.fulfill({ json: { success: "Usuario actualizado" } });
+        });
 
         // Go to page under test
         await page.goto("/users");
@@ -112,6 +115,10 @@ test.describe("Users page", () => {
         // Click submit button
         await page.getByRole("button", { name: "Actualizar" }).click();
 
+        // Expect notification to appear
+        await expect(page.getByText("Usuario actualizado")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
+
         // TO DO: Should update the list of users
 
         // Click button to remove an entry
@@ -125,6 +132,10 @@ test.describe("Users page", () => {
 
         // Click submit button
         await page.getByRole("button", { name: "Eliminar" }).click();
+
+        // Expect notification to appear
+        await expect(page.getByText("Usuario actualizado")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
 
         // TO DO: Should update the list of users
     });

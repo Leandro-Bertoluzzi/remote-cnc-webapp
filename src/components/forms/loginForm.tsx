@@ -38,9 +38,7 @@ export default function LoginForm() {
                 setJwtToken(response.data.token);
                 router.push(callbackUrl);
             })
-            .catch((error) => {
-                showErrorDialog(error.message);
-            });
+            .catch((error) => showErrorDialog(error.message));
     };
 
     return (

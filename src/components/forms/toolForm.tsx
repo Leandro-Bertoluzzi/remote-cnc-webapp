@@ -43,12 +43,8 @@ export default function ToolForm(props: ToolFormProps) {
         };
 
         apiRequest("tools", "POST", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };
@@ -61,12 +57,8 @@ export default function ToolForm(props: ToolFormProps) {
         const url = `tools/${toolInfo.id}`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };

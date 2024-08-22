@@ -44,7 +44,7 @@ export default function PortsList() {
             <Button
                 color={connected ? "failure" : "success"}
                 disabled={!selectedPort || waiting}
-                onClick={() => handleConnect()}
+                onClick={handleConnect}
                 size="md"
             >
                 {connected ? <TbPlugX /> : <TbPlug />}

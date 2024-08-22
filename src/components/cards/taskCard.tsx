@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     BUTTON_CANCEL,
     BUTTON_EDIT,
@@ -10,35 +9,37 @@ import {
     BUTTON_RETRY,
     BUTTON_RUN,
 } from "../discrete/cardButton";
-import apiRequest from "@/services/apiService";
 import ButtonInfo, { ButtonInfoArray } from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
-import CancelTaskForm from "../forms/cancelTaskForm";
-import ConfirmDialog from "../dialogs/confirmDialog";
 import TaskCardProps from "@/types/TaskCardProps";
-import TaskForm from "../forms/taskForm";
-import { useNotification } from "@/contexts/notificationContext";
 
-// Type definitions
-type actionType = () => void;
+// Constants
+
+export const TASK_FINISHED_STATUS = "finished";
+export const TASK_CANCELLED_STATUS = "cancelled";
+export const TASK_ON_HOLD_STATUS = "on_hold";
+export const TASK_APPROVED_STATUS = TASK_ON_HOLD_STATUS;
+export const TASK_INITIAL_STATUS = "pending_approval";
+export const TASK_FAILED_STATUS = "failed";
+export const TASK_IN_PROGRESS_STATUS = "in_progress";
 
 export default function TaskCard(props: TaskCardProps) {
     // Props
-    const { task, show, toolsList, materialsList, filesList } = props;
-
-    // Context
-    const { showErrorDialog, showNotification } = useNotification();
-
-    // Hooks for state variables
-    const [showTaskForm, setShowTaskForm] = useState<boolean>(false);
-    const [createTask, setCreateTask] = useState<boolean>(false);
-    const [showCancelTaskForm, setShowCancelTaskForm] = useState<boolean>(false);
-    const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-    const [confirmDialogTitle, setConfirmDialogTitle] = useState<string>("");
-    const [confirmDialogText, setConfirmDialogText] = useState<string>("");
-    const [onConfirmMethod, setOnConfirmMethod] = useState<actionType>(() => () => {
-        return;
-    });
+    const {
+        task,
+        show,
+        toolsList,
+        materialsList,
+        filesList,
+        onEdit,
+        onCancel,
+        onRemove,
+        onApprove,
+        onRestore,
+        onRun,
+        onPause,
+        onRetry,
+    } = props;
 
     // Text
     const materialText = `Material: ${materialsList.find((material) => material.id == task.material_id)?.name}`;
@@ -46,53 +47,43 @@ export default function TaskCard(props: TaskCardProps) {
     const fileText = `Archivo: ${filesList.find((file) => file.id == task.file_id)?.name}`;
     const additionalText = [materialText, toolText, fileText];
 
-    // Constants
-
-    const TASK_FINISHED_STATUS = "finished";
-    const TASK_CANCELLED_STATUS = "cancelled";
-    const TASK_ON_HOLD_STATUS = "on_hold";
-    const TASK_APPROVED_STATUS = TASK_ON_HOLD_STATUS;
-    const TASK_INITIAL_STATUS = "pending_approval";
-    const TASK_FAILED_STATUS = "failed";
-    const TASK_IN_PROGRESS_STATUS = "in_progress";
-
     // Card buttons
     const btnEdit: ButtonInfo = {
         type: BUTTON_EDIT,
-        action: showUpdateTaskFormModal,
+        action: onEdit,
     };
     const btnCancel: ButtonInfo = {
         type: BUTTON_CANCEL,
-        action: showCancelTaskFormModal,
+        action: onCancel,
     };
     const btnApprove: ButtonInfo = {
         type: BUTTON_APPROVE,
-        action: showApproveConfirmationModal,
+        action: onApprove,
     };
     const btnRemove: ButtonInfo = {
         type: BUTTON_REMOVE,
-        action: showRemoveConfirmationModal,
+        action: onRemove,
     };
     const btnRestore: ButtonInfo = {
         type: BUTTON_RESTORE,
-        action: showRestoreConfirmationModal,
+        action: onRestore,
     };
     const btnRepeat: ButtonInfo = {
         type: BUTTON_REPEAT,
-        action: showDuplicateTaskFormModal,
+        action: onRetry,
     };
     const btnRetry: ButtonInfo = {
         type: BUTTON_RETRY,
-        action: showDuplicateTaskFormModal,
+        action: onRetry,
     };
     const btnRun: ButtonInfo = {
         type: BUTTON_RUN,
-        action: showRunConfirmationModal,
+        action: onRun,
     };
     const btnPause: ButtonInfo = {
         //('Retomar' if self.paused else 'Pausar', self.pauseTask)
         type: BUTTON_PAUSE,
-        action: togglePausedTask,
+        action: onPause,
     };
 
     const button_info: ButtonInfoArray = {
@@ -130,210 +121,9 @@ export default function TaskCard(props: TaskCardProps) {
         additionalText.push(`Motivo de cancelación: ${task.cancellation_reason}`);
     }
 
-    // API requests
-
-    /*  Function: updateTaskStatus
-     *   Description: Requests the API to update the task status
-     */
-    const updateTaskStatus = (status: string) => {
-        const data = { status };
-        const url = `tasks/${task.id}/status`;
-
-        apiRequest(url, "PUT", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
-    };
-
-    /*  Function: removeTask
-     *   Description: Requests the API to remove the task
-     */
-    const removeTask = () => {
-        const url = `tasks/${task.id}`;
-
-        apiRequest(url, "DELETE")
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
-    };
-
-    /*  Function: runTask
-     *   Description: Requests the API to execute the task
-     */
-    const runTask = () => {
-        const url = `worker/task/${task.id}`;
-
-        apiRequest(url, "POST")
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
-    };
-
-    /*  Function: togglePausedTask
-     *   Description: Requests the API to pause or resume the task
-     */
-    async function togglePausedTask() {
-        try {
-            const r = await apiRequest("worker/pause", "GET");
-            const url = `worker/pause/${r.paused ? 0 : 1}`;
-            const response = await apiRequest(url, "PUT");
-            showNotification(response.success);
-        } catch (error) {
-            if (error instanceof Error) {
-                showErrorDialog(error.message);
-            }
-        }
-    }
-
-    /*  Function: approveTask
-     *   Description: Approves the current request
-     */
-    const approveTask = () => {
-        updateTaskStatus(TASK_APPROVED_STATUS);
-    };
-
-    /*  Function: restoreTask
-     *   Description: Restores the current task to its initial state
-     */
-    const restoreTask = () => {
-        updateTaskStatus(TASK_INITIAL_STATUS);
-    };
-
-    // Actions
-
-    /*  Function: showUpdateTaskFormModal
-     *   Description: Enables the modal to update the current task
-     */
-    function showUpdateTaskFormModal() {
-        setCreateTask(false);
-        setShowTaskForm(true);
-    }
-
-    /*  Function: showDuplicateTaskFormModal
-     *   Description: Enables the modal to create a duplicate of the current task
-     */
-    function showDuplicateTaskFormModal() {
-        setCreateTask(true);
-        setShowTaskForm(true);
-    }
-
-    /*  Function: hideUpdateTaskFormModal
-     *   Description: Disables the modal to update the current task
-     */
-    function hideUpdateTaskFormModal() {
-        setShowTaskForm(false);
-    }
-
-    /*  Function: showCancelTaskFormModal
-     *   Description: Enables the modal to cancel the current task
-     */
-    function showCancelTaskFormModal() {
-        setShowCancelTaskForm(true);
-    }
-
-    /*  Function: hideCancelFormModal
-     *   Description: Disables the modal to cancel the current task
-     */
-    function hideCancelFormModal() {
-        setShowCancelTaskForm(false);
-    }
-
-    /*  Function: showApproveConfirmationModal
-     *   Description: Enables the modal to confirm the approval
-     */
-    function showApproveConfirmationModal() {
-        setConfirmDialogTitle("Aprobar tarea");
-        setConfirmDialogText("¿Está seguro de que desea aprobar la tarea?");
-        setOnConfirmMethod(() => () => approveTask());
-        setShowConfirmation(true);
-    }
-
-    /*  Function: showConfirmationModal
-     *   Description: Enables the modal to confirm the restore
-     */
-    function showRestoreConfirmationModal() {
-        setConfirmDialogTitle("Restaurar tarea");
-        setConfirmDialogText(
-            "¿Realmente desea restaurar la tarea? \
-            Esto la devolverá al estado inicial, pendiente de aprobación"
-        );
-        setOnConfirmMethod(() => () => restoreTask());
-        setShowConfirmation(true);
-    }
-
-    /*  Function: showRemoveConfirmationModal
-     *   Description: Enables the modal to confirm the removal
-     */
-    function showRemoveConfirmationModal() {
-        setConfirmDialogTitle("Eliminar tarea");
-        setConfirmDialogText("¿Realmente desea eliminar la tarea?");
-        setOnConfirmMethod(() => () => removeTask());
-        setShowConfirmation(true);
-    }
-
-    /*  Function: showRunConfirmationModal
-     *   Description: Enables the modal to confirm the execution
-     */
-    function showRunConfirmationModal() {
-        setConfirmDialogTitle("Ejecutar tarea");
-        setConfirmDialogText("¿Desea ejecutar la tarea ahora?");
-        setOnConfirmMethod(() => () => runTask());
-        setShowConfirmation(true);
-    }
-
-    /*  Function: onConfirm
-     *   Description: Executes the selected action
-     */
-    function onConfirm() {
-        hideConfirmationModal();
-        onConfirmMethod();
-    }
-
-    /*  Function: hideConfirmationModal
-     *   Description: Disables the confirmation dialog
-     */
-    function hideConfirmationModal() {
-        setShowConfirmation(false);
-    }
-
     if (!show) {
         return <></>;
     }
 
-    return (
-        <>
-            <BaseCard mainText={task.name} additionalText={additionalText} buttons={cardButtons} />
-            {showTaskForm && (
-                <TaskForm
-                    exitAction={hideUpdateTaskFormModal}
-                    create={createTask}
-                    taskInfo={task}
-                    toolsList={toolsList}
-                    materialsList={materialsList}
-                    filesList={filesList}
-                />
-            )}
-            {showCancelTaskForm && (
-                <CancelTaskForm exitAction={hideCancelFormModal} taskInfo={task} />
-            )}
-            {showConfirmation && (
-                <ConfirmDialog
-                    title={confirmDialogTitle}
-                    text={confirmDialogText}
-                    confirmText="Aceptar"
-                    onAccept={onConfirm}
-                    onCancel={hideConfirmationModal}
-                />
-            )}
-        </>
-    );
+    return <BaseCard mainText={task.name} additionalText={additionalText} buttons={cardButtons} />;
 }
