@@ -34,7 +34,11 @@ export default function LoginForm() {
 
         apiRequest("users/login", "POST", data, true)
             .then((response) => {
-                const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+                const callbackUrlParam = searchParams.get("callbackUrl");
+                const callbackUrl =
+                    typeof callbackUrlParam === "string" && callbackUrlParam.trim().length > 0
+                        ? callbackUrlParam
+                        : "/";
                 setJwtToken(response.data.token);
                 router.push(callbackUrl);
             })

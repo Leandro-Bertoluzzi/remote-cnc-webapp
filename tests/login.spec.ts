@@ -51,6 +51,35 @@ test.describe("Login page", () => {
         await expect(page).not.toHaveURL(/.*login/);
     });
 
+    test("Successful login from home page", async ({ page }) => {
+        // Mock API request
+        await page.route(/.*\/users\/login/, async (route) => {
+            const json = {
+                data: {
+                    token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjI1NTYxMjI0MDB9.2ISWda0JDBdD-Ee-7zibI6sVpB5hreinj3k_vLQExDU",
+                },
+            };
+            await route.fulfill({ json });
+        });
+
+        // Go to login page
+        await page.goto("/login?callbackUrl=");
+
+        // Fill in form
+        const email = faker.internet.email();
+        const password = faker.internet.password({ length: 10 });
+        const correctPassword = password[0].toUpperCase() + password.slice(1) + "@123";
+        await page.getByRole("textbox", { name: "email" }).fill(email);
+        await page.getByTestId("input-password").fill(correctPassword);
+
+        // Click submit button
+        await page.getByRole("button", { name: "Enviar" }).click();
+
+        // Expect redirection
+        await expect(page).toHaveURL("./");
+        await expect(page).not.toHaveURL(/.*login/);
+    });
+
     const pages = ["files", "inventory", "requests", "tasks", "users"];
     for (const page_name of pages) {
         test(`Successful login from ${page_name}`, async ({ page }) => {
