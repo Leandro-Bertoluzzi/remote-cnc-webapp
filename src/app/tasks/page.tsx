@@ -15,7 +15,7 @@ import TaskForm from "@/components/forms/taskForm";
 import Tool from "@/types/Tool";
 import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { TASK_APPROVED_STATUS, TASK_INITIAL_STATUS } from "@/components/cards/taskCard";
 
 const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
@@ -116,31 +116,30 @@ export default function TasksView() {
     };
 
     // Action to execute at the beginning
-    useEffect(() => {
-        async function queryItems() {
-            try {
-                const [files, materials, tools, tasks] = await Promise.all([
-                    apiRequest("files", "GET"),
-                    apiRequest("materials", "GET"),
-                    apiRequest("tools", "GET"),
-                    apiRequest("tasks", "GET"),
-                ]);
-
-                setAvailableFiles(files);
-                setAvailableMaterials(materials);
-                setAvailableTools(tools);
-                setTasks(tasks);
-            } catch (error) {
-                if (error instanceof Error) {
-                    showErrorDialog(error.message);
-                }
+    const queryItems = useCallback(async () => {
+        try {
+            const [files, materials, tools, tasks] = await Promise.all([
+                apiRequest("files", "GET"),
+                apiRequest("materials", "GET"),
+                apiRequest("tools", "GET"),
+                apiRequest("tasks", "GET"),
+            ]);
+            setAvailableFiles(files);
+            setAvailableMaterials(materials);
+            setAvailableTools(tools);
+            setTasks(tasks);
+        } catch (error) {
+            if (error instanceof Error) {
+                showErrorDialog(error.message);
             }
         }
+    }, [showErrorDialog]);
 
+    useEffect(() => {
         if (authorized) {
             queryItems();
         }
-    }, [authorized]);
+    }, [authorized, queryItems]);
 
     // Methods
     const updateTaskStatusList = (status: string, add: boolean) => {

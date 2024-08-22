@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useState, useCallback } from "react";
 import { MessageDialogType } from "@/types/MessageDialogProps";
 
 interface NotificationContextProps {
@@ -21,23 +21,23 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     const [messageType, setMessageType] = useState<MessageDialogType>("info");
     const [messageTitle, setMessageTitle] = useState<string>("");
 
-    const showErrorDialog = (message: string) => {
+    const showErrorDialog = useCallback((message: string, title = "Hubo un error") => {
         setNotification(message);
         setMessageType("error");
-        setMessageTitle("Hubo un error");
+        setMessageTitle(title);
         setShowMessageDialog(true);
-    };
+    }, []);
 
-    const showNotification = (message: string) => {
+    const showNotification = useCallback((message: string, title = "¡Éxito!") => {
         setNotification(message);
         setMessageType("info");
-        setMessageTitle("¡Éxito!");
+        setMessageTitle(title);
         setShowMessageDialog(true);
-    };
+    }, []);
 
-    const hideMessageDialog = () => {
+    const hideMessageDialog = useCallback(() => {
         setShowMessageDialog(false);
-    };
+    }, []);
 
     return (
         <NotificationContext.Provider

@@ -10,7 +10,7 @@ import FileInfo from "@/types/FileInfo";
 import Loader from "@/components/discrete/loader";
 import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function FilesView() {
     // Hooks for state variables
@@ -56,19 +56,17 @@ export default function FilesView() {
     };
 
     // Action to execute at the beginning
+    const fetchFiles = useCallback(() => {
+        apiRequest("files", "GET")
+            .then(setFiles)
+            .catch((error) => showErrorDialog(error.message));
+    }, [showErrorDialog]);
+
     useEffect(() => {
-        const fetchFiles = () => {
-            if (!authorized) {
-                return;
-            }
-
-            apiRequest("files", "GET")
-                .then((data) => setFiles(data))
-                .catch((error) => showErrorDialog(error.message));
-        };
-
-        fetchFiles();
-    }, [authorized]);
+        if (authorized) {
+            fetchFiles();
+        }
+    }, [authorized, fetchFiles]);
 
     if (!authorized) {
         return <Loader />;

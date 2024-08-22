@@ -13,7 +13,7 @@ import ToolCard from "@/components/cards/toolCard";
 import ToolForm from "@/components/forms/toolForm";
 import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function InventoryView() {
     // Hooks for state variables
@@ -101,27 +101,27 @@ export default function InventoryView() {
     };
 
     // Action to execute at the beginning
-    useEffect(() => {
-        async function queryItems() {
-            try {
-                const [materials, tools] = await Promise.all([
-                    apiRequest("materials", "GET"),
-                    apiRequest("tools", "GET"),
-                ]);
+    const queryItems = useCallback(async () => {
+        try {
+            const [materials, tools] = await Promise.all([
+                apiRequest("materials", "GET"),
+                apiRequest("tools", "GET"),
+            ]);
 
-                setMaterials(materials);
-                setTools(tools);
-            } catch (error) {
-                if (error instanceof Error) {
-                    showErrorDialog(error.message);
-                }
+            setMaterials(materials);
+            setTools(tools);
+        } catch (error) {
+            if (error instanceof Error) {
+                showErrorDialog(error.message);
             }
         }
+    }, [showErrorDialog]);
 
+    useEffect(() => {
         if (authorized) {
             queryItems();
         }
-    }, [authorized]);
+    }, [authorized, queryItems]);
 
     if (!authorized) {
         return <Loader />;
