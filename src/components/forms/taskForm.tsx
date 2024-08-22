@@ -53,6 +53,7 @@ export default function TaskForm(props: TaskFormProps) {
     const handleUploadClick = () => {
         const data = {
             name: taskName,
+            note: taskNote,
             tool_id: taskTool,
             material_id: taskMaterial,
             file_id: taskFile,
@@ -72,6 +73,7 @@ export default function TaskForm(props: TaskFormProps) {
 
         const dataUpdateTask = {
             name: taskName,
+            note: taskNote,
             tool_id: taskTool,
             material_id: taskMaterial,
             file_id: taskFile,
