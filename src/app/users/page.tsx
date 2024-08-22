@@ -9,7 +9,7 @@ import UserCard from "@/components/cards/userCard";
 import UserForm from "@/components/forms/userForm";
 import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function UsersView() {
     // Hooks for state variables
@@ -55,19 +55,17 @@ export default function UsersView() {
     };
 
     // Action to execute at the beginning
+    const fetchUsers = useCallback(() => {
+        apiRequest("users", "GET")
+            .then(setUsers)
+            .catch((error) => showErrorDialog(error.message));
+    }, [showErrorDialog]);
+
     useEffect(() => {
-        const fetchUsers = () => {
-            if (!authorized) {
-                return;
-            }
-
-            apiRequest("users", "GET")
-                .then((data) => setUsers(data))
-                .catch((error) => showErrorDialog(error.message));
-        };
-
-        fetchUsers();
-    }, [authorized]);
+        if (authorized) {
+            fetchUsers();
+        }
+    }, [authorized, fetchUsers]);
 
     if (!authorized) {
         return <Loader />;
