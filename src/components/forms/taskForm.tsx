@@ -59,12 +59,8 @@ export default function TaskForm(props: TaskFormProps) {
         };
 
         apiRequest("tasks", "POST", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };
@@ -90,12 +86,8 @@ export default function TaskForm(props: TaskFormProps) {
         // since we made changes to the task
         apiRequest(urlUpdateTask, "PUT", dataUpdateTask, true)
             .then(() => apiRequest(urlUpdateStatus, "PUT", dataUpdateStatus, true))
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };

@@ -9,4 +9,12 @@ export default interface TaskCardProps {
     toolsList: Tool[];
     materialsList: Material[];
     filesList: FileInfo[];
+    onEdit: () => void;
+    onCancel: () => void;
+    onRemove: () => void;
+    onApprove: () => void;
+    onRestore: () => void;
+    onRun: () => void;
+    onPause: () => void;
+    onRetry: () => void;
 }

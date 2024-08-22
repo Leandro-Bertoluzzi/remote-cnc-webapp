@@ -56,7 +56,7 @@ jest.mock("@/components/forms/fileForm", () =>
     // eslint-disable-next-line react/display-name
     ({ exitAction }: FileFormProps) => (
         <div data-testid="file-form">
-            <button onClick={() => exitAction()}>Close form</button>
+            <button onClick={exitAction}>Close form</button>
         </div>
     )
 );
@@ -66,7 +66,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     ({ onClose, text }: MessageDialogProps) => (
         <div data-testid="message-dialog">
             {text}
-            <button onClick={() => onClose()}>Close dialog</button>
+            <button onClick={onClose}>Close dialog</button>
         </div>
     )
 );

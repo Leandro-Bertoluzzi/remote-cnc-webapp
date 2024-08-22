@@ -82,7 +82,7 @@ jest.mock("@/components/forms/materialForm", () =>
     // eslint-disable-next-line react/display-name
     ({ exitAction }: MaterialFormProps) => (
         <div data-testid="material-form">
-            <button onClick={() => exitAction()}>Close form</button>
+            <button onClick={exitAction}>Close form</button>
         </div>
     )
 );
@@ -100,7 +100,7 @@ jest.mock("@/components/forms/toolForm", () =>
     // eslint-disable-next-line react/display-name
     ({ exitAction }: ToolFormProps) => (
         <div data-testid="tool-form">
-            <button onClick={() => exitAction()}>Close form</button>
+            <button onClick={exitAction}>Close form</button>
         </div>
     )
 );
@@ -110,7 +110,7 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     ({ onClose, text }: MessageDialogProps) => (
         <div data-testid="message-dialog">
             {text}
-            <button onClick={() => onClose()}>Close dialog</button>
+            <button onClick={onClose}>Close dialog</button>
         </div>
     )
 );

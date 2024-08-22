@@ -187,6 +187,12 @@ test.describe("Tasks page", () => {
         await page.route(/.*\/tasks\?token=/, async (route) => {
             await route.fulfill({ json: test_tasks });
         });
+        await page.route(/.*\/tasks\/\d\?token=/, async (route) => {
+            await route.fulfill({ json: { success: "Tarea actualizada" } });
+        });
+        await page.route(/.*\/tasks\/\d\/status\?token=/, async (route) => {
+            await route.fulfill({ json: { success: "Tarea actualizada" } });
+        });
 
         // Go to page under test
         await page.goto("/tasks");
@@ -221,6 +227,10 @@ test.describe("Tasks page", () => {
         // Click submit button
         await page.getByRole("button", { name: "Actualizar" }).click();
 
+        // Expect notification to appear
+        await expect(page.getByText("Tarea actualizada")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
+
         // TO DO: Should update the list of tasks
 
         // Click button to remove an entry
@@ -236,6 +246,10 @@ test.describe("Tasks page", () => {
 
         // Click submit button
         await page.getByRole("button", { name: "Aceptar" }).click();
+
+        // Expect notification to appear
+        await expect(page.getByText("Tarea actualizada")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
 
         // TO DO: Should update the list of tasks
     });

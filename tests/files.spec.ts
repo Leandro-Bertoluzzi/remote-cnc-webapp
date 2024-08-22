@@ -78,6 +78,9 @@ test.describe("Files page", () => {
         await page.route(/.*\/files\?token=/, async (route) => {
             await route.fulfill({ json: test_files });
         });
+        await page.route(/.*\/files\/\d\?token=/, async (route) => {
+            await route.fulfill({ json: { success: "Archivo actualizado" } });
+        });
 
         // Go to page under test
         await page.goto("/files");
@@ -106,6 +109,10 @@ test.describe("Files page", () => {
         // Click submit button
         await page.getByRole("button", { name: "Actualizar" }).click();
 
+        // Expect notification to appear
+        await expect(page.getByText("Archivo actualizado")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
+
         // TO DO: Should update the list of files
 
         // Click button to remove an entry
@@ -119,6 +126,10 @@ test.describe("Files page", () => {
 
         // Click submit button
         await page.getByRole("button", { name: "Eliminar" }).click();
+
+        // Expect notification to appear
+        await expect(page.getByText("Archivo actualizado")).toBeVisible();
+        await page.getByRole("button", { name: "Entendido" }).click();
 
         // TO DO: Should update the list of files
     });

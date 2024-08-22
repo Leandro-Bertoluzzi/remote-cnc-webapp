@@ -35,10 +35,10 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
                     </div>
                 </div>
                 <div className="flex justify-center px-4 py-3 sm:px-6">
-                    <Button color="indigo" onClick={() => onAccept()}>
+                    <Button color="indigo" onClick={onAccept}>
                         {confirmText}
                     </Button>
-                    <Button color="red" onClick={() => onCancel()}>
+                    <Button color="red" onClick={onCancel}>
                         Cancel
                     </Button>
                 </div>

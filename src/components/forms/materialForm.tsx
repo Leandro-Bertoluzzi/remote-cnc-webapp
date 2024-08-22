@@ -45,12 +45,8 @@ export default function MaterialForm(props: MaterialFormProps) {
         };
 
         apiRequest("materials", "POST", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };
@@ -63,12 +59,8 @@ export default function MaterialForm(props: MaterialFormProps) {
         const url = `materials/${materialInfo.id}`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
+            .then((response) => showNotification(response.success))
+            .catch((err) => showErrorDialog(err.message));
 
         exitAction();
     };

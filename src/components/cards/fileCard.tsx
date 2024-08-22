@@ -1,76 +1,21 @@
-import { useState } from "react";
 import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
-import apiRequest from "@/services/apiService";
 import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
-import ConfirmDialog from "../dialogs/confirmDialog";
-import FileForm from "../forms/fileForm";
 import FileInfo from "@/types/FileInfo";
-import { useNotification } from "@/contexts/notificationContext";
 
 export interface FileCardProps {
     file: FileInfo;
+    onEdit: () => void;
+    onRemove: () => void;
 }
 
 export default function FileCard(props: FileCardProps) {
     // Props
-    const { file } = props;
-
-    // Context
-    const { showErrorDialog, showNotification } = useNotification();
-
-    // Hooks for state variables
-    const [showFileForm, setShowFileForm] = useState<boolean>(false);
-    const [showRemoveConfirmation, setShowRemoveConfirmation] = useState<boolean>(false);
+    const { file, onEdit, onRemove } = props;
 
     // Text
     const createdAt = new Date(file.created_at);
     const createdAtText = `Created at: ${createdAt.toLocaleString()}`;
-
-    /*  Function: removeFile
-     *   Description: Removes the current file
-     */
-    const removeFile = () => {
-        hideRemoveConfirmationModal();
-
-        const url = `files/${file.id}`;
-
-        apiRequest(url, "DELETE")
-            .then((response) => {
-                showNotification(response.success);
-            })
-            .catch((err) => {
-                showErrorDialog(err.message);
-            });
-    };
-
-    /*  Function: showUpdateFileFormModal
-     *   Description: Enables the modal to update the file
-     */
-    function showUpdateFileFormModal() {
-        setShowFileForm(true);
-    }
-
-    /*  Function: hideFileFormModal
-     *   Description: Disables the modal to update the file
-     */
-    function hideFileFormModal() {
-        setShowFileForm(false);
-    }
-
-    /*  Function: showRemoveConfirmationModal
-     *   Description: Enables the modal to confirm the removal of the file
-     */
-    function showRemoveConfirmationModal() {
-        setShowRemoveConfirmation(true);
-    }
-
-    /*  Function: hideRemoveConfirmationModal
-     *   Description: Disables the modal to confirm the removal of the file
-     */
-    function hideRemoveConfirmationModal() {
-        setShowRemoveConfirmation(false);
-    }
 
     // Buttons
     const btnDownload: ButtonInfo = {
@@ -81,11 +26,11 @@ export default function FileCard(props: FileCardProps) {
     };
     const btnEdit: ButtonInfo = {
         type: BUTTON_EDIT,
-        action: showUpdateFileFormModal,
+        action: onEdit,
     };
     const btnRemove: ButtonInfo = {
         type: BUTTON_REMOVE,
-        action: showRemoveConfirmationModal,
+        action: onRemove,
     };
 
     return (
@@ -95,18 +40,6 @@ export default function FileCard(props: FileCardProps) {
                 additionalText={[createdAtText]}
                 buttons={[btnDownload, btnEdit, btnRemove]}
             />
-            {showFileForm && (
-                <FileForm exitAction={hideFileFormModal} create={false} fileInfo={file} />
-            )}
-            {showRemoveConfirmation && (
-                <ConfirmDialog
-                    title="Eliminar archivo"
-                    text="¿Está seguro de que desea eliminar el archivo? Esta acción no puede deshacerse"
-                    confirmText="Eliminar"
-                    onAccept={removeFile}
-                    onCancel={hideRemoveConfirmationModal}
-                />
-            )}
         </>
     );
 }
