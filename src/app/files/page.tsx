@@ -15,10 +15,12 @@ import { useState, useEffect } from "react";
 export default function FilesView() {
     // Hooks for state variables
     const [files, setFiles] = useState<FileInfo[]>([]);
-    const [selectedFile, setSelectedFile] = useState<FileInfo | undefined>(undefined);
-    const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
-    const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false);
-    const [showRemoveConfirmation, setShowRemoveConfirmation] = useState<boolean>(false);
+    const [selectedFile, setSelectedFile] = useState<FileInfo | null>(null);
+    const [modalState, setModalState] = useState({
+        create: false,
+        update: false,
+        remove: false,
+    });
 
     // User authentication
     const authorized = useAuth();
@@ -26,26 +28,22 @@ export default function FilesView() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
 
-    // Actions
-    const toggleCreateModal = (show: boolean) => {
-        setShowCreateForm(show);
-    };
-
-    const toggleUpdateModal = (show: boolean, file?: FileInfo) => {
-        setShowUpdateForm(show);
-        setSelectedFile(file);
-    };
-
-    const toggleRemoveConfirmation = (show: boolean, file?: FileInfo) => {
-        setShowRemoveConfirmation(show);
+    // Event handlers
+    const handleModalToggle = (
+        modalType: keyof typeof modalState,
+        show: boolean,
+        file: FileInfo | null = null
+    ) => {
+        setModalState((prevState) => ({
+            ...prevState,
+            [modalType]: show,
+        }));
         setSelectedFile(file);
     };
 
     const removeFile = () => {
-        setShowRemoveConfirmation(false);
-
         if (!selectedFile) {
-            setSelectedFile(undefined);
+            handleModalToggle("remove", false);
             return;
         }
 
@@ -53,9 +51,8 @@ export default function FilesView() {
 
         apiRequest(url, "DELETE")
             .then((response) => showNotification(response.success))
-            .catch((err) => showErrorDialog(err.message));
-
-        setSelectedFile(undefined);
+            .catch((err) => showErrorDialog(err.message))
+            .finally(() => handleModalToggle("remove", false));
     };
 
     // Action to execute at the beginning
@@ -77,12 +74,14 @@ export default function FilesView() {
         return <Loader />;
     }
 
+    const fileInfo = selectedFile ? { fileInfo: selectedFile } : {};
+
     return (
         <>
             <CardsList
                 title="Archivos"
                 addItemBtnText="Subir archivo"
-                addItemBtnAction={() => toggleCreateModal(true)}
+                addItemBtnAction={() => handleModalToggle("create", true)}
                 showAddItemBtn
             >
                 {files.length === 0 ? (
@@ -93,30 +92,29 @@ export default function FilesView() {
                             <FileCard
                                 key={file.id}
                                 file={file}
-                                onEdit={() => toggleUpdateModal(true, file)}
-                                onRemove={() => toggleRemoveConfirmation(true, file)}
+                                onEdit={() => handleModalToggle("update", true, file)}
+                                onRemove={() => handleModalToggle("remove", true, file)}
                             />
                         ))}
                     </>
                 )}
             </CardsList>
-            {showCreateForm && (
-                <FileForm exitAction={() => toggleCreateModal(false)} create={true} />
-            )}
-            {showUpdateForm && selectedFile && (
+            {(modalState.create || modalState.update) && (
                 <FileForm
-                    exitAction={() => toggleUpdateModal(false)}
-                    create={false}
-                    fileInfo={selectedFile}
+                    exitAction={() =>
+                        handleModalToggle(modalState.create ? "create" : "update", false)
+                    }
+                    create={modalState.create}
+                    {...fileInfo}
                 />
             )}
-            {showRemoveConfirmation && selectedFile && (
+            {modalState.remove && selectedFile && (
                 <ConfirmDialog
                     title="Eliminar archivo"
                     text="¿Está seguro de que desea eliminar el archivo? Esta acción no puede deshacerse"
                     confirmText="Eliminar"
                     onAccept={removeFile}
-                    onCancel={() => toggleRemoveConfirmation(false)}
+                    onCancel={() => handleModalToggle("remove", false)}
                 />
             )}
         </>

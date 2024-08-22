@@ -20,8 +20,6 @@ import { TASK_APPROVED_STATUS, TASK_INITIAL_STATUS } from "@/components/cards/ta
 
 const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 
-type taskActionType = (task: Task) => void;
-
 export default function TasksView() {
     // Hooks for state variables
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -30,16 +28,21 @@ export default function TasksView() {
     const [availableFiles, setAvailableFiles] = useState<FileInfo[]>([]);
 
     const [taskTypes, setTaskTypes] = useState<string[]>(DEFAULT_TASK_TYPES);
-    const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
-    const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
-    const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false);
-    const [showCancelForm, setShowCancelForm] = useState<boolean>(false);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-    const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-    const [confirmDialogTitle, setConfirmDialogTitle] = useState<string>("");
-    const [confirmDialogText, setConfirmDialogText] = useState<string>("");
-    const [onConfirmMethod, setOnConfirmMethod] = useState<taskActionType>(() => (task: Task) => {
-        void task;
+    const [modalState, setModalState] = useState({
+        create: false,
+        update: false,
+        cancel: false,
+        confirmation: false,
+    });
+
+    const [confirmDialogInfo, setConfirmDialogInfo] = useState({
+        title: "",
+        text: "",
+        onConfirm: () => {
+            return;
+        },
     });
 
     // User authentication
@@ -48,69 +51,27 @@ export default function TasksView() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
 
-    // Actions
-    const toggleCreateModal = (show: boolean, task?: Task) => {
-        setShowCreateForm(show);
+    // Event handlers
+    const toggleModal = (
+        modalType: keyof typeof modalState,
+        show: boolean,
+        task: Task | null = null
+    ) => {
+        setModalState((prevState) => ({
+            ...prevState,
+            [modalType]: show,
+        }));
         setSelectedTask(task);
     };
 
-    const toggleUpdateModal = (show: boolean, task?: Task) => {
-        setShowUpdateForm(show);
-        setSelectedTask(task);
-    };
-
-    const toggleCancelForm = (show: boolean, task?: Task) => {
-        setShowCancelForm(show);
-        setSelectedTask(task);
-    };
-
-    const toggleConfirmation = (show: boolean, task?: Task) => {
-        setShowConfirmation(show);
-        setSelectedTask(task);
-    };
-
-    const confirmRemove = (task: Task) => {
-        setConfirmDialogTitle("Eliminar tarea");
-        setConfirmDialogText(
-            "¿Está seguro de que desea eliminar la tarea? Esta acción no puede deshacerse"
-        );
-        setOnConfirmMethod(() => removeTask);
-        toggleConfirmation(true, task);
-    };
-
-    const confirmRun = (task: Task) => {
-        setConfirmDialogTitle("Ejecutar tarea");
-        setConfirmDialogText("¿Desea ejecutar la tarea ahora?");
-        setOnConfirmMethod(() => runTask);
-        toggleConfirmation(true, task);
-    };
-
-    const confirmRestore = (task: Task) => {
-        setConfirmDialogTitle("Restaurar tarea");
-        setConfirmDialogText(
-            "¿Realmente desea restaurar la tarea? \
-            Esto la devolverá al estado inicial, pendiente de aprobación"
-        );
-        setOnConfirmMethod(() => restoreTask);
-        toggleConfirmation(true, task);
-    };
-
-    const confirmApprove = (task: Task) => {
-        setConfirmDialogTitle("Aprobar tarea");
-        setConfirmDialogText("¿Está seguro de que desea aprobar la tarea?");
-        setOnConfirmMethod(() => approveTask);
-        toggleConfirmation(true, task);
+    const setConfirmationDialog = (title: string, text: string, action: () => void, task: Task) => {
+        setConfirmDialogInfo({ title, text, onConfirm: action });
+        toggleModal("confirmation", true, task);
     };
 
     const onConfirm = () => {
-        setShowConfirmation(false);
-        if (!selectedTask) {
-            showErrorDialog("No hay tarea seleccionada");
-            setSelectedTask(undefined);
-            return;
-        }
-        onConfirmMethod(selectedTask);
-        setSelectedTask(undefined);
+        confirmDialogInfo.onConfirm();
+        toggleModal("confirmation", false);
     };
 
     // API requests
@@ -183,35 +144,27 @@ export default function TasksView() {
 
     // Methods
     const updateTaskStatusList = (status: string, add: boolean) => {
-        // Search for status
-        const index = taskTypes.indexOf(status);
-
-        // Add status
-        if (add) {
-            if (index !== -1) {
-                return;
+        setTaskTypes((prevStatuses) => {
+            if (add) {
+                return prevStatuses.includes(status) ? prevStatuses : [...prevStatuses, status];
+            } else {
+                return prevStatuses.filter((s) => s !== status);
             }
-            setTaskTypes((prevStatuses) => [...prevStatuses, status]);
-            return;
-        }
-
-        // Remove status
-        if (index === -1) {
-            return;
-        }
-        setTaskTypes((prevStatuses) => prevStatuses.filter((element) => element !== status));
+        });
     };
 
     if (!authorized) {
         return <Loader />;
     }
 
+    const taskInfo = selectedTask ? { taskInfo: selectedTask } : {};
+
     return (
         <>
             <CardsList
                 title="Tareas"
                 addItemBtnText="Crear tarea"
-                addItemBtnAction={() => toggleCreateModal(true, undefined)}
+                addItemBtnAction={() => toggleModal("create", true)}
                 showAddItemBtn
             >
                 {tasks.length === 0 ? (
@@ -230,51 +183,69 @@ export default function TasksView() {
                                 toolsList={availableTools}
                                 materialsList={availableMaterials}
                                 filesList={availableFiles}
-                                onEdit={() => toggleUpdateModal(true, task)}
-                                onCancel={() => toggleCancelForm(true, task)}
-                                onRemove={() => confirmRemove(task)}
-                                onApprove={() => confirmApprove(task)}
-                                onRestore={() => confirmRestore(task)}
-                                onRun={() => confirmRun(task)}
+                                onEdit={() => toggleModal("update", true, task)}
+                                onCancel={() => toggleModal("cancel", true, task)}
+                                onRemove={() =>
+                                    setConfirmationDialog(
+                                        "Eliminar tarea",
+                                        "¿Está seguro de que desea eliminar la tarea? Esta acción no puede deshacerse",
+                                        () => removeTask(task),
+                                        task
+                                    )
+                                }
+                                onApprove={() =>
+                                    setConfirmationDialog(
+                                        "Aprobar tarea",
+                                        "¿Está seguro de que desea aprobar la tarea?",
+                                        () => approveTask(task),
+                                        task
+                                    )
+                                }
+                                onRestore={() =>
+                                    setConfirmationDialog(
+                                        "Restaurar tarea",
+                                        "¿Realmente desea restaurar la tarea? Esto la devolverá al estado inicial, pendiente de aprobación",
+                                        () => restoreTask(task),
+                                        task
+                                    )
+                                }
+                                onRun={() =>
+                                    setConfirmationDialog(
+                                        "Ejecutar tarea",
+                                        "¿Desea ejecutar la tarea ahora?",
+                                        () => runTask(task),
+                                        task
+                                    )
+                                }
                                 onPause={() => togglePausedTask()}
-                                onRetry={() => toggleCreateModal(true, task)}
+                                onRetry={() => toggleModal("create", true, task)}
                             />
                         ))}
                     </>
                 )}
             </CardsList>
-            {showCreateForm && (
+            {(modalState.create || modalState.update) && (
                 <TaskForm
-                    exitAction={() => toggleCreateModal(false)}
-                    create={true}
+                    exitAction={() => toggleModal(modalState.create ? "create" : "update", false)}
+                    create={modalState.create}
                     toolsList={availableTools}
                     materialsList={availableMaterials}
                     filesList={availableFiles}
-                    taskInfo={selectedTask}
+                    {...taskInfo}
                 />
             )}
-            {showUpdateForm && selectedTask && (
-                <TaskForm
-                    exitAction={() => toggleUpdateModal(false)}
-                    create={false}
-                    toolsList={availableTools}
-                    materialsList={availableMaterials}
-                    filesList={availableFiles}
-                    taskInfo={selectedTask}
-                />
-            )}
-            {showConfirmation && selectedTask && (
+            {modalState.confirmation && selectedTask && (
                 <ConfirmDialog
-                    title={confirmDialogTitle}
-                    text={confirmDialogText}
+                    title={confirmDialogInfo.title}
+                    text={confirmDialogInfo.text}
                     confirmText="Aceptar"
                     onAccept={onConfirm}
-                    onCancel={() => toggleConfirmation(false)}
+                    onCancel={() => toggleModal("confirmation", false)}
                 />
             )}
-            {showCancelForm && selectedTask && (
+            {modalState.cancel && selectedTask && (
                 <CancelTaskForm
-                    exitAction={() => toggleCancelForm(false)}
+                    exitAction={() => toggleModal("cancel", false)}
                     taskInfo={selectedTask}
                 />
             )}
