@@ -14,10 +14,12 @@ import { useState, useEffect } from "react";
 export default function UsersView() {
     // Hooks for state variables
     const [users, setUsers] = useState<User[]>([]);
-    const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
-    const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
-    const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false);
-    const [showRemoveConfirmation, setShowRemoveConfirmation] = useState<boolean>(false);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [modalState, setModalState] = useState({
+        create: false,
+        update: false,
+        remove: false,
+    });
 
     // User authentication
     const authorized = useAuth(true);
@@ -25,26 +27,22 @@ export default function UsersView() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
 
-    // Actions
-    const toggleCreateModal = (show: boolean) => {
-        setShowCreateForm(show);
-    };
-
-    const toggleUpdateModal = (show: boolean, user?: User) => {
-        setShowUpdateForm(show);
-        setSelectedUser(user);
-    };
-
-    const toggleRemoveConfirmation = (show: boolean, user?: User) => {
-        setShowRemoveConfirmation(show);
+    // Event handlers
+    const handleModalToggle = (
+        modalType: keyof typeof modalState,
+        show: boolean,
+        user: User | null = null
+    ) => {
+        setModalState((prevState) => ({
+            ...prevState,
+            [modalType]: show,
+        }));
         setSelectedUser(user);
     };
 
     const removeUser = () => {
-        setShowRemoveConfirmation(false);
-
         if (!selectedUser) {
-            setSelectedUser(undefined);
+            handleModalToggle("remove", false);
             return;
         }
 
@@ -52,9 +50,8 @@ export default function UsersView() {
 
         apiRequest(url, "DELETE")
             .then((response) => showNotification(response.success))
-            .catch((err) => showErrorDialog(err.message));
-
-        setSelectedUser(undefined);
+            .catch((err) => showErrorDialog(err.message))
+            .finally(() => handleModalToggle("remove", false));
     };
 
     // Action to execute at the beginning
@@ -76,40 +73,41 @@ export default function UsersView() {
         return <Loader />;
     }
 
+    const userInfo = selectedUser ? { userInfo: selectedUser } : {};
+
     return (
         <>
             <CardsList
                 title="Usuarios"
                 addItemBtnText="Agregar usuario"
-                addItemBtnAction={() => toggleCreateModal(true)}
+                addItemBtnAction={() => handleModalToggle("create", true)}
                 showAddItemBtn
             >
                 {users.map((user) => (
                     <UserCard
                         key={user.id}
                         user={user}
-                        onEdit={() => toggleUpdateModal(true, user)}
-                        onRemove={() => toggleRemoveConfirmation(true, user)}
+                        onEdit={() => handleModalToggle("update", true, user)}
+                        onRemove={() => handleModalToggle("remove", true, user)}
                     />
                 ))}
             </CardsList>
-            {showCreateForm && (
-                <UserForm exitAction={() => toggleCreateModal(false)} create={true} />
-            )}
-            {showUpdateForm && selectedUser && (
+            {(modalState.create || modalState.update) && (
                 <UserForm
-                    exitAction={() => toggleUpdateModal(false)}
-                    create={false}
-                    userInfo={selectedUser}
+                    exitAction={() =>
+                        handleModalToggle(modalState.create ? "create" : "update", false)
+                    }
+                    create={modalState.create}
+                    {...userInfo}
                 />
             )}
-            {showRemoveConfirmation && selectedUser && (
+            {modalState.remove && selectedUser && (
                 <ConfirmDialog
                     title="Eliminar usuario"
                     text="¿Está seguro de que desea eliminar el usuario? Esta acción no puede deshacerse"
                     confirmText="Eliminar"
                     onAccept={removeUser}
-                    onCancel={() => toggleRemoveConfirmation(false)}
+                    onCancel={() => handleModalToggle("remove", false)}
                 />
             )}
         </>
