@@ -1,8 +1,7 @@
 "use client";
 
 import { Card } from "flowbite-react";
-import Loader from "@/components/discrete/loader";
-import useAuth from "@/hooks/useauth";
+import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
 interface MenuOption {
     name: string;
@@ -43,11 +42,8 @@ const options: MenuOption[] = [
     },
 ];
 
-export default function MainMenu() {
-    // User authentication
-    const authorized = useAuth();
-
-    return authorized ? (
+function MainMenu() {
+    return (
         <div className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4">
             <Card className="w-screen max-w-md max-w-sm flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                 {options.map((option) => (
@@ -66,7 +62,7 @@ export default function MainMenu() {
                 ))}
             </Card>
         </div>
-    ) : (
-        <Loader />
     );
 }
+
+export default withAuthentication(MainMenu);

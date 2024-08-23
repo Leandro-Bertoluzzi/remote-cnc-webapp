@@ -7,12 +7,11 @@ import EmptyCard from "@/components/cards/emptyCard";
 import FileCard from "@/components/cards/fileCard";
 import FileForm from "@/components/forms/fileForm";
 import FileInfo from "@/types/FileInfo";
-import Loader from "@/components/discrete/loader";
-import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect, useCallback } from "react";
+import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
-export default function FilesView() {
+function FilesView() {
     // Hooks for state variables
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [selectedFile, setSelectedFile] = useState<FileInfo | null>(null);
@@ -21,9 +20,6 @@ export default function FilesView() {
         update: false,
         remove: false,
     });
-
-    // User authentication
-    const authorized = useAuth();
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
@@ -63,14 +59,8 @@ export default function FilesView() {
     }, [showErrorDialog]);
 
     useEffect(() => {
-        if (authorized) {
-            fetchFiles();
-        }
-    }, [authorized, fetchFiles]);
-
-    if (!authorized) {
-        return <Loader />;
-    }
+        fetchFiles();
+    }, [fetchFiles]);
 
     const fileInfo = selectedFile ? { fileInfo: selectedFile } : {};
 
@@ -118,3 +108,5 @@ export default function FilesView() {
         </>
     );
 }
+
+export default withAuthentication(FilesView);

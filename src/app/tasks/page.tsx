@@ -6,21 +6,20 @@ import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
 import EmptyCard from "@/components/cards/emptyCard";
 import FileInfo from "@/types/FileInfo";
-import Loader from "@/components/discrete/loader";
 import Material from "@/types/Material";
 import Task from "@/types/Task";
 import TaskCard from "@/components/cards/taskCard";
 import TasksFilter from "@/components/discrete/tasksFilter";
 import TaskForm from "@/components/forms/taskForm";
 import Tool from "@/types/Tool";
-import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect, useCallback } from "react";
 import { TASK_APPROVED_STATUS, TASK_INITIAL_STATUS } from "@/components/cards/taskCard";
+import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
 const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 
-export default function TasksView() {
+function TasksView() {
     // Hooks for state variables
     const [tasks, setTasks] = useState<Task[]>([]);
     const [availableTools, setAvailableTools] = useState<Tool[]>([]);
@@ -44,9 +43,6 @@ export default function TasksView() {
             return;
         },
     });
-
-    // User authentication
-    const authorized = useAuth();
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
@@ -136,10 +132,8 @@ export default function TasksView() {
     }, [showErrorDialog]);
 
     useEffect(() => {
-        if (authorized) {
-            queryItems();
-        }
-    }, [authorized, queryItems]);
+        queryItems();
+    }, [queryItems]);
 
     // Methods
     const updateTaskStatusList = (status: string, add: boolean) => {
@@ -151,10 +145,6 @@ export default function TasksView() {
             }
         });
     };
-
-    if (!authorized) {
-        return <Loader />;
-    }
 
     const taskInfo = selectedTask ? { taskInfo: selectedTask } : {};
 
@@ -251,3 +241,5 @@ export default function TasksView() {
         </>
     );
 }
+
+export default withAuthentication(TasksView);
