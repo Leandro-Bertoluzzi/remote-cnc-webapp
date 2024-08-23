@@ -4,18 +4,17 @@ import apiRequest from "@/services/apiService";
 import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
 import EmptyCard from "@/components/cards/emptyCard";
-import Loader from "@/components/discrete/loader";
 import Material from "@/types/Material";
 import MaterialCard from "@/components/cards/materialCard";
 import MaterialForm from "@/components/forms/materialForm";
 import Tool from "@/types/Tool";
 import ToolCard from "@/components/cards/toolCard";
 import ToolForm from "@/components/forms/toolForm";
-import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect, useCallback } from "react";
+import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
-export default function InventoryView() {
+function InventoryView() {
     // Hooks for state variables
     const [tools, setTools] = useState<Tool[]>([]);
     const [materials, setMaterials] = useState<Material[]>([]);
@@ -34,9 +33,6 @@ export default function InventoryView() {
             remove: false,
         },
     });
-
-    // User authentication
-    const authorized = useAuth(true);
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
@@ -118,14 +114,8 @@ export default function InventoryView() {
     }, [showErrorDialog]);
 
     useEffect(() => {
-        if (authorized) {
-            queryItems();
-        }
-    }, [authorized, queryItems]);
-
-    if (!authorized) {
-        return <Loader />;
-    }
+        queryItems();
+    }, [queryItems]);
 
     const toolInfo = selectedTool ? { toolInfo: selectedTool } : {};
     const materialInfo = selectedMaterial ? { materialInfo: selectedMaterial } : {};
@@ -217,3 +207,5 @@ export default function InventoryView() {
         </>
     );
 }
+
+export default withAuthentication(InventoryView, true);

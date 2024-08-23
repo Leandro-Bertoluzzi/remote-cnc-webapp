@@ -3,29 +3,21 @@
 import apiRequest from "@/services/apiService";
 import CameraWidget from "@/components/discrete/cameraWidget";
 import ControllerStatus from "@/components/controllerStatus";
-import Loader from "@/components/discrete/loader";
 import Log from "@/types/Log";
 import LogsViewer from "@/components/discrete/logsViewer";
 import Terminal from "@/components/terminal";
-import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
+import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
-export default function MonitorView() {
+function MonitorView() {
     const [logs, setLogs] = useState<Log[]>([]);
-
-    // User authentication
-    const authorized = useAuth(true);
 
     // Context
     const { showErrorDialog } = useNotification();
 
     // Action to execute at the beginning
     useEffect(() => {
-        if (!authorized) {
-            return;
-        }
-
         apiRequest("monitor/logs", "GET")
             .then((data) => {
                 setLogs(data);
@@ -33,11 +25,7 @@ export default function MonitorView() {
             .catch((error) => {
                 showErrorDialog("Error solicitando registros: " + error.message);
             });
-    }, [authorized]);
-
-    if (!authorized) {
-        return <Loader />;
-    }
+    }, []);
 
     return (
         <section data-section-id="1" className="overflow-hidden py-4">
@@ -55,3 +43,5 @@ export default function MonitorView() {
         </section>
     );
 }
+
+export default withAuthentication(MonitorView, true);

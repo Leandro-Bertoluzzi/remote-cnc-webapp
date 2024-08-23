@@ -3,17 +3,10 @@
 import CodeEditor from "@/components/codeEditor";
 import ControllerActions from "@/components/controllerActions";
 import ControllerStatus from "@/components/controllerStatus";
-import Loader from "@/components/discrete/loader";
 import Terminal from "@/components/terminal";
-import useAuth from "@/hooks/useauth";
+import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
-export default function ControlView() {
-    // User authentication
-    const authorized = useAuth(true);
-    if (!authorized) {
-        return <Loader />;
-    }
-
+function ControlView() {
     return (
         <section data-section-id="1" className="overflow-hidden py-4">
             <div className="container mx-auto px-4">
@@ -30,3 +23,5 @@ export default function ControlView() {
         </section>
     );
 }
+
+export default withAuthentication(ControlView, true);

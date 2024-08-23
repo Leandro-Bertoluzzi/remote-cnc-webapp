@@ -3,15 +3,14 @@
 import apiRequest from "@/services/apiService";
 import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
-import Loader from "@/components/discrete/loader";
 import User from "@/types/User";
 import UserCard from "@/components/cards/userCard";
 import UserForm from "@/components/forms/userForm";
-import useAuth from "@/hooks/useauth";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect, useCallback } from "react";
+import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
-export default function UsersView() {
+function UsersView() {
     // Hooks for state variables
     const [users, setUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -20,9 +19,6 @@ export default function UsersView() {
         update: false,
         remove: false,
     });
-
-    // User authentication
-    const authorized = useAuth(true);
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
@@ -62,14 +58,8 @@ export default function UsersView() {
     }, [showErrorDialog]);
 
     useEffect(() => {
-        if (authorized) {
-            fetchUsers();
-        }
-    }, [authorized, fetchUsers]);
-
-    if (!authorized) {
-        return <Loader />;
-    }
+        fetchUsers();
+    }, [fetchUsers]);
 
     const userInfo = selectedUser ? { userInfo: selectedUser } : {};
 
@@ -111,3 +101,5 @@ export default function UsersView() {
         </>
     );
 }
+
+export default withAuthentication(UsersView, true);
