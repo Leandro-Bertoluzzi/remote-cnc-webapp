@@ -8,7 +8,7 @@ services:
             target: development
         ports:
             - 3000:3000
-        profiles: ["ui", "all"]
+        profiles: ["ui", "ui-with-api", "ui-with-camera", "all"]
         pull_policy: never
         volumes:
             - ./:/app
@@ -20,9 +20,24 @@ services:
             - ./camera/.env
         ports:
             - 8081:8081
-        profiles: ["camera", "all"]
+        profiles: ["camera", "ui-with-camera", "all"]
         volumes:
             - ./camera/motion/config:/usr/local/etc/motion
             - ./camera/motion/storage:/var/lib/motion
             - ./camera/video:/media/video
         container_name: remote-cnc-camera
+
+    mock-api:
+        image: mockoon/cli:latest
+        command: ["--data", "data", "--port", "8000"]
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+            interval: 30s
+            timeout: 5s
+            retries: 2
+            start_period: 10s
+        ports:
+            - 8000:8000
+        profiles: ["api", "ui-with-api", "all"]
+        volumes:
+            - ./mock_api/cnc_api.json:/data:readonly
