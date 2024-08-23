@@ -94,10 +94,24 @@ $ docker compose --profile=camera up
 if you want both ui and camera:
 
 ```bash
-$ docker compose --profile=all up
+$ docker compose --profile=ui-with-camera up
 ```
 
 You can validate the camera web server works properly by visiting `http://localhost:8081` in your web browser.
+
+### Initiate mocked API server
+
+You can also start a mocked version of the API, created with [Mockoon](https://mockoon.com/).
+
+```bash
+$ docker compose --profile=api up
+```
+
+if you want both ui and mock API:
+
+```bash
+$ docker compose --profile=ui-with-api up
+```
 
 ## :wrench: Running tests
 
