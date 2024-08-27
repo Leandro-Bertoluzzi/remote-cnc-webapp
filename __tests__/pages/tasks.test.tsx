@@ -8,6 +8,7 @@ import TaskFormProps from "@/types/TaskFormProps";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
+import { TasksProvider } from "@/contexts/tasksContext";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication
@@ -115,6 +116,17 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+// View component with its wrappers for context
+const WrappedComponent = () => (
+    <NotificationProvider>
+        <NotificationsWrapper>
+            <TasksProvider>
+                <TasksView />
+            </TasksProvider>
+        </NotificationsWrapper>
+    </NotificationProvider>
+);
+
 describe("TasksView", () => {
     beforeEach(() => {
         mockedAuth.mockReturnValue(true);
@@ -133,13 +145,7 @@ describe("TasksView", () => {
             .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <TasksView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");
@@ -160,13 +166,7 @@ describe("TasksView", () => {
         mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <TasksView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
@@ -185,13 +185,7 @@ describe("TasksView", () => {
             .mockResolvedValueOnce([]); // tasks
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <TasksView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const taskCards = screen.queryAllByTestId("task-card");
@@ -209,13 +203,7 @@ describe("TasksView", () => {
         mockedApiRequest.mockRejectedValue(new Error("Error en comunicación con API"));
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <TasksView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -241,13 +229,7 @@ describe("TasksView", () => {
             .mockResolvedValueOnce(tasks);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <TasksView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");

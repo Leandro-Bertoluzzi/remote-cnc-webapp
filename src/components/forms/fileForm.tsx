@@ -5,6 +5,7 @@ import { voidActionType } from "@/types/Actions";
 import FileInfo from "@/types/FileInfo";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledFileInput from "../discrete/labeledFileInput";
+import { useFiles } from "@/contexts/filesContext";
 import { useNotification } from "@/contexts/notificationContext";
 
 export interface FileFormProps {
@@ -25,6 +26,7 @@ export default function FileForm(props: FileFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { fetchFiles } = useFiles();
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
@@ -55,7 +57,10 @@ export default function FileForm(props: FileFormProps) {
         formData.append("file", file, fileName);
 
         apiRequest("files", "POST", formData)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchFiles();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();
@@ -68,7 +73,10 @@ export default function FileForm(props: FileFormProps) {
         const url = `files/${fileInfo.id}`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchFiles();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();

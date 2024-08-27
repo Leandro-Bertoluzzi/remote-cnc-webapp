@@ -7,13 +7,13 @@ import EmptyCard from "@/components/cards/emptyCard";
 import FileCard from "@/components/cards/fileCard";
 import FileForm from "@/components/forms/fileForm";
 import FileInfo from "@/types/FileInfo";
+import { useFiles } from "@/contexts/filesContext";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
 function FilesView() {
     // Hooks for state variables
-    const [files, setFiles] = useState<FileInfo[]>([]);
     const [selectedFile, setSelectedFile] = useState<FileInfo | null>(null);
     const [modalState, setModalState] = useState({
         create: false,
@@ -23,6 +23,7 @@ function FilesView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { files, fetchFiles } = useFiles();
 
     // Event handlers
     const handleModalToggle = (
@@ -46,18 +47,15 @@ function FilesView() {
         const url = `files/${selectedFile.id}`;
 
         apiRequest(url, "DELETE")
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchFiles();
+            })
             .catch((err) => showErrorDialog(err.message))
             .finally(() => handleModalToggle("remove", false));
     };
 
     // Action to execute at the beginning
-    const fetchFiles = useCallback(() => {
-        apiRequest("files", "GET")
-            .then(setFiles)
-            .catch((error) => showErrorDialog(error.message));
-    }, [showErrorDialog]);
-
     useEffect(() => {
         fetchFiles();
     }, [fetchFiles]);

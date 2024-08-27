@@ -10,14 +10,14 @@ import MaterialForm from "@/components/forms/materialForm";
 import Tool from "@/types/Tool";
 import ToolCard from "@/components/cards/toolCard";
 import ToolForm from "@/components/forms/toolForm";
+import { useMaterials } from "@/contexts/materialsContext";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useTools } from "@/contexts/toolsContext";
 import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
 function InventoryView() {
     // Hooks for state variables
-    const [tools, setTools] = useState<Tool[]>([]);
-    const [materials, setMaterials] = useState<Material[]>([]);
     const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
     const [selectedMaterial, setSelectedMaterial] = useState<Material | null>(null);
 
@@ -36,6 +36,8 @@ function InventoryView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { materials, fetchMaterials } = useMaterials();
+    const { tools, fetchTools } = useTools();
 
     // Event handlers
     const handleToolModalToggle = (
@@ -77,7 +79,10 @@ function InventoryView() {
         const url = `tools/${selectedTool.id}`;
 
         apiRequest(url, "DELETE")
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchTools();
+            })
             .catch((err) => showErrorDialog(err.message))
             .finally(() => handleToolModalToggle("remove", false));
     };
@@ -91,31 +96,19 @@ function InventoryView() {
         const url = `materials/${selectedMaterial.id}`;
 
         apiRequest(url, "DELETE")
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchMaterials();
+            })
             .catch((err) => showErrorDialog(err.message))
             .finally(() => handleMaterialModalToggle("remove", false));
     };
 
     // Action to execute at the beginning
-    const queryItems = useCallback(async () => {
-        try {
-            const [materials, tools] = await Promise.all([
-                apiRequest("materials", "GET"),
-                apiRequest("tools", "GET"),
-            ]);
-
-            setMaterials(materials);
-            setTools(tools);
-        } catch (error) {
-            if (error instanceof Error) {
-                showErrorDialog(error.message);
-            }
-        }
-    }, [showErrorDialog]);
-
     useEffect(() => {
-        queryItems();
-    }, [queryItems]);
+        fetchMaterials();
+        fetchTools();
+    }, [fetchMaterials, fetchTools]);
 
     const toolInfo = selectedTool ? { toolInfo: selectedTool } : {};
     const materialInfo = selectedMaterial ? { materialInfo: selectedMaterial } : {};

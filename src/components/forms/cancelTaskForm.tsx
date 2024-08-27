@@ -4,6 +4,7 @@ import BaseForm from "./baseForm";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import Task from "@/types/Task";
 import { useNotification } from "@/contexts/notificationContext";
+import { useTasks } from "@/contexts/tasksContext";
 
 export interface CancelTaskFormProps {
     exitAction: () => void;
@@ -16,6 +17,7 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { fetchTasks } = useTasks();
 
     // Hooks for state variables
     const [cancellationReason, setCancellationReason] = useState<string>("");
@@ -35,7 +37,10 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
         const url = `tasks/${taskInfo.id}/status`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchTasks();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();

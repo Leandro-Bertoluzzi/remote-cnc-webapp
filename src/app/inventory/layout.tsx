@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { MaterialsProvider } from "@/contexts/materialsContext";
+import { ToolsProvider } from "@/contexts/toolsContext";
 
 export const metadata: Metadata = {
     title: "Inventario",
@@ -6,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function InventoryLayout({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
+    return (
+        <MaterialsProvider>
+            <ToolsProvider>{children}</ToolsProvider>
+        </MaterialsProvider>
+    );
 }

@@ -5,6 +5,7 @@ import apiRequest from "@/services/apiService";
 import FileInfo from "@/types/FileInfo";
 import { FileCardProps } from "@/components/cards/fileCard";
 import { FileFormProps } from "@/components/forms/fileForm";
+import { FilesProvider } from "@/contexts/filesContext";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
@@ -71,6 +72,17 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+// View component with its wrappers for context
+const WrappedComponent = () => (
+    <NotificationProvider>
+        <NotificationsWrapper>
+            <FilesProvider>
+                <FilesView />
+            </FilesProvider>
+        </NotificationsWrapper>
+    </NotificationProvider>
+);
+
 describe("FilesView", () => {
     beforeEach(() => {
         mockedAuth.mockReturnValue(true);
@@ -85,13 +97,7 @@ describe("FilesView", () => {
         mockedApiRequest.mockResolvedValueOnce(files);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <FilesView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const fileCards = await screen.findAllByTestId("file-card");
@@ -112,13 +118,7 @@ describe("FilesView", () => {
         mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <FilesView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
@@ -133,13 +133,7 @@ describe("FilesView", () => {
         mockedApiRequest.mockResolvedValueOnce([]);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <FilesView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const fileCards = screen.queryAllByTestId("file-card");
@@ -157,13 +151,7 @@ describe("FilesView", () => {
         mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando archivos"));
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <FilesView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -185,13 +173,7 @@ describe("FilesView", () => {
         mockedApiRequest.mockResolvedValueOnce(files);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <FilesView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const button = screen.getByText("Subir archivo");

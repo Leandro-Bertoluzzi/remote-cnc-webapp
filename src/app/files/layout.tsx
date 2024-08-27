@@ -1,3 +1,4 @@
+import { FilesProvider } from "@/contexts/filesContext";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function FilesLayout({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
+    return <FilesProvider>{children}</FilesProvider>;
 }

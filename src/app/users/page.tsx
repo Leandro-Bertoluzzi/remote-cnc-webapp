@@ -7,12 +7,12 @@ import User from "@/types/User";
 import UserCard from "@/components/cards/userCard";
 import UserForm from "@/components/forms/userForm";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useUsers } from "@/contexts/usersContext";
 import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
 function UsersView() {
     // Hooks for state variables
-    const [users, setUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [modalState, setModalState] = useState({
         create: false,
@@ -22,6 +22,7 @@ function UsersView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { users, fetchUsers } = useUsers();
 
     // Event handlers
     const handleModalToggle = (
@@ -45,18 +46,15 @@ function UsersView() {
         const url = `users/${selectedUser.id}`;
 
         apiRequest(url, "DELETE")
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchUsers();
+            })
             .catch((err) => showErrorDialog(err.message))
             .finally(() => handleModalToggle("remove", false));
     };
 
     // Action to execute at the beginning
-    const fetchUsers = useCallback(() => {
-        apiRequest("users", "GET")
-            .then(setUsers)
-            .catch((error) => showErrorDialog(error.message));
-    }, [showErrorDialog]);
-
     useEffect(() => {
         fetchUsers();
     }, [fetchUsers]);

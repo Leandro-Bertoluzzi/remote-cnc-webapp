@@ -14,6 +14,7 @@ import TaskForm from "@/components/forms/taskForm";
 import Tool from "@/types/Tool";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect, useCallback } from "react";
+import { useTasks } from "@/contexts/tasksContext";
 import { TASK_APPROVED_STATUS, TASK_INITIAL_STATUS } from "@/components/cards/taskCard";
 import withAuthentication from "@/components/wrappers/authenticationWrapper";
 
@@ -21,7 +22,6 @@ const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 
 function TasksView() {
     // Hooks for state variables
-    const [tasks, setTasks] = useState<Task[]>([]);
     const [availableTools, setAvailableTools] = useState<Tool[]>([]);
     const [availableMaterials, setAvailableMaterials] = useState<Material[]>([]);
     const [availableFiles, setAvailableFiles] = useState<FileInfo[]>([]);
@@ -46,6 +46,7 @@ function TasksView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { tasks, fetchTasks } = useTasks();
 
     // Event handlers
     const toggleModal = (
@@ -75,7 +76,10 @@ function TasksView() {
         const url = `tasks/${task.id}`;
 
         apiRequest(url, "DELETE")
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchTasks();
+            })
             .catch((err) => showErrorDialog(err.message));
     };
 
@@ -83,7 +87,10 @@ function TasksView() {
         const url = `worker/task/${task.id}`;
 
         apiRequest(url, "POST")
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchTasks();
+            })
             .catch((err) => showErrorDialog(err.message));
     };
 
@@ -92,7 +99,10 @@ function TasksView() {
         const url = `tasks/${task.id}/status`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchTasks();
+            })
             .catch((err) => showErrorDialog(err.message));
     };
 
@@ -114,16 +124,14 @@ function TasksView() {
     // Action to execute at the beginning
     const queryItems = useCallback(async () => {
         try {
-            const [files, materials, tools, tasks] = await Promise.all([
+            const [files, materials, tools] = await Promise.all([
                 apiRequest("files", "GET"),
                 apiRequest("materials", "GET"),
                 apiRequest("tools", "GET"),
-                apiRequest("tasks", "GET"),
             ]);
             setAvailableFiles(files);
             setAvailableMaterials(materials);
             setAvailableTools(tools);
-            setTasks(tasks);
         } catch (error) {
             if (error instanceof Error) {
                 showErrorDialog(error.message);
@@ -133,7 +141,8 @@ function TasksView() {
 
     useEffect(() => {
         queryItems();
-    }, [queryItems]);
+        fetchTasks();
+    }, [queryItems, fetchTasks]);
 
     // Methods
     const updateTaskStatusList = (status: string, add: boolean) => {
