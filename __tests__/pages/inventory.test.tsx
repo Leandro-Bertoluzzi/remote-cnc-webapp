@@ -6,11 +6,13 @@ import Tool from "@/types/Tool";
 import Material from "@/types/Material";
 import { MaterialCardProps } from "@/components/cards/materialCard";
 import { MaterialFormProps } from "@/components/forms/materialForm";
+import { MaterialsProvider } from "@/contexts/materialsContext";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 import { ToolCardProps } from "@/components/cards/toolCard";
 import { ToolFormProps } from "@/components/forms/toolForm";
+import { ToolsProvider } from "@/contexts/toolsContext";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication
@@ -115,6 +117,19 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+// View component with its wrappers for context
+const WrappedComponent = () => (
+    <NotificationProvider>
+        <NotificationsWrapper>
+            <MaterialsProvider>
+                <ToolsProvider>
+                    <InventoryView />
+                </ToolsProvider>
+            </MaterialsProvider>
+        </NotificationsWrapper>
+    </NotificationProvider>
+);
+
 describe("InventoryView", () => {
     beforeEach(() => {
         mockedAuth.mockReturnValue(true);
@@ -129,13 +144,7 @@ describe("InventoryView", () => {
         mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <InventoryView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         //console.log("DOM is:");
         //screen.debug();
@@ -165,13 +174,7 @@ describe("InventoryView", () => {
         mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <InventoryView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
@@ -186,13 +189,7 @@ describe("InventoryView", () => {
         mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce([]);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <InventoryView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const materialCards = await screen.findAllByTestId("material-card");
@@ -208,13 +205,7 @@ describe("InventoryView", () => {
         mockedApiRequest.mockResolvedValueOnce([]).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <InventoryView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const toolCards = await screen.findAllByTestId("tool-card");
@@ -227,16 +218,10 @@ describe("InventoryView", () => {
 
     it("notifies error querying items from API", async () => {
         // Mock API calls
-        mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando materiales"));
+        mockedApiRequest.mockRejectedValue(new Error("Error retornando materiales"));
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <InventoryView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -258,13 +243,7 @@ describe("InventoryView", () => {
         mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <InventoryView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const button = screen.getByText("Agregar herramienta");
@@ -291,13 +270,7 @@ describe("InventoryView", () => {
         mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <InventoryView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const button = screen.getByText("Agregar material");

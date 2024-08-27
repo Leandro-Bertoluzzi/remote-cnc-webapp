@@ -3,6 +3,7 @@ import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import Material from "@/types/Material";
 import LabeledTextInput from "../discrete/labeledTextInput";
+import { useMaterials } from "@/contexts/materialsContext";
 import { useNotification } from "@/contexts/notificationContext";
 
 export interface MaterialFormProps {
@@ -23,6 +24,7 @@ export default function MaterialForm(props: MaterialFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { fetchMaterials } = useMaterials();
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);
@@ -45,7 +47,10 @@ export default function MaterialForm(props: MaterialFormProps) {
         };
 
         apiRequest("materials", "POST", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchMaterials();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();
@@ -59,7 +64,10 @@ export default function MaterialForm(props: MaterialFormProps) {
         const url = `materials/${materialInfo.id}`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchMaterials();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();

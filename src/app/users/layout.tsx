@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { UsersProvider } from "@/contexts/usersContext";
 
 export const metadata: Metadata = {
     title: "Usuarios",
@@ -6,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function UsersLayout({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
+    return <UsersProvider>{children}</UsersProvider>;
 }

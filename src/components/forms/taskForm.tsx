@@ -6,6 +6,7 @@ import LabeledTextArea from "../discrete/labeledTextArea";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import TaskFormProps from "@/types/TaskFormProps";
 import { useNotification } from "@/contexts/notificationContext";
+import { useTasks } from "@/contexts/tasksContext";
 
 export default function TaskForm(props: TaskFormProps) {
     // Props
@@ -13,6 +14,7 @@ export default function TaskForm(props: TaskFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { fetchTasks } = useTasks();
 
     // Initialization
     const initialName = taskInfo ? taskInfo.name : "";
@@ -60,7 +62,10 @@ export default function TaskForm(props: TaskFormProps) {
         };
 
         apiRequest("tasks", "POST", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchTasks();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();
@@ -88,7 +93,10 @@ export default function TaskForm(props: TaskFormProps) {
         // since we made changes to the task
         apiRequest(urlUpdateTask, "PUT", dataUpdateTask, true)
             .then(() => apiRequest(urlUpdateStatus, "PUT", dataUpdateStatus, true))
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchTasks();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();

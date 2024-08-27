@@ -140,7 +140,7 @@ describe("Login", () => {
         expect(setJwtToken).toHaveBeenCalledWith("a-valid-token");
 
         // Assert calls to router
-        expect(mockRouterPush).toHaveBeenCalled();
-        expect(mockRouterPush).toHaveBeenCalledWith(callbackUrl);
+        const expected = callbackUrl.length ? callbackUrl : "/";
+        expect(mockRouterPush).toHaveBeenCalledWith(expected);
     });
 });

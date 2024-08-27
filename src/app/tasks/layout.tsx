@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { TasksProvider } from "@/contexts/tasksContext";
 
 export const metadata: Metadata = {
     title: "Tareas",
@@ -6,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function TasksLayout({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
+    return <TasksProvider>{children}</TasksProvider>;
 }

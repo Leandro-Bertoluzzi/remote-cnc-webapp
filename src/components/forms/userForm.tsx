@@ -5,6 +5,7 @@ import User from "@/types/User";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledSelect from "../discrete/labeledSelect";
 import { useNotification } from "@/contexts/notificationContext";
+import { useUsers } from "@/contexts/usersContext";
 
 export interface UserFormProps {
     exitAction: () => void;
@@ -25,6 +26,7 @@ export default function UserForm(props: UserFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { fetchUsers } = useUsers();
 
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);
@@ -57,7 +59,10 @@ export default function UserForm(props: UserFormProps) {
         };
 
         apiRequest("users", "POST", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchUsers();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();
@@ -72,7 +77,10 @@ export default function UserForm(props: UserFormProps) {
         const url = `users/${userInfo.id}`;
 
         apiRequest(url, "PUT", data, true)
-            .then((response) => showNotification(response.success))
+            .then((response) => {
+                showNotification(response.success);
+                fetchUsers();
+            })
             .catch((err) => showErrorDialog(err.message));
 
         exitAction();

@@ -51,13 +51,11 @@ function MainMenu() {
                         key={option.name}
                         className="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50"
                     >
-                        <div>
-                            <a href={option.path} className="font-semibold text-gray-900">
-                                {option.name}
-                                <span className="absolute inset-0" />
-                            </a>
-                            <p className="mt-1 text-gray-600">{option.description}</p>
-                        </div>
+                        <a href={option.path} className="font-semibold text-gray-900">
+                            {option.name}
+                            <span className="absolute inset-0" />
+                        </a>
+                        <p className="mt-1 text-gray-600">{option.description}</p>
                     </div>
                 ))}
             </Card>

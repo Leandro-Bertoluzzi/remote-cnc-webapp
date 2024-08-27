@@ -9,6 +9,7 @@ import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 import useAuth from "@/hooks/useauth";
+import { UsersProvider } from "@/contexts/usersContext";
 
 // Mock authentication
 jest.mock("@/hooks/useauth");
@@ -75,6 +76,17 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+// View component with its wrappers for context
+const WrappedComponent = () => (
+    <NotificationProvider>
+        <NotificationsWrapper>
+            <UsersProvider>
+                <UsersView />
+            </UsersProvider>
+        </NotificationsWrapper>
+    </NotificationProvider>
+);
+
 describe("UsersView", () => {
     beforeEach(() => {
         mockedAuth.mockReturnValue(true);
@@ -89,13 +101,7 @@ describe("UsersView", () => {
         mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <UsersView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const userCards = await screen.findAllByTestId("user-card");
@@ -116,13 +122,7 @@ describe("UsersView", () => {
         mockedAuth.mockReturnValue(false);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <UsersView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
@@ -137,13 +137,7 @@ describe("UsersView", () => {
         mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando usuarios"));
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <UsersView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -165,13 +159,7 @@ describe("UsersView", () => {
         mockedApiRequest.mockResolvedValueOnce(users);
 
         // Instantiate widget under test
-        render(
-            <NotificationProvider>
-                <NotificationsWrapper>
-                    <UsersView />
-                </NotificationsWrapper>
-            </NotificationProvider>
-        );
+        render(<WrappedComponent />);
 
         // Assert components in widget
         const button = screen.getByText("Agregar usuario");
