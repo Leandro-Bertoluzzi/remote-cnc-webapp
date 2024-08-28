@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import { Metadata } from "next";
+import { NavigationBar } from "@/components/navigationBar";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 
@@ -13,7 +14,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en">
             <body>
                 <NotificationProvider>
-                    <NotificationsWrapper>{children}</NotificationsWrapper>
+                    <NotificationsWrapper>
+                        <NavigationBar />
+                        {children}
+                    </NotificationsWrapper>
                 </NotificationProvider>
             </body>
         </html>
