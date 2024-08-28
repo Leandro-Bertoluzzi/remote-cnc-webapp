@@ -9,7 +9,7 @@ import UserForm from "@/components/forms/userForm";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
 import { useUsers } from "@/contexts/usersContext";
-import withAuthentication from "@/components/wrappers/authenticationWrapper";
+import withAuthentication from "@/components/wrappers/withAuthentication";
 
 function UsersView() {
     // Hooks for state variables

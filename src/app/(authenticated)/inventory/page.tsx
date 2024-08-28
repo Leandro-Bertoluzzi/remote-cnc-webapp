@@ -14,7 +14,7 @@ import { useMaterials } from "@/contexts/materialsContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
 import { useTools } from "@/contexts/toolsContext";
-import withAuthentication from "@/components/wrappers/authenticationWrapper";
+import withAuthentication from "@/components/wrappers/withAuthentication";
 
 function InventoryView() {
     // Hooks for state variables
@@ -136,6 +136,7 @@ function InventoryView() {
                     </>
                 )}
             </CardsList>
+            <br />
 
             <CardsList
                 title="Materiales"

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import UsersView from "@/app/users/page";
+import UsersView from "@/app/(authenticated)/users/page";
 import apiRequest from "@/services/apiService";
 import User from "@/types/User";
 import { UserCardProps } from "@/components/cards/userCard";
