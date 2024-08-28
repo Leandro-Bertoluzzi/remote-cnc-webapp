@@ -1,21 +1,81 @@
 "use client";
 
 import { AiOutlineStop, AiOutlineHome } from "react-icons/ai";
+import { Button, Navbar } from "flowbite-react";
 import ConfirmDialog from "./dialogs/confirmDialog";
+import type { CustomFlowbiteTheme } from "flowbite-react";
 import { GrTask } from "react-icons/gr";
 import { HiOutlineUsers } from "react-icons/hi2";
+import LabeledIcon from "./discrete/labeledIcon";
 import Link from "next/link";
 import { MdOutlineGamepad } from "react-icons/md";
 import { MouseEventHandler, useState } from "react";
-import { Navbar } from "flowbite-react";
 import { PiFiles, PiToolbox } from "react-icons/pi";
+import useScreenSize from "@/hooks/useScreenSize";
+
+const customTheme: CustomFlowbiteTheme["navbar"] = {
+    collapse: {
+        list: "mt-4 flex flex-col md:mt-0 md:flex-row md:space-x-4 md:text-sm md:font-medium",
+    },
+};
+
+const links = [
+    {
+        url: "/",
+        icon: AiOutlineHome,
+        label: "Inicio",
+    },
+    {
+        url: "/tasks",
+        icon: GrTask,
+        label: "Tareas",
+    },
+    {
+        url: "/files",
+        icon: PiFiles,
+        label: "Archivos",
+    },
+    {
+        url: "/control",
+        icon: MdOutlineGamepad,
+        label: "Control",
+    },
+    {
+        url: "/users",
+        icon: HiOutlineUsers,
+        label: "Usuarios",
+    },
+    {
+        url: "/inventory",
+        icon: PiToolbox,
+        label: "Inventario",
+    },
+];
+
+function DeviceStatus({ onStop }: { onStop: () => void }) {
+    const handleEmergencyStop: MouseEventHandler<HTMLButtonElement> = (event) => {
+        event.preventDefault();
+        onStop();
+    };
+
+    return (
+        <>
+            <Button onClick={handleEmergencyStop} color="light">
+                <AiOutlineStop size={20} color="red" /> Detener
+            </Button>
+            <Button as="span" color="light">
+                Equipo: Habilitado
+            </Button>
+        </>
+    );
+}
 
 export function NavigationBar() {
+    const screenSize = useScreenSize();
     const [confirm, setConfirm] = useState(false);
 
     // Handlers
-    const handleEmergencyStop: MouseEventHandler<HTMLAnchorElement> = (event) => {
-        event.preventDefault();
+    const handleEmergencyStop = () => {
         setConfirm(true);
     };
 
@@ -26,27 +86,24 @@ export function NavigationBar() {
 
     return (
         <>
-            <Navbar rounded>
+            <Navbar theme={customTheme}>
                 <Navbar.Brand as={Link} href="/">
                     <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
                         CNC remoto
                     </span>
                 </Navbar.Brand>
-                <div className="flex md:order-2 p-1 border rounded border-red-600">
-                    Equipo: Habilitado
-                </div>
+                {screenSize.width > 1023 && <DeviceStatus onStop={handleEmergencyStop} />}
                 <Navbar.Toggle />
                 <Navbar.Collapse>
-                    <Navbar.Link onClick={handleEmergencyStop} href="#">
-                        <AiOutlineStop size={20} color="red" />
-                    </Navbar.Link>
-                    <Navbar.Link href="/"><AiOutlineHome size={20} /></Navbar.Link>
-                    <Navbar.Link href="/tasks"><GrTask size={20} /></Navbar.Link>
-                    <Navbar.Link href="/files"><PiFiles size={20} /></Navbar.Link>
-                    <Navbar.Link href="/control"><MdOutlineGamepad size={20} /></Navbar.Link>
-                    <Navbar.Link href="/users"><HiOutlineUsers size={20} /></Navbar.Link>
-                    <Navbar.Link href="/inventory"><PiToolbox size={20} /></Navbar.Link>
+                    {links.map((link) => (
+                        <Navbar.Link key={link.label} href={link.url}>
+                            <LabeledIcon Icon={link.icon} label={link.label} />
+                        </Navbar.Link>
+                    ))}
                 </Navbar.Collapse>
+            </Navbar>
+            <Navbar className="lg:hidden">
+                <DeviceStatus onStop={handleEmergencyStop} />
             </Navbar>
             {confirm && (
                 <ConfirmDialog
