@@ -39,7 +39,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
                         {confirmText}
                     </Button>
                     <Button color="red" onClick={onCancel}>
-                        Cancel
+                        Cancelar
                     </Button>
                 </div>
             </Modal.Body>

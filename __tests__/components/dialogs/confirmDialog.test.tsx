@@ -22,7 +22,7 @@ describe("ConfirmDialog", () => {
         expect(content).toBeInTheDocument();
         const acceptBtn = screen.getByText("Accept");
         expect(acceptBtn).toBeInTheDocument();
-        const cancelBtn = screen.getByText("Cancel");
+        const cancelBtn = screen.getByText("Cancelar");
         expect(cancelBtn).toBeInTheDocument();
     });
 
@@ -41,7 +41,7 @@ describe("ConfirmDialog", () => {
         );
 
         // Action to close the dialog
-        const button = screen.getByText("Cancel");
+        const button = screen.getByText("Cancelar");
         fireEvent.click(button);
 
         // Assert close action was called
