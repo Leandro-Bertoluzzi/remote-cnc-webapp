@@ -2,6 +2,7 @@
 
 import apiRequest from "@/services/apiService";
 import CameraWidget from "@/components/discrete/cameraWidget";
+import { Card } from "flowbite-react";
 import ControllerStatus from "@/components/controllerStatus";
 import Log from "@/types/Log";
 import LogsViewer from "@/components/discrete/logsViewer";
@@ -28,7 +29,7 @@ function MonitorView() {
     }, [showErrorDialog]);
 
     return (
-        <div className="rounded-xl border bg-white p-4">
+        <Card>
             <h2 className="mb-4 text-center text-3xl font-semibold">Monitor</h2>
             <div className="grid gap-2 lg:grid-cols-2">
                 <ControllerStatus />
@@ -36,7 +37,7 @@ function MonitorView() {
                 <CameraWidget />
                 <LogsViewer logs={logs} />
             </div>
-        </div>
+        </Card>
     );
 }
 
