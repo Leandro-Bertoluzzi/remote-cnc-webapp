@@ -26,12 +26,10 @@ export default function UserCard(props: UserCardProps) {
     };
 
     return (
-        <>
-            <BaseCard
-                mainText={user.name}
-                additionalText={[roleText, user.email]}
-                buttons={[btnEdit, btnRemove]}
-            />
-        </>
+        <BaseCard
+            mainText={user.name}
+            additionalText={[roleText, user.email]}
+            buttons={[btnEdit, btnRemove]}
+        />
     );
 }
