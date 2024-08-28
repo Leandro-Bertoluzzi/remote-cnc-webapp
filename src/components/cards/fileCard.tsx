@@ -1,6 +1,7 @@
 import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
 import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
+import config from "@/config";
 import FileInfo from "@/types/FileInfo";
 
 export interface FileCardProps {
@@ -9,6 +10,8 @@ export interface FileCardProps {
     onRemove: () => void;
 }
 
+const { THUMBNAILS_URL } = config;
+
 export default function FileCard(props: FileCardProps) {
     // Props
     const { file, onEdit, onRemove } = props;
@@ -16,6 +19,9 @@ export default function FileCard(props: FileCardProps) {
     // Text
     const createdAt = new Date(file.created_at);
     const createdAtText = `Created at: ${createdAt.toLocaleString()}`;
+
+    // Image
+    const imageSource = THUMBNAILS_URL + "/" + file.id + ".png";
 
     // Buttons
     const btnDownload: ButtonInfo = {
@@ -34,12 +40,11 @@ export default function FileCard(props: FileCardProps) {
     };
 
     return (
-        <>
-            <BaseCard
-                mainText={file.name}
-                additionalText={[createdAtText]}
-                buttons={[btnDownload, btnEdit, btnRemove]}
-            />
-        </>
+        <BaseCard
+            mainText={file.name}
+            additionalText={[createdAtText]}
+            buttons={[btnDownload, btnEdit, btnRemove]}
+            imgSrc={imageSource}
+        />
     );
 }

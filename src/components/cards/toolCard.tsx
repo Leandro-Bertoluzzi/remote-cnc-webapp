@@ -24,12 +24,10 @@ export default function ToolCard(props: ToolCardProps) {
     };
 
     return (
-        <>
-            <BaseCard
-                mainText={tool.name}
-                additionalText={[tool.description]}
-                buttons={[btnEdit, btnRemove]}
-            />
-        </>
+        <BaseCard
+            mainText={tool.name}
+            additionalText={[tool.description]}
+            buttons={[btnEdit, btnRemove]}
+        />
     );
 }

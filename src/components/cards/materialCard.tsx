@@ -24,12 +24,10 @@ export default function MaterialCard(props: MaterialCardProps) {
     };
 
     return (
-        <>
-            <BaseCard
-                mainText={material.name}
-                additionalText={[material.description]}
-                buttons={[btnEdit, btnRemove]}
-            />
-        </>
+        <BaseCard
+            mainText={material.name}
+            additionalText={[material.description]}
+            buttons={[btnEdit, btnRemove]}
+        />
     );
 }
