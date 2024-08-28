@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "flowbite-react";
-import withAuthentication from "@/components/wrappers/authenticationWrapper";
+import withAuthentication from "@/components/wrappers/withAuthentication";
 
 interface MenuOption {
     name: string;

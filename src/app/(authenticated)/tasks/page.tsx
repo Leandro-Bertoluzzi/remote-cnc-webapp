@@ -16,7 +16,7 @@ import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect, useCallback } from "react";
 import { useTasks } from "@/contexts/tasksContext";
 import { TASK_APPROVED_STATUS, TASK_INITIAL_STATUS } from "@/components/cards/taskCard";
-import withAuthentication from "@/components/wrappers/authenticationWrapper";
+import withAuthentication from "@/components/wrappers/withAuthentication";
 
 const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import TasksView from "@/app/tasks/page";
+import TasksView from "@/app/(authenticated)/tasks/page";
 import apiRequest from "@/services/apiService";
 import Task from "@/types/Task";
 import TaskCardProps from "@/types/TaskCardProps";

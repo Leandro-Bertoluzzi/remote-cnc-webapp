@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import InventoryView from "@/app/inventory/page";
+import InventoryView from "@/app/(authenticated)/inventory/page";
 import apiRequest from "@/services/apiService";
 import Tool from "@/types/Tool";
 import Material from "@/types/Material";

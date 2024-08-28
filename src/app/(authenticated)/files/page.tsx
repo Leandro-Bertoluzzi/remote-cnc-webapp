@@ -10,7 +10,7 @@ import FileInfo from "@/types/FileInfo";
 import { useFiles } from "@/contexts/filesContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
-import withAuthentication from "@/components/wrappers/authenticationWrapper";
+import withAuthentication from "@/components/wrappers/withAuthentication";
 
 function FilesView() {
     // Hooks for state variables

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import FilesView from "@/app/files/page";
+import FilesView from "@/app/(authenticated)/files/page";
 import apiRequest from "@/services/apiService";
 import FileInfo from "@/types/FileInfo";
 import { FileCardProps } from "@/components/cards/fileCard";

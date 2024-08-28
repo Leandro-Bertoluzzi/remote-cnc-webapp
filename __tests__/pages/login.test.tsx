@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
-import Login from "@/app/login/page";
+import Login from "@/app/(outside)/login/page";
 import apiRequest from "@/services/apiService";
 import { setJwtToken } from "@/services/storage";
 import MessageDialogProps from "@/types/MessageDialogProps";

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup } from "@testing-library/react";
-import MainMenu from "@/app/page";
+import MainMenu from "@/app/(authenticated)/page";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication
