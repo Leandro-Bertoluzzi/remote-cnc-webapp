@@ -11,6 +11,7 @@ import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
 import withAuthentication from "@/components/wrappers/withAuthentication";
+import TaskForm from "@/components/forms/taskForm";
 
 function FilesView() {
     // Hooks for state variables
@@ -19,6 +20,7 @@ function FilesView() {
         create: false,
         update: false,
         remove: false,
+        create_task: false,
     });
 
     // Context
@@ -61,6 +63,7 @@ function FilesView() {
     }, [fetchFiles]);
 
     const fileInfo = selectedFile ? { fileInfo: selectedFile } : {};
+    const fixedFile = selectedFile ? { fixedFile: selectedFile } : {};
 
     return (
         <>
@@ -80,6 +83,7 @@ function FilesView() {
                                 file={file}
                                 onEdit={() => handleModalToggle("update", true, file)}
                                 onRemove={() => handleModalToggle("remove", true, file)}
+                                onNewTask={() => handleModalToggle("create_task", true, file)}
                             />
                         ))}
                     </>
@@ -92,6 +96,13 @@ function FilesView() {
                     }
                     create={modalState.create}
                     {...fileInfo}
+                />
+            )}
+            {modalState.create_task && (
+                <TaskForm
+                    exitAction={() => handleModalToggle("create_task", false)}
+                    create={true}
+                    {...fixedFile}
                 />
             )}
             {modalState.remove && selectedFile && (

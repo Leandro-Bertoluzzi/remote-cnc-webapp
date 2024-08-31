@@ -15,6 +15,7 @@ export const BUTTON_RESTORE = "restaurar";
 export const BUTTON_RESUME = "retomar";
 export const BUTTON_RETRY = "reintentar";
 export const BUTTON_RUN = "ejecutar";
+export const BUTTON_CREATE_TASK = "crear tarea";
 
 const BUTTON_COLOR_MAP: AssociativeArray = {
     [BUTTON_DOWNLOAD]: "teal",
@@ -28,6 +29,7 @@ const BUTTON_COLOR_MAP: AssociativeArray = {
     [BUTTON_RESUME]: "green",
     [BUTTON_RETRY]: "indigo",
     [BUTTON_RUN]: "green",
+    [BUTTON_CREATE_TASK]: "green",
 };
 
 // Types definition
