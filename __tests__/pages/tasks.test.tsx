@@ -3,12 +3,12 @@ import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import TasksView from "@/app/(authenticated)/tasks/page";
 import apiRequest from "@/services/apiService";
 import Task from "@/types/Task";
-import TaskCardProps from "@/types/TaskCardProps";
-import TaskFormProps from "@/types/TaskFormProps";
+import { TaskCardProps } from "@/components/cards/taskCard";
+import { TaskFormProps } from "@/components/forms/taskForm";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
-import { TasksProvider } from "@/contexts/tasksContext";
+import { ItemsProvider } from "@/contexts/itemsContext";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication
@@ -120,9 +120,9 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 const WrappedComponent = () => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <TasksProvider>
+            <ItemsProvider>
                 <TasksView />
-            </TasksProvider>
+            </ItemsProvider>
         </NotificationsWrapper>
     </NotificationProvider>
 );

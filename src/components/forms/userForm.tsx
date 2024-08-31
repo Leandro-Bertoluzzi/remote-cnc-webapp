@@ -5,7 +5,7 @@ import User from "@/types/User";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledSelect from "../discrete/labeledSelect";
 import { useNotification } from "@/contexts/notificationContext";
-import { useUsers } from "@/contexts/usersContext";
+import { useItems } from "@/contexts/itemsContext";
 
 export interface UserFormProps {
     exitAction: () => void;
@@ -26,7 +26,7 @@ export default function UserForm(props: UserFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { fetchUsers } = useUsers();
+    const { fetchUsers } = useItems();
 
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);

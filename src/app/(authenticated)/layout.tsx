@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { ItemsProvider } from "@/contexts/itemsContext";
 import NavigationWrapper from "@/components/wrappers/navigationWrapper";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
-    return <NavigationWrapper>{children}</NavigationWrapper>;
+    return (
+        <NavigationWrapper>
+            <ItemsProvider>{children}</ItemsProvider>
+        </NavigationWrapper>
+    );
 }

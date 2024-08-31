@@ -9,7 +9,7 @@ import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 import useAuth from "@/hooks/useauth";
-import { UsersProvider } from "@/contexts/usersContext";
+import { ItemsProvider } from "@/contexts/itemsContext";
 
 // Mock authentication
 jest.mock("@/hooks/useauth");
@@ -80,9 +80,9 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 const WrappedComponent = () => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <UsersProvider>
+            <ItemsProvider>
                 <UsersView />
-            </UsersProvider>
+            </ItemsProvider>
         </NotificationsWrapper>
     </NotificationProvider>
 );

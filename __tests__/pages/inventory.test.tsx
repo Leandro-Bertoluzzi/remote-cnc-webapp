@@ -6,13 +6,12 @@ import Tool from "@/types/Tool";
 import Material from "@/types/Material";
 import { MaterialCardProps } from "@/components/cards/materialCard";
 import { MaterialFormProps } from "@/components/forms/materialForm";
-import { MaterialsProvider } from "@/contexts/materialsContext";
+import { ItemsProvider } from "@/contexts/itemsContext";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
 import { ToolCardProps } from "@/components/cards/toolCard";
 import { ToolFormProps } from "@/components/forms/toolForm";
-import { ToolsProvider } from "@/contexts/toolsContext";
 import useAuth from "@/hooks/useauth";
 
 // Mock authentication
@@ -121,11 +120,9 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 const WrappedComponent = () => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <MaterialsProvider>
-                <ToolsProvider>
-                    <InventoryView />
-                </ToolsProvider>
-            </MaterialsProvider>
+            <ItemsProvider>
+                <InventoryView />
+            </ItemsProvider>
         </NotificationsWrapper>
     </NotificationProvider>
 );

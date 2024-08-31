@@ -3,7 +3,7 @@ import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import Material from "@/types/Material";
 import LabeledTextInput from "../discrete/labeledTextInput";
-import { useMaterials } from "@/contexts/materialsContext";
+import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
 
 export interface MaterialFormProps {
@@ -24,7 +24,7 @@ export default function MaterialForm(props: MaterialFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { fetchMaterials } = useMaterials();
+    const { fetchMaterials } = useItems();
 
     // Hooks for state variables
     const [materialName, setMaterialName] = useState<string>(materialInfo.name);

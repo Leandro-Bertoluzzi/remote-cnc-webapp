@@ -4,7 +4,7 @@ import BaseForm from "./baseForm";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import Task from "@/types/Task";
 import { useNotification } from "@/contexts/notificationContext";
-import { useTasks } from "@/contexts/tasksContext";
+import { useItems } from "@/contexts/itemsContext";
 
 export interface CancelTaskFormProps {
     exitAction: () => void;
@@ -17,7 +17,7 @@ export default function CancelTaskForm(props: CancelTaskFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { fetchTasks } = useTasks();
+    const { fetchTasks } = useItems();
 
     // Hooks for state variables
     const [cancellationReason, setCancellationReason] = useState<string>("");

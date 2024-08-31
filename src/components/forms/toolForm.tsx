@@ -4,7 +4,7 @@ import BaseForm from "./baseForm";
 import Tool from "@/types/Tool";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import { useNotification } from "@/contexts/notificationContext";
-import { useTools } from "@/contexts/toolsContext";
+import { useItems } from "@/contexts/itemsContext";
 
 export interface ToolFormProps {
     exitAction: () => void;
@@ -24,7 +24,7 @@ export default function ToolForm(props: ToolFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { fetchTools } = useTools();
+    const { fetchTools } = useItems();
 
     // Hooks for state variables
     const [toolName, setToolName] = useState<string>(toolInfo.name);
