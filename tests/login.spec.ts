@@ -80,7 +80,7 @@ test.describe("Login page", () => {
         await expect(page).not.toHaveURL(/.*login/);
     });
 
-    const pages = ["files", "inventory", "requests", "tasks", "users"];
+    const pages = ["control", "files", "inventory", "tasks", "users"];
     for (const page_name of pages) {
         test(`Successful login from ${page_name}`, async ({ page }) => {
             // Mock API request

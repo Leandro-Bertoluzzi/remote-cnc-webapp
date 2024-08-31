@@ -1,7 +1,7 @@
 "use client";
 
+import CameraWidget from "@/components/discrete/cameraWidget";
 import { Card } from "flowbite-react";
-import CodeEditor from "@/components/codeEditor";
 import ControllerActions from "@/components/controllerActions";
 import ControllerStatus from "@/components/controllerStatus";
 import Terminal from "@/components/terminal";
@@ -13,7 +13,7 @@ function ControlView() {
             <h2 className="mb-4 text-center text-3xl font-semibold">Control manual</h2>
             <div className="grid gap-2 lg:grid-cols-2">
                 <ControllerStatus />
-                <CodeEditor />
+                <CameraWidget />
                 <ControllerActions />
                 <Terminal sender />
             </div>

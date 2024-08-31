@@ -23,9 +23,8 @@ describe("MainMenu", () => {
         // Assert components in widget
         const options = [
             "Ver estado de tareas",
-            "Monitorizar equipo",
             "Administrar archivos",
-            "Control manual y calibración",
+            "Control manual y monitoreo",
             "Administrar usuarios",
             "Administrar inventario",
         ];

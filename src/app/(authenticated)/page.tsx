@@ -16,17 +16,12 @@ const options: MenuOption[] = [
         path: "/tasks",
     },
     {
-        name: "Monitorizar equipo",
-        description: "",
-        path: "/monitor",
-    },
-    {
         name: "Administrar archivos",
         description: "",
         path: "/files",
     },
     {
-        name: "Control manual y calibración",
+        name: "Control manual y monitoreo",
         description: "",
         path: "/control",
     },
