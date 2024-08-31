@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/test";
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("Redirect to login page", () => {
-    const pages = ["", "files", "inventory", "tasks", "users"];
+    const pages = ["", "control", "files", "inventory", "tasks", "users"];
     for (const page_name of pages) {
         test(`Redirects from ${page_name || "index"}`, async ({ page }) => {
             await page.goto(`/${page_name}`);

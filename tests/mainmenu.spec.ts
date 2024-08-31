@@ -16,12 +16,14 @@ test.describe("MainMenu", () => {
             name: "Ver estado de tareas",
             path: "/tasks",
         },
-        //{ name: "Monitorizar equipo", path: "#", },
         {
             name: "Administrar archivos",
             path: "/files",
         },
-        //{ name: "Control manual y calibración", path: "#", },
+        {
+            name: "Control manual y monitoreo",
+            path: "/control",
+        },
         {
             name: "Administrar usuarios",
             path: "/users",
