@@ -5,16 +5,13 @@ import CancelTaskForm from "@/components/forms/cancelTaskForm";
 import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
 import EmptyCard from "@/components/cards/emptyCard";
-import FileInfo from "@/types/FileInfo";
-import Material from "@/types/Material";
 import Task from "@/types/Task";
 import TaskCard from "@/components/cards/taskCard";
 import TasksFilter from "@/components/discrete/tasksFilter";
 import TaskForm from "@/components/forms/taskForm";
-import Tool from "@/types/Tool";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState, useEffect, useCallback } from "react";
-import { useTasks } from "@/contexts/tasksContext";
+import { useState, useEffect } from "react";
+import { useItems } from "@/contexts/itemsContext";
 import { TASK_APPROVED_STATUS, TASK_INITIAL_STATUS } from "@/components/cards/taskCard";
 import withAuthentication from "@/components/wrappers/withAuthentication";
 
@@ -22,10 +19,6 @@ const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 
 function TasksView() {
     // Hooks for state variables
-    const [availableTools, setAvailableTools] = useState<Tool[]>([]);
-    const [availableMaterials, setAvailableMaterials] = useState<Material[]>([]);
-    const [availableFiles, setAvailableFiles] = useState<FileInfo[]>([]);
-
     const [taskTypes, setTaskTypes] = useState<string[]>(DEFAULT_TASK_TYPES);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
@@ -46,7 +39,7 @@ function TasksView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { tasks, fetchTasks } = useTasks();
+    const { tasks, fetchTasks } = useItems();
 
     // Event handlers
     const toggleModal = (
@@ -121,28 +114,9 @@ function TasksView() {
             .catch((err) => showErrorDialog(err.message));
     };
 
-    // Action to execute at the beginning
-    const queryItems = useCallback(async () => {
-        try {
-            const [files, materials, tools] = await Promise.all([
-                apiRequest("files", "GET"),
-                apiRequest("materials", "GET"),
-                apiRequest("tools", "GET"),
-            ]);
-            setAvailableFiles(files);
-            setAvailableMaterials(materials);
-            setAvailableTools(tools);
-        } catch (error) {
-            if (error instanceof Error) {
-                showErrorDialog(error.message);
-            }
-        }
-    }, [showErrorDialog]);
-
     useEffect(() => {
-        queryItems();
-        fetchTasks();
-    }, [queryItems, fetchTasks]);
+        fetchTasks(true);
+    }, [fetchTasks]);
 
     // Methods
     const updateTaskStatusList = (status: string, add: boolean) => {
@@ -178,9 +152,6 @@ function TasksView() {
                                 key={task.id}
                                 task={task}
                                 show={taskTypes.includes(task.status)}
-                                toolsList={availableTools}
-                                materialsList={availableMaterials}
-                                filesList={availableFiles}
                                 onEdit={() => toggleModal("update", true, task)}
                                 onCancel={() => toggleModal("cancel", true, task)}
                                 onRemove={() =>
@@ -226,9 +197,6 @@ function TasksView() {
                 <TaskForm
                     exitAction={() => toggleModal(modalState.create ? "create" : "update", false)}
                     create={modalState.create}
-                    toolsList={availableTools}
-                    materialsList={availableMaterials}
-                    filesList={availableFiles}
                     {...taskInfo}
                 />
             )}

@@ -8,7 +8,7 @@ import UserCard from "@/components/cards/userCard";
 import UserForm from "@/components/forms/userForm";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
-import { useUsers } from "@/contexts/usersContext";
+import { useItems } from "@/contexts/itemsContext";
 import withAuthentication from "@/components/wrappers/withAuthentication";
 
 function UsersView() {
@@ -22,7 +22,7 @@ function UsersView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { users, fetchUsers } = useUsers();
+    const { users, fetchUsers } = useItems();
 
     // Event handlers
     const handleModalToggle = (

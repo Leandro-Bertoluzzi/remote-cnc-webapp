@@ -11,7 +11,21 @@ import {
 } from "../discrete/cardButton";
 import ButtonInfo, { ButtonInfoArray } from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
-import TaskCardProps from "@/types/TaskCardProps";
+import Task from "@/types/Task";
+import { useItems } from "@/contexts/itemsContext";
+
+export interface TaskCardProps {
+    task: Task;
+    show: boolean;
+    onEdit: () => void;
+    onCancel: () => void;
+    onRemove: () => void;
+    onApprove: () => void;
+    onRestore: () => void;
+    onRun: () => void;
+    onPause: () => void;
+    onRetry: () => void;
+}
 
 // Constants
 
@@ -28,9 +42,6 @@ export default function TaskCard(props: TaskCardProps) {
     const {
         task,
         show,
-        toolsList,
-        materialsList,
-        filesList,
         onEdit,
         onCancel,
         onRemove,
@@ -41,10 +52,13 @@ export default function TaskCard(props: TaskCardProps) {
         onRetry,
     } = props;
 
+    // Context
+    const { files, materials, tools } = useItems();
+
     // Text
-    const materialText = `Material: ${materialsList.find((material) => material.id == task.material_id)?.name}`;
-    const toolText = `Herramienta: ${toolsList.find((tool) => tool.id == task.tool_id)?.name}`;
-    const fileText = `Archivo: ${filesList.find((file) => file.id == task.file_id)?.name}`;
+    const materialText = `Material: ${materials.find((material) => material.id == task.material_id)?.name}`;
+    const toolText = `Herramienta: ${tools.find((tool) => tool.id == task.tool_id)?.name}`;
+    const fileText = `Archivo: ${files.find((file) => file.id == task.file_id)?.name}`;
     const additionalText = [materialText, toolText, fileText];
 
     // Card buttons

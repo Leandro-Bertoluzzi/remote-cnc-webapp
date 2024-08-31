@@ -5,7 +5,7 @@ import apiRequest from "@/services/apiService";
 import FileInfo from "@/types/FileInfo";
 import { FileCardProps } from "@/components/cards/fileCard";
 import { FileFormProps } from "@/components/forms/fileForm";
-import { FilesProvider } from "@/contexts/filesContext";
+import { ItemsProvider } from "@/contexts/itemsContext";
 import MessageDialogProps from "@/types/MessageDialogProps";
 import { NotificationProvider } from "@/contexts/notificationContext";
 import NotificationsWrapper from "@/components/wrappers/notificationsWrapper";
@@ -76,9 +76,9 @@ jest.mock("@/components/dialogs/messageDialog", () =>
 const WrappedComponent = () => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <FilesProvider>
+            <ItemsProvider>
                 <FilesView />
-            </FilesProvider>
+            </ItemsProvider>
         </NotificationsWrapper>
     </NotificationProvider>
 );

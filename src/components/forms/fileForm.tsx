@@ -5,7 +5,7 @@ import { voidActionType } from "@/types/Actions";
 import FileInfo from "@/types/FileInfo";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledFileInput from "../discrete/labeledFileInput";
-import { useFiles } from "@/contexts/filesContext";
+import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
 
 export interface FileFormProps {
@@ -26,7 +26,7 @@ export default function FileForm(props: FileFormProps) {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { fetchFiles } = useFiles();
+    const { fetchFiles } = useItems();
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();

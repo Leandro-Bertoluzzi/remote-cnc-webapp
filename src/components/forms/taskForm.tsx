@@ -4,24 +4,30 @@ import BaseForm from "./baseForm";
 import LabeledSelect from "../discrete/labeledSelect";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import LabeledTextInput from "../discrete/labeledTextInput";
-import TaskFormProps from "@/types/TaskFormProps";
+import Task from "@/types/Task";
 import { useNotification } from "@/contexts/notificationContext";
-import { useTasks } from "@/contexts/tasksContext";
+import { useItems } from "@/contexts/itemsContext";
+
+export interface TaskFormProps {
+    exitAction: () => void;
+    create: boolean;
+    taskInfo?: Task;
+}
 
 export default function TaskForm(props: TaskFormProps) {
     // Props
-    const { exitAction, create, taskInfo, toolsList, materialsList, filesList } = props;
+    const { exitAction, create, taskInfo } = props;
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { fetchTasks } = useTasks();
+    const { files, materials, fetchTasks, tools } = useItems();
 
     // Initialization
     const initialName = taskInfo ? taskInfo.name : "";
     const initialNote = taskInfo ? taskInfo.note : "";
-    const initialTool = taskInfo ? taskInfo.tool_id : toolsList[0]?.id;
-    const initialMaterial = taskInfo ? taskInfo.material_id : materialsList[0]?.id;
-    const initialFile = taskInfo ? taskInfo.file_id : filesList[0]?.id;
+    const initialTool = taskInfo ? taskInfo.tool_id : tools[0]?.id;
+    const initialMaterial = taskInfo ? taskInfo.material_id : materials[0]?.id;
+    const initialFile = taskInfo ? taskInfo.file_id : files[0]?.id;
 
     // Hooks for state variables
     const [taskName, setTaskName] = useState<string>(initialName);
@@ -125,7 +131,7 @@ export default function TaskForm(props: TaskFormProps) {
                     name="task-tool"
                     initialValue={taskTool}
                     handleChange={handleTaskToolChange}
-                    options={toolsList.map((tool) => {
+                    options={tools.map((tool) => {
                         return { label: tool.name, value: tool.id };
                     })}
                 />
@@ -136,7 +142,7 @@ export default function TaskForm(props: TaskFormProps) {
                     name="task-material"
                     initialValue={taskMaterial}
                     handleChange={handleTaskMaterialChange}
-                    options={materialsList.map((mat) => {
+                    options={materials.map((mat) => {
                         return { label: mat.name, value: mat.id };
                     })}
                 />
@@ -147,7 +153,7 @@ export default function TaskForm(props: TaskFormProps) {
                     name="task-file"
                     initialValue={taskFile}
                     handleChange={handleTaskFileChange}
-                    options={filesList.map((file) => {
+                    options={files.map((file) => {
                         return { label: file.name, value: file.id };
                     })}
                 />

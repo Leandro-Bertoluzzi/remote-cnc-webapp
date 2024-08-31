@@ -7,7 +7,7 @@ import EmptyCard from "@/components/cards/emptyCard";
 import FileCard from "@/components/cards/fileCard";
 import FileForm from "@/components/forms/fileForm";
 import FileInfo from "@/types/FileInfo";
-import { useFiles } from "@/contexts/filesContext";
+import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
 import withAuthentication from "@/components/wrappers/withAuthentication";
@@ -23,7 +23,7 @@ function FilesView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { files, fetchFiles } = useFiles();
+    const { files, fetchFiles } = useItems();
 
     // Event handlers
     const handleModalToggle = (

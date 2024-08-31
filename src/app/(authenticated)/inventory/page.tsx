@@ -10,10 +10,9 @@ import MaterialForm from "@/components/forms/materialForm";
 import Tool from "@/types/Tool";
 import ToolCard from "@/components/cards/toolCard";
 import ToolForm from "@/components/forms/toolForm";
-import { useMaterials } from "@/contexts/materialsContext";
+import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
-import { useTools } from "@/contexts/toolsContext";
 import withAuthentication from "@/components/wrappers/withAuthentication";
 
 function InventoryView() {
@@ -36,8 +35,7 @@ function InventoryView() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { materials, fetchMaterials } = useMaterials();
-    const { tools, fetchTools } = useTools();
+    const { materials, fetchMaterials, tools, fetchTools } = useItems();
 
     // Event handlers
     const handleToolModalToggle = (
