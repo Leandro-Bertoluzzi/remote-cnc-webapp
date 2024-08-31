@@ -8,11 +8,12 @@ export interface LabeledSelectProps {
     label: string;
     options: SelectOption[];
     initialValue?: string | number;
+    disabled?: boolean;
 }
 
 export default function LabeledSelect(props: LabeledSelectProps) {
     // Props
-    const { handleChange, name, label, options, initialValue } = props;
+    const { handleChange, name, label, options, initialValue, disabled = false } = props;
 
     // Methods
     const handleOptionChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -32,6 +33,7 @@ export default function LabeledSelect(props: LabeledSelectProps) {
                 id={`select-${name}`}
                 value={initialValue}
                 onChange={handleOptionChange}
+                disabled={disabled}
                 required
             >
                 {options.map((option) => (

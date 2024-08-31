@@ -1,4 +1,4 @@
-import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE } from "../discrete/cardButton";
+import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE, BUTTON_CREATE_TASK } from "../discrete/cardButton";
 import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
 import config from "@/config";
@@ -8,13 +8,14 @@ export interface FileCardProps {
     file: FileInfo;
     onEdit: () => void;
     onRemove: () => void;
+    onNewTask: () => void;
 }
 
 const { THUMBNAILS_URL } = config;
 
 export default function FileCard(props: FileCardProps) {
     // Props
-    const { file, onEdit, onRemove } = props;
+    const { file, onEdit, onRemove, onNewTask } = props;
 
     // Text
     const createdAt = new Date(file.created_at);
@@ -34,6 +35,10 @@ export default function FileCard(props: FileCardProps) {
         type: BUTTON_EDIT,
         action: onEdit,
     };
+    const btnCreateTask: ButtonInfo = {
+        type: BUTTON_CREATE_TASK,
+        action: onNewTask,
+    };
     const btnRemove: ButtonInfo = {
         type: BUTTON_REMOVE,
         action: onRemove,
@@ -43,7 +48,7 @@ export default function FileCard(props: FileCardProps) {
         <BaseCard
             mainText={file.name}
             additionalText={[createdAtText]}
-            buttons={[btnDownload, btnEdit, btnRemove]}
+            buttons={[btnDownload, btnEdit, btnCreateTask, btnRemove,]}
             imgSrc={imageSource}
         />
     );

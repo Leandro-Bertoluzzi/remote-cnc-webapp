@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
+import FileInfo from "@/types/FileInfo";
 import LabeledSelect from "../discrete/labeledSelect";
 import LabeledTextArea from "../discrete/labeledTextArea";
 import LabeledTextInput from "../discrete/labeledTextInput";
@@ -12,15 +13,17 @@ export interface TaskFormProps {
     exitAction: () => void;
     create: boolean;
     taskInfo?: Task;
+    fixedFile?: FileInfo;
 }
 
 export default function TaskForm(props: TaskFormProps) {
     // Props
-    const { exitAction, create, taskInfo } = props;
+    const { exitAction, create, taskInfo, fixedFile } = props;
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
-    const { files, materials, fetchTasks, tools } = useItems();
+    const { files, fetchFiles, materials, fetchMaterials, fetchTasks, tools, fetchTools } =
+        useItems();
 
     // Initialization
     const initialName = taskInfo ? taskInfo.name : "";
@@ -34,7 +37,24 @@ export default function TaskForm(props: TaskFormProps) {
     const [taskNote, setTaskNote] = useState<string>(initialNote);
     const [taskTool, setTaskTool] = useState<number>(initialTool);
     const [taskMaterial, setTaskMaterial] = useState<number>(initialMaterial);
-    const [taskFile, setTaskFile] = useState<number>(initialFile);
+    const [taskFile, setTaskFile] = useState<number>(fixedFile ? fixedFile.id : initialFile);
+
+    // Action to execute at the beginning
+    const queryItems = useCallback(async () => {
+        if (files.length === 0) {
+            fetchFiles();
+        }
+        if (materials.length === 0) {
+            fetchMaterials();
+        }
+        if (tools.length === 0) {
+            fetchTools();
+        }
+    }, [fetchFiles, files, fetchMaterials, materials, fetchTools, tools]);
+
+    useEffect(() => {
+        queryItems();
+    }, [queryItems]);
 
     // Event handlers
 
@@ -153,6 +173,7 @@ export default function TaskForm(props: TaskFormProps) {
                     name="task-file"
                     initialValue={taskFile}
                     handleChange={handleTaskFileChange}
+                    disabled={!!fixedFile}
                     options={files.map((file) => {
                         return { label: file.name, value: file.id };
                     })}
