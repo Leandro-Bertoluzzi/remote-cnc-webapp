@@ -2,6 +2,7 @@ import apiRequest from "@/services/apiService";
 import { Button } from "flowbite-react";
 import { FaArrowAltCircleLeft, FaCircle } from "react-icons/fa";
 import LabeledNumberInput from "./discrete/labeledNumberInput";
+import { useConnection } from "@/contexts/connectionContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState } from "react";
 
@@ -30,6 +31,7 @@ export default function Joystick() {
 
     // Context
     const { showErrorDialog } = useNotification();
+    const { connected } = useConnection();
 
     // Handlers
     const handleStepXChange = (step_x: number) => {
@@ -74,7 +76,7 @@ export default function Joystick() {
 
     return (
         <>
-            <div className="grid grid-cols-3 gap-2">
+            <div className={"grid grid-cols-3 gap-2" + (connected ? "" : " disabled")}>
                 <JoystickButton index={0} onclick={() => handleMove(-1, 1, 0)} />
                 <JoystickButton index={1} onclick={() => handleMove(0, 1, 0)} />
                 <JoystickButton index={2} onclick={() => handleMove(1, 1, 0)} />
@@ -87,7 +89,7 @@ export default function Joystick() {
                 <JoystickButton index={5} onclick={() => handleMove(0, -1, 0)} />
                 <JoystickButton index={4} onclick={() => handleMove(1, -1, 0)} />
             </div>
-            <div className="m-4 grid grid-cols-2 gap-2">
+            <div className={"m-4 grid grid-cols-2 gap-2" + (connected ? "" : " disabled")}>
                 <LabeledNumberInput
                     label="Paso en X"
                     name="step-x"

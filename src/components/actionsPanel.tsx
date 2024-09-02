@@ -1,5 +1,6 @@
 import apiRequest from "@/services/apiService";
 import ButtonGrid from "@/components/containers/buttonGrid";
+import { useConnection } from "@/contexts/connectionContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState } from "react";
 
@@ -8,6 +9,7 @@ export default function ActionsPanel() {
 
     // Context
     const { showErrorDialog, showNotification } = useNotification();
+    const { connected } = useConnection();
 
     /*  Function: sendCommand
      *   Description: Requests the API to execute a command
@@ -48,6 +50,7 @@ export default function ActionsPanel() {
                     },
                 },
             ]}
+            disabled={!connected}
         />
     );
 }

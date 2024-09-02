@@ -3,6 +3,7 @@ import { getEventSource } from "@/services/apiService";
 import GrblMessage from "@/types/GrblMessage";
 import { VscSend } from "react-icons/vsc";
 import { TextInput, Button } from "flowbite-react";
+import { useConnection } from "@/contexts/connectionContext";
 import { useState, useEffect, useRef } from "react";
 
 export interface TerminalProps {
@@ -18,6 +19,9 @@ export default function Terminal(props: TerminalProps) {
     // State
     const [messages, setMessages] = useState<string[]>([]);
     const [text, setText] = useState<string>("");
+
+    // Context
+    const { connected } = useConnection();
 
     // State hooks
     useEffect(() => {
@@ -65,7 +69,7 @@ export default function Terminal(props: TerminalProps) {
                     <div key={index}>{`> ${message}`}</div>
                 ))}
             </div>
-            {sender && (
+            {sender && connected && (
                 <div className="relative">
                     <TextInput
                         placeholder="A command..."
