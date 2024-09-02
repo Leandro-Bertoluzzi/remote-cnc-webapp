@@ -12,6 +12,7 @@ import { MdOutlineGamepad } from "react-icons/md";
 import { MouseEventHandler, useState } from "react";
 import { PiFiles, PiToolbox } from "react-icons/pi";
 import useScreenSize from "@/hooks/useScreenSize";
+import { useWorkerStatus } from "@/contexts/workerContext";
 
 const customTheme: CustomFlowbiteTheme["navbar"] = {
     collapse: {
@@ -53,6 +54,17 @@ const links = [
 ];
 
 function DeviceStatus({ onStop }: { onStop: () => void }) {
+    // Context
+    const { workerStatus } = useWorkerStatus();
+
+    // Calculated values
+    const status = workerStatus.available
+        ? "Disponible"
+        : workerStatus.running
+          ? "Ocupado"
+          : "Deshabilitado";
+
+    // Event handlers
     const handleEmergencyStop: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
         onStop();
@@ -64,7 +76,7 @@ function DeviceStatus({ onStop }: { onStop: () => void }) {
                 <AiOutlineStop size={20} color="red" /> Detener
             </Button>
             <Button as="span" color="light">
-                Equipo: Habilitado
+                {`Equipo: ${status}`}
             </Button>
         </>
     );

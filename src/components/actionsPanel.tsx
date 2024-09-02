@@ -1,17 +1,21 @@
 import apiRequest from "@/services/apiService";
 import ButtonGrid from "@/components/containers/buttonGrid";
+import { useNotification } from "@/contexts/notificationContext";
 import { useState } from "react";
 
 export default function ActionsPanel() {
     const [pausedText, setPausedText] = useState<string>("Pausar");
+
+    // Context
+    const { showErrorDialog, showNotification } = useNotification();
 
     /*  Function: sendCommand
      *   Description: Requests the API to execute a command
      */
     const sendCommand = (command: string) => {
         apiRequest("cnc/command", "POST", { command }, true)
-            .then((response) => console.log("SUCCESS: ", response))
-            .catch((error) => console.log("ERROR: ", error));
+            .then((response) => showNotification(response.success))
+            .catch((error) => showErrorDialog(error.message));
     };
 
     /*  Function: togglePausedTask
@@ -19,12 +23,9 @@ export default function ActionsPanel() {
      */
     async function togglePausedTask() {
         apiRequest("worker/pause", "GET")
-            .then((response) =>
-                apiRequest(`worker/pause/${response.paused ? 0 : 1}`, "PUT").then((response) =>
-                    setPausedText(response.paused ? "Retomar" : "Pausar")
-                )
-            )
-            .catch((error) => console.log("ERROR: ", error));
+            .then((response) => apiRequest(`worker/pause/${response.paused ? 0 : 1}`, "PUT"))
+            .then((response) => setPausedText(response.paused ? "Retomar" : "Pausar"))
+            .catch((error) => showErrorDialog(error.message));
     }
 
     return (

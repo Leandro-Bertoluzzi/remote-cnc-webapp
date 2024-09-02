@@ -65,15 +65,18 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
             .catch((error) => showErrorDialog(error.message));
     }, [showErrorDialog]);
 
-    const fetchTasks = useCallback((request_items = false) => {
-        if(request_items){
-            queryTaskItems();
-        }
+    const fetchTasks = useCallback(
+        (request_items = false) => {
+            if (request_items) {
+                queryTaskItems();
+            }
 
-        apiRequest("tasks", "GET")
-            .then(setTasks)
-            .catch((error) => showErrorDialog(error.message));
-    }, [queryTaskItems, showErrorDialog]);
+            apiRequest("tasks", "GET")
+                .then(setTasks)
+                .catch((error) => showErrorDialog(error.message));
+        },
+        [queryTaskItems, showErrorDialog]
+    );
 
     const fetchTools = useCallback(() => {
         apiRequest("tools", "GET")

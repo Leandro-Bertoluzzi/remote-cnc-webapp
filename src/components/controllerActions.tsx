@@ -24,11 +24,7 @@ const tabs = [
     {
         title: "Joystick",
         icon: MdOutlineGamepad,
-        content: (
-            <>
-                <Joystick />
-            </>
-        ),
+        content: <Joystick />,
     },
 ];
 
