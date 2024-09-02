@@ -3,7 +3,7 @@ import { Button, Dropdown } from "flowbite-react";
 import { TbPlug, TbPlugX } from "react-icons/tb";
 import { useConnection } from "@/contexts/connectionContext";
 import { useNotification } from "@/contexts/notificationContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWorkerStatus } from "@/contexts/workerContext";
 
 export default function PortsList() {
@@ -39,6 +39,13 @@ export default function PortsList() {
             .catch((error) => showErrorDialog(error.message))
             .finally(() => setWaiting(false));
     };
+
+    // Effect
+    useEffect(() => {
+        if (connected && !workerStatus.available) {
+            updateConnected(false);
+        }
+    }, [connected, updateConnected, workerStatus.available]);
 
     return (
         <div className="flex flex-wrap items-center gap-2">
