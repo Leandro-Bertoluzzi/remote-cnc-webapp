@@ -2,6 +2,7 @@ import apiRequest from "@/services/apiService";
 import { Button } from "flowbite-react";
 import { FaArrowAltCircleLeft, FaCircle } from "react-icons/fa";
 import LabeledNumberInput from "./discrete/labeledNumberInput";
+import { useNotification } from "@/contexts/notificationContext";
 import { useState } from "react";
 
 interface JoystickButtonProps {
@@ -27,6 +28,9 @@ export default function Joystick() {
     const [feedrate, setFeedrate] = useState<number>(0.0);
     //const [units, setUnits] = useState<number>(0.0);
 
+    // Context
+    const { showErrorDialog } = useNotification();
+
     // Handlers
     const handleStepXChange = (step_x: number) => {
         setStepX(step_x);
@@ -51,7 +55,10 @@ export default function Joystick() {
 
         if (move_x == 0 && move_y == 0 && move_z == 0) return;
 
-        if (feedrate == 0) return; // TODO: Alertar al usuario
+        if (feedrate == 0) {
+            showErrorDialog("Debe configurar la velocidad de avance (feed rate)");
+            return;
+        }
 
         const body = {
             x: move_x,
@@ -62,9 +69,7 @@ export default function Joystick() {
             mode: "distance_incremental",
         };
 
-        apiRequest("cnc/jog", "POST", body, true)
-            .then((response) => console.log("SUCCESS: ", response))
-            .catch((error) => console.log("ERROR: ", error));
+        apiRequest("cnc/jog", "POST", body, true).catch((error) => showErrorDialog(error.message));
     };
 
     return (

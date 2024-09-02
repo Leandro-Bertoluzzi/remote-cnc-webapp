@@ -1,4 +1,9 @@
-import { BUTTON_DOWNLOAD, BUTTON_EDIT, BUTTON_REMOVE, BUTTON_CREATE_TASK } from "../discrete/cardButton";
+import {
+    BUTTON_DOWNLOAD,
+    BUTTON_EDIT,
+    BUTTON_REMOVE,
+    BUTTON_CREATE_TASK,
+} from "../discrete/cardButton";
 import ButtonInfo from "@/types/ButtonInfo";
 import BaseCard from "./baseCard";
 import config from "@/config";
@@ -48,7 +53,7 @@ export default function FileCard(props: FileCardProps) {
         <BaseCard
             mainText={file.name}
             additionalText={[createdAtText]}
-            buttons={[btnDownload, btnEdit, btnCreateTask, btnRemove,]}
+            buttons={[btnDownload, btnEdit, btnCreateTask, btnRemove]}
             imgSrc={imageSource}
         />
     );

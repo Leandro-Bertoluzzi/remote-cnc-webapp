@@ -1,13 +1,20 @@
 import apiRequest from "@/services/apiService";
 import { Button, Dropdown } from "flowbite-react";
 import { TbPlug, TbPlugX } from "react-icons/tb";
+import { useNotification } from "@/contexts/notificationContext";
 import { useState } from "react";
+import { useWorkerStatus } from "@/contexts/workerContext";
 
 export default function PortsList() {
     const [connected, setConnected] = useState<boolean>(false);
     const [waiting, setWaiting] = useState<boolean>(false);
     const [selectedPort, setSelectedPort] = useState<string>("");
 
+    // Context
+    const { showErrorDialog } = useNotification();
+    const { workerStatus } = useWorkerStatus();
+
+    // Calculated values
     const ports = ["/dev/ttyUSB0", "/dev/example", "/dev/invalid"];
 
     // Handlers
@@ -21,14 +28,14 @@ export default function PortsList() {
         if (connected) {
             apiRequest("cnc/server", "DELETE")
                 .then(() => setConnected(false))
-                .catch((error) => console.log("Hubo un error: ", error.message))
+                .catch((error) => showErrorDialog(error.message))
                 .finally(() => setWaiting(false));
             return;
         }
 
         apiRequest("cnc/server", "POST")
             .then(() => setConnected(true))
-            .catch((error) => console.log("Hubo un error: ", error.message))
+            .catch((error) => showErrorDialog(error.message))
             .finally(() => setWaiting(false));
     };
 
@@ -43,7 +50,7 @@ export default function PortsList() {
             </Dropdown>
             <Button
                 color={connected ? "failure" : "success"}
-                disabled={!selectedPort || waiting}
+                disabled={!selectedPort || waiting || !workerStatus.available}
                 onClick={handleConnect}
                 size="md"
             >
