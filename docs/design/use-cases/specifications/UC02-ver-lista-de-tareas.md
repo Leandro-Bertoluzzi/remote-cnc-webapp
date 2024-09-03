@@ -1,12 +1,12 @@
-| **Caso de uso**   | **Ver cola de ejecución**                                               |
-| :---------------- | :---------------------------------------------------------------------- |
-| **Identificador** | UC02                                                                    |
-| **Actores**       | Usuario                                                                 |
-| **Precondición**  | El usuario está autenticado y tiene acceso al sistema.                  |
-| **Resultado**     | El usuario puede ver un listado de las tareas en ejecución y en espera. |
+| **Caso de uso**   | **Ver cola de ejecución**                                |
+| :---------------- | :------------------------------------------------------- |
+| **Identificador** | UC02                                                     |
+| **Actores**       | Usuario                                                  |
+| **Precondición**  | El usuario está autenticado y tiene acceso al sistema.   |
+| **Resultado**     | El usuario puede ver un listado de las tareas generadas. |
 
 **Resumen:**
-Este caso de uso describe los pasos necesarios para que el usuario pueda ver un listado de las tareas en ejecución y en espera.
+Este caso de uso describe los pasos necesarios para que el usuario pueda ver un listado de las tareas.
 
 **Curso normal (básico):**
 

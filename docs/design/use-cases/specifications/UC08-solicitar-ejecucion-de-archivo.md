@@ -13,7 +13,7 @@ Este caso de uso describe los pasos necesarios para que el usuario pueda solicit
 | **N** | **Acción realizada por actor**                                                            | **Acción realizada por el sistema**                           |
 | :---- | :---------------------------------------------------------------------------------------- | :------------------------------------------------------------ |
 | 1     | En la vista de "Archivos", selecciona el archivo deseado.                                 |                                                               |
-| 2     | Cliquea "solicitar ejecución".                                                            |                                                               |
+| 2     | Cliquea "crear tarea".                                                                    |                                                               |
 | 3     |                                                                                           | Despliega una ventana de registro de solicitud.               |
 | 4     | Completa el nombre, selecciona material y herramienta, y (opcional) agrega un comentario. |                                                               |
 | 5     | Presiona "Aceptar".                                                                       |                                                               |
