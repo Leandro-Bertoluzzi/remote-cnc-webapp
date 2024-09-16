@@ -29,10 +29,6 @@
         },
         {
           "type": "route",
-          "uuid": "8b028eb6-8d4f-45c4-bcce-2ffbf7339f6b"
-        },
-        {
-          "type": "route",
           "uuid": "8bf18700-0958-40fa-b768-beca3fb6c1dc"
         }
       ]
@@ -325,7 +321,7 @@
       "responses": [
         {
           "uuid": "838ac4dc-eb68-4a26-8a8d-85e78f1db0ae",
-          "body": "{\n  \"success\": \"Usuario agregado con éxito\"\n}",
+          "body": "{\r\n  \"id\": 11,\r\n  \"name\": \"{{bodyRaw 'name'}}\",\r\n  \"email\": \"{{bodyRaw 'email'}}\",\r\n  \"role\": \"{{bodyRaw 'role'}}\"\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -487,7 +483,7 @@
         },
         {
           "uuid": "0f47974d-11d6-4610-9b76-85b84c371d1d",
-          "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"body\",\n        \"password\"\n      ],\n      \"msg\": \"string does not match regex \\\"\\\\b^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d)(?=.*[@$!%*#?&])[A-Za-z\\\\d@$!#%*?&]{8,20}$\\\\b\\\"\",\n      \"type\": \"value_error.str.regex\",\n      \"ctx\": {\n        \"pattern\": \"\\\\b^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d)(?=.*[@$!%*#?&])[A-Za-z\\\\d@$!#%*?&]{8,20}$\\\\b\"\n      }\n    }\n  ]\n}",
+          "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"body\",\n        \"password\"\n      ],\n      \"msg\": \"Password must be 8-20 characters long with upper and lower case letters, numbers and special characters (@$!%*#?&)\",\n      \"type\": \"value_error.str.regex\",\n      \"ctx\": {\n        \"pattern\": \"\\\\b^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d)(?=.*[@$!%*#?&])[A-Za-z\\\\d@$!#%*?&]{8,20}$\\\\b\"\n      }\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 422,
           "label": "Mal formato de contraseña",
@@ -551,7 +547,7 @@
       "responses": [
         {
           "uuid": "a5fcf003-48f0-4d05-b561-1fe5204913ef",
-          "body": "{\n  \"success\": \"The user was successfully updated\"\n}",
+          "body": "{\r\n  \"id\": \"{{urlParam 'id'}}\",\r\n  \"name\": \"{{bodyRaw 'name'}}\",\r\n  \"email\": \"{{bodyRaw 'email'}}\",\r\n  \"role\": \"{{bodyRaw 'role'}}\"\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -675,7 +671,7 @@
       "responses": [
         {
           "uuid": "00c3f0d3-33f5-4ce1-9fdb-0d705e858ea8",
-          "body": "{\n  \"success\": \"The user was successfully removed\"\n}",
+          "body": "{\n  \"success\": \"El usuario fue eliminado con éxito\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -734,11 +730,11 @@
       "type": "http",
       "documentation": "Login user",
       "method": "post",
-      "endpoint": "users/login",
+      "endpoint": "login",
       "responses": [
         {
           "uuid": "1d5417d6-9b8d-447e-af7c-13f9ba23141f",
-          "body": "{\r\n    \"message\": \"Successfully fetched auth token\",\r\n    \"data\": {\r\n        \"id\": 1,\r\n        \"name\": \"{{faker 'person.fullName'}}\",\r\n        \"email\": \"{{faker 'internet.email'}}\",\r\n        \"role\": \"{{oneOf (array 'user' 'admin')}}\",\r\n        \"token\": \"{{faker 'string.uuid'}}\"\r\n    }\r\n}",
+          "body": "{\r\n    \"message\": \"Usuario autenticado con éxito\",\r\n    \"data\": {\r\n        \"id\": 1,\r\n        \"name\": \"{{faker 'person.fullName'}}\",\r\n        \"email\": \"{{faker 'internet.email'}}\",\r\n        \"role\": \"{{oneOf (array 'user' 'admin')}}\",\r\n        \"token\": \"{{faker 'string.uuid'}}\"\r\n    }\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -986,7 +982,7 @@
       "responses": [
         {
           "uuid": "6cc59142-6e05-4aed-bf91-d945b6996795",
-          "body": "{\n  \"success\": \"The file was successfully uploaded\"\n}",
+          "body": "{\r\n  \"id\": 11,\r\n  \"name\": \"{{faker 'system.commonFileName' 'gcode'}}\",\r\n  \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\",\r\n  \"user_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\"\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1015,7 +1011,7 @@
       "responses": [
         {
           "uuid": "233b3c9e-124b-4b56-b9ad-69d225425ddf",
-          "body": "{\n  \"success\": \"The file name was successfully updated\"\n}",
+          "body": "{\r\n  \"id\": 11,\r\n  \"name\": \"{{bodyRaw 'file_name'}}\",\r\n  \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\",\r\n  \"user_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\"\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1098,7 +1094,7 @@
       "responses": [
         {
           "uuid": "c73d2959-3785-4901-b8af-9b8290c4b8bb",
-          "body": "{\n  \"success\": \"The file was successfully removed\"\n}",
+          "body": "{\n  \"success\": \"El archivo fue eliminado con éxito\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1292,7 +1288,7 @@
       "responses": [
         {
           "uuid": "e1691f2b-6e4e-48dc-969e-cfda7f469e9e",
-          "body": "{\n  \"success\": \"The tool was successfully updated\"\n}",
+          "body": "{\n  \"id\": \"{{urlParam 'id'}}\",\n  \"name\": \"{{bodyRaw 'name'}}\",\n  \"description\": \"{{bodyRaw 'description'}}\",\n  \"added_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1355,7 +1351,7 @@
       "responses": [
         {
           "uuid": "917d45d9-06b2-415d-95ca-dd827c15b008",
-          "body": "{\n  \"success\": \"The tool was successfully removed\"\n}",
+          "body": "{\n  \"success\": \"La herramienta fue eliminada con éxito\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1549,7 +1545,7 @@
       "responses": [
         {
           "uuid": "503fa9ba-3dbf-4af5-af91-0c707b5d9f42",
-          "body": "{\n  \"success\": \"The material was successfully updated\"\n}",
+          "body": "{\n  \"id\": \"{{urlParam 'id'}}\",\n  \"name\": \"{{bodyRaw 'name'}}\",\n  \"description\": \"{{bodyRaw 'description'}}\",\n  \"added_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1612,7 +1608,7 @@
       "responses": [
         {
           "uuid": "a9d4b71b-f1b1-49a6-a62d-dd68b2a67ff0",
-          "body": "{\n  \"success\": \"The material was successfully removed\"\n}",
+          "body": "{\n  \"success\": \"El material fue eliminado con éxito\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1685,7 +1681,7 @@
       "responses": [
         {
           "uuid": "51ca8a04-d81f-4332-9f52-b6ce3002cd70",
-          "body": "[\r\n  {{#repeat 10}}\r\n  {\r\n    \"id\": {{add @index 1}},\r\n    \"name\": \"{{faker 'lorem.sentence' min=2 max=5}}\",\r\n    \"status\": \"pending_approval\",\r\n    \"priority\": \"{{int 0 20}}\",\r\n    \"user_id\": \"{{int 1 10}}\",\r\n    \"file_id\": \"{{int 1 10}}\",\r\n    \"tool_id\": \"{{int 1 10}}\",\r\n    \"material_id\": \"{{int 1 10}}\",\r\n    \"note\": \"{{faker 'lorem.paragraph' min=1 max=3}}\",\r\n    \"admin_id\": null,\r\n    \"cancellation_reason\": null,\r\n    \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\r\n  }\r\n  {{/repeat}}\r\n]",
+          "body": "[\r\n  {{#repeat 10}}\r\n  {\r\n    \"id\": {{add @index 1}},\r\n    \"name\": \"{{faker 'lorem.sentence' min=2 max=5}}\",\r\n    \"status\": \"{{oneOf (array 'pending_approval' 'on_hold' 'finished' 'cancelled' 'failed')}}\",\r\n    \"priority\": \"{{int 0 20}}\",\r\n    \"user_id\": \"{{int 1 10}}\",\r\n    \"file_id\": \"{{int 1 10}}\",\r\n    \"tool_id\": \"{{int 1 10}}\",\r\n    \"material_id\": \"{{int 1 10}}\",\r\n    \"note\": \"{{faker 'lorem.paragraph' min=1 max=3}}\",\r\n    \"admin_id\": null,\r\n    \"cancellation_reason\": null,\r\n    \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\r\n  }\r\n  {{/repeat}}\r\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1714,7 +1710,7 @@
       "responses": [
         {
           "uuid": "4431d7dc-8fd8-4f99-a0b5-4816793bc26f",
-          "body": "[\r\n  {{#repeat 10}}\r\n  {\r\n    \"id\": {{add @index 1}},\r\n    \"name\": \"{{faker 'lorem.sentence' min=2 max=5}}\",\r\n    \"status\": \"pending_approval\",\r\n    \"priority\": \"{{int 0 20}}\",\r\n    \"user_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\",\r\n    \"file_id\": \"{{int 1 10}}\",\r\n    \"tool_id\": \"{{int 1 10}}\",\r\n    \"material_id\": \"{{int 1 10}}\",\r\n    \"note\": \"{{faker 'lorem.paragraph' min=1 max=3}}\",\r\n    \"admin_id\": null,\r\n    \"cancellation_reason\": null,\r\n    \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\r\n  }\r\n  {{/repeat}}\r\n]",
+          "body": "[\r\n  {{#repeat 10}}\r\n  {\r\n    \"id\": {{add @index 1}},\r\n    \"name\": \"{{faker 'lorem.sentence' min=2 max=5}}\",\r\n    \"status\": \"{{oneOf (array 'pending_approval' 'on_hold' 'finished' 'cancelled' 'failed')}}\",\r\n    \"priority\": \"{{int 0 20}}\",\r\n    \"user_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\",\r\n    \"file_id\": \"{{int 1 10}}\",\r\n    \"tool_id\": \"{{int 1 10}}\",\r\n    \"material_id\": \"{{int 1 10}}\",\r\n    \"note\": \"{{faker 'lorem.paragraph' min=1 max=3}}\",\r\n    \"admin_id\": null,\r\n    \"cancellation_reason\": null,\r\n    \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\r\n  }\r\n  {{/repeat}}\r\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1743,7 +1739,7 @@
       "responses": [
         {
           "uuid": "dcc9269d-622e-4a95-bd10-36ffc55a33f5",
-          "body": "{\n  \"success\": \"The task was successfully created\"\n}",
+          "body": "{\r\n  \"id\": 11,\r\n  \"name\": \"{{bodyRaw 'name'}}\",\r\n  \"status\": \"pending_approval\",\r\n  \"priority\": \"{{int 0 20}}\",\r\n  \"user_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\",\r\n  \"file_id\": \"{{bodyRaw 'file_id'}}\",\r\n  \"tool_id\": \"{{bodyRaw 'tool_id'}}\",\r\n  \"material_id\": \"{{bodyRaw 'material_id'}}\",\r\n  \"note\": \"{{bodyRaw 'note' 'Default note...'}}\",\r\n  \"admin_id\": null,\r\n  \"cancellation_reason\": null,\r\n  \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1820,7 +1816,7 @@
       "responses": [
         {
           "uuid": "859462f9-94a6-4e3e-870a-b0dae0c52398",
-          "body": "{\n  \"success\": \"The task was successfully updated\"\n}",
+          "body": "{\r\n  \"id\": \"{{urlParam 'id'}}\",\r\n  \"name\": \"{{bodyRaw 'name' 'Default name...'}}\",\r\n  \"status\": \"pending_approval\",\r\n  \"priority\": \"{{bodyRaw 'priority' 1}}\",\r\n  \"user_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\",\r\n  \"file_id\": \"{{bodyRaw 'file_id' 1}}\",\r\n  \"tool_id\": \"{{bodyRaw 'tool_id' 1}}\",\r\n  \"material_id\": \"{{bodyRaw 'material_id' 1}}\",\r\n  \"note\": \"{{bodyRaw 'note' 'Default note...'}}\",\r\n  \"admin_id\": null,\r\n  \"cancellation_reason\": null,\r\n  \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1849,7 +1845,7 @@
       "responses": [
         {
           "uuid": "351d7137-99ee-4b65-abba-3d3ed7ae2ccc",
-          "body": "{\n  \"success\": \"The task status was successfully updated\"\n}",
+          "body": "{\r\n  \"id\": \"{{urlParam 'id'}}\",\r\n  \"name\": \"{{faker 'lorem.sentence' min=2 max=5}}\",\r\n  \"status\": \"{{bodyRaw 'status'}}\",\r\n  \"priority\": \"{{int 0 20}}\",\r\n  \"user_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\",\r\n  \"file_id\": \"{{int 1 10}}\",\r\n  \"tool_id\": \"{{int 1 10}}\",\r\n  \"material_id\": \"{{int 1 10}}\",\r\n  \"note\": \"{{faker 'lorem.paragraph' min=1 max=3}}\",\r\n  \"admin_id\": \"{{jwtPayload (header 'Authorization') 'user_id'}}\",\r\n  \"cancellation_reason\": null,\r\n  \"created_at\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd\\'T\\'HH:mm:ss.SSSSSS'}}\"\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1878,7 +1874,7 @@
       "responses": [
         {
           "uuid": "945c9508-40f5-4976-9060-1ee3fd7ee492",
-          "body": "{\n  \"success\": \"The task status was successfully removed\"\n}",
+          "body": "{\n  \"success\": \"La tarea fue eliminada con éxito\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -2553,6 +2549,10 @@
     {
       "type": "route",
       "uuid": "588e0576-e1e8-41d1-985b-8af6e95b79d5"
+    },
+    {
+      "type": "route",
+      "uuid": "8b028eb6-8d4f-45c4-bcce-2ffbf7339f6b"
     },
     {
       "type": "folder",
