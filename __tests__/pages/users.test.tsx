@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import UsersView from "@/app/(authenticated)/users/page";
-import apiRequest from "@/services/apiService";
+import { ItemsClient } from "@/application/items/itemsClient";
 import User from "@/types/User";
 import { UserCardProps } from "@/components/cards/userCard";
 import { UserFormProps } from "@/components/forms/userForm";
@@ -14,10 +14,6 @@ import { ItemsProvider } from "@/contexts/itemsContext";
 // Mock authentication
 jest.mock("@/hooks/useauth");
 const mockedAuth = jest.mocked(useAuth);
-
-// Mock apiRequest import
-jest.mock("@/services/apiService");
-const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const users: User[] = [
@@ -76,11 +72,23 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+function createItemsClient(usersToReturn: User[] | Error): ItemsClient {
+    return {
+        getFiles: jest.fn(() => Promise.resolve([])),
+        getMaterials: jest.fn(() => Promise.resolve([])),
+        getTasks: jest.fn(() => Promise.resolve([])),
+        getTools: jest.fn(() => Promise.resolve([])),
+        getUsers: jest.fn(() =>
+            usersToReturn instanceof Error ? Promise.reject(usersToReturn) : Promise.resolve(usersToReturn)
+        ),
+    };
+}
+
 // View component with its wrappers for context
-const WrappedComponent = () => (
+const WrappedComponent = ({ client }: { client: ItemsClient }) => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <ItemsProvider>
+            <ItemsProvider client={client}>
                 <UsersView />
             </ItemsProvider>
         </NotificationsWrapper>
@@ -97,11 +105,10 @@ describe("UsersView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(users);
+        const client = createItemsClient(users);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const userCards = await screen.findAllByTestId("user-card");
@@ -113,31 +120,31 @@ describe("UsersView", () => {
         const button = screen.getByText("Agregar usuario");
         expect(button).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(1);
+        // Assert calls to port client
+        expect(client.getUsers).toHaveBeenCalledTimes(1);
     });
 
     it("renders the load screen before authenticating", async () => {
         // Mock authentication hook
         mockedAuth.mockReturnValue(false);
+        const client = createItemsClient(users);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
         expect(loader).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(0);
+        // Assert calls to port client
+        expect(client.getUsers).toHaveBeenCalledTimes(0);
     });
 
     it("notifies error querying users from API", async () => {
-        // Mock API calls
-        mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando usuarios"));
+        const client = createItemsClient(new Error("Error retornando usuarios"));
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -155,11 +162,10 @@ describe("UsersView", () => {
     });
 
     it("opens the form to upload a new user", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(users);
+        const client = createItemsClient(users);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const button = screen.getByText("Agregar usuario");

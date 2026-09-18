@@ -1,6 +1,9 @@
 import config from "../config";
+import { createSessionStorageClient } from "@/infrastructure/clients/sessionStorageClient";
 
 const { JWT_NAME } = config;
+
+const sessionStorageClient = createSessionStorageClient(JWT_NAME);
 
 /**
  * Gets the JWT token from local storage.
@@ -8,7 +11,7 @@ const { JWT_NAME } = config;
  * @returns The JWT token, or null if the token is not set.
  */
 export function getJwtToken(): string {
-    return localStorage.getItem(JWT_NAME) || "";
+    return sessionStorageClient.getToken();
 }
 
 /**
@@ -17,5 +20,5 @@ export function getJwtToken(): string {
  * @param token The JWT token to set.
  */
 export function setJwtToken(token: string) {
-    localStorage.setItem(JWT_NAME, token);
+    sessionStorageClient.setToken(token);
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import apiRequest from "@/services/apiService";
+import { ItemsClient } from "@/application/items/itemsClient";
+import { createItemsClient } from "@/infrastructure/clients/itemsClient";
 import FileInfo from "@/types/FileInfo";
 import Material from "@/types/Material";
 import Task from "@/types/Task";
@@ -24,7 +25,14 @@ interface ItemsContextProps {
 
 export const ItemsContext = createContext<ItemsContextProps | undefined>(undefined);
 
-export const ItemsProvider = ({ children }: { children: ReactNode }) => {
+interface ItemsProviderProps {
+    children: ReactNode;
+    client?: ItemsClient;
+}
+
+const defaultClient = createItemsClient();
+
+export const ItemsProvider = ({ children, client = defaultClient }: ItemsProviderProps) => {
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [materials, setMaterials] = useState<Material[]>([]);
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -38,9 +46,9 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
     const queryTaskItems = useCallback(async () => {
         try {
             const [_files, _materials, _tools] = await Promise.all([
-                apiRequest("files", "GET"),
-                apiRequest("materials", "GET"),
-                apiRequest("tools", "GET"),
+                client.getFiles(),
+                client.getMaterials(),
+                client.getTools(),
             ]);
             setFiles(_files);
             setMaterials(_materials);
@@ -50,20 +58,20 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
                 showErrorDialog(error.message);
             }
         }
-    }, [showErrorDialog]);
+    }, [client, showErrorDialog]);
 
     // Shared methods
     const fetchFiles = useCallback(() => {
-        apiRequest("files", "GET")
+        client.getFiles()
             .then(setFiles)
             .catch((error) => showErrorDialog(error.message));
-    }, [showErrorDialog]);
+    }, [client, showErrorDialog]);
 
     const fetchMaterials = useCallback(() => {
-        apiRequest("materials", "GET")
+        client.getMaterials()
             .then(setMaterials)
             .catch((error) => showErrorDialog(error.message));
-    }, [showErrorDialog]);
+    }, [client, showErrorDialog]);
 
     const fetchTasks = useCallback(
         (request_items = false) => {
@@ -71,24 +79,24 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
                 queryTaskItems();
             }
 
-            apiRequest("tasks", "GET")
+            client.getTasks()
                 .then(setTasks)
                 .catch((error) => showErrorDialog(error.message));
         },
-        [queryTaskItems, showErrorDialog]
+        [client, queryTaskItems, showErrorDialog]
     );
 
     const fetchTools = useCallback(() => {
-        apiRequest("tools", "GET")
+        client.getTools()
             .then(setTools)
             .catch((error) => showErrorDialog(error.message));
-    }, [showErrorDialog]);
+    }, [client, showErrorDialog]);
 
     const fetchUsers = useCallback(() => {
-        apiRequest("users", "GET")
+        client.getUsers()
             .then(setUsers)
             .catch((error) => showErrorDialog(error.message));
-    }, [showErrorDialog]);
+    }, [client, showErrorDialog]);
 
     return (
         <ItemsContext.Provider
