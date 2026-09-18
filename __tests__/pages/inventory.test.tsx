@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import InventoryView from "@/app/(authenticated)/inventory/page";
-import apiRequest from "@/services/apiService";
+import { ItemsClient } from "@/application/items/itemsClient";
 import Tool from "@/types/Tool";
 import Material from "@/types/Material";
 import { MaterialCardProps } from "@/components/cards/materialCard";
@@ -17,10 +17,6 @@ import useAuth from "@/hooks/useauth";
 // Mock authentication
 jest.mock("@/hooks/useauth");
 const mockedAuth = jest.mocked(useAuth);
-
-// Mock apiRequest import
-jest.mock("@/services/apiService");
-const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const tools: Tool[] = [
@@ -116,11 +112,27 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+function createItemsClient(materialsToReturn: Material[] | Error, toolsToReturn: Tool[] | Error): ItemsClient {
+    return {
+        getFiles: jest.fn(() => Promise.resolve([])),
+        getMaterials: jest.fn(() =>
+            materialsToReturn instanceof Error
+                ? Promise.reject(materialsToReturn)
+                : Promise.resolve(materialsToReturn)
+        ),
+        getTasks: jest.fn(() => Promise.resolve([])),
+        getTools: jest.fn(() =>
+            toolsToReturn instanceof Error ? Promise.reject(toolsToReturn) : Promise.resolve(toolsToReturn)
+        ),
+        getUsers: jest.fn(() => Promise.resolve([])),
+    };
+}
+
 // View component with its wrappers for context
-const WrappedComponent = () => (
+const WrappedComponent = ({ client }: { client: ItemsClient }) => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <ItemsProvider>
+            <ItemsProvider client={client}>
                 <InventoryView />
             </ItemsProvider>
         </NotificationsWrapper>
@@ -137,11 +149,10 @@ describe("InventoryView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
+        const client = createItemsClient(materials, tools);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         //console.log("DOM is:");
         //screen.debug();
@@ -162,31 +173,33 @@ describe("InventoryView", () => {
         const buttonTool = screen.getByText("Agregar herramienta");
         expect(buttonTool).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(2);
+        // Assert calls to port client
+        expect(client.getMaterials).toHaveBeenCalledTimes(1);
+        expect(client.getTools).toHaveBeenCalledTimes(1);
     });
 
     it("renders the load screen before authenticating", async () => {
         // Mock authentication hook
         mockedAuth.mockReturnValue(false);
+        const client = createItemsClient(materials, tools);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
         expect(loader).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(0);
+        // Assert calls to port client
+        expect(client.getMaterials).toHaveBeenCalledTimes(0);
+        expect(client.getTools).toHaveBeenCalledTimes(0);
     });
 
     it("renders the view with no tools", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce([]);
+        const client = createItemsClient(materials, []);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const materialCards = await screen.findAllByTestId("material-card");
@@ -198,11 +211,10 @@ describe("InventoryView", () => {
     });
 
     it("renders the view with no materials", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce([]).mockResolvedValueOnce(tools);
+        const client = createItemsClient([], tools);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const toolCards = await screen.findAllByTestId("tool-card");
@@ -214,11 +226,10 @@ describe("InventoryView", () => {
     });
 
     it("notifies error querying items from API", async () => {
-        // Mock API calls
-        mockedApiRequest.mockRejectedValue(new Error("Error retornando materiales"));
+        const client = createItemsClient(new Error("Error retornando materiales"), tools);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -236,11 +247,10 @@ describe("InventoryView", () => {
     });
 
     it("opens the form to upload a new tool", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
+        const client = createItemsClient(materials, tools);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const button = screen.getByText("Agregar herramienta");
@@ -263,11 +273,10 @@ describe("InventoryView", () => {
     });
 
     it("opens the form to upload a new material", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(materials).mockResolvedValueOnce(tools);
+        const client = createItemsClient(materials, tools);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const button = screen.getByText("Agregar material");

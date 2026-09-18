@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import FilesView from "@/app/(authenticated)/files/page";
-import apiRequest from "@/services/apiService";
+import { ItemsClient } from "@/application/items/itemsClient";
 import FileInfo from "@/types/FileInfo";
 import { FileCardProps } from "@/components/cards/fileCard";
 import { FileFormProps } from "@/components/forms/fileForm";
@@ -14,10 +14,6 @@ import useAuth from "@/hooks/useauth";
 // Mock authentication
 jest.mock("@/hooks/useauth");
 const mockedAuth = jest.mocked(useAuth);
-
-// Mock apiRequest import
-jest.mock("@/services/apiService");
-const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const files: FileInfo[] = [
@@ -72,11 +68,23 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+function createItemsClient(filesToReturn: FileInfo[] | Error): ItemsClient {
+    return {
+        getFiles: jest.fn(() =>
+            filesToReturn instanceof Error ? Promise.reject(filesToReturn) : Promise.resolve(filesToReturn)
+        ),
+        getMaterials: jest.fn(() => Promise.resolve([])),
+        getTasks: jest.fn(() => Promise.resolve([])),
+        getTools: jest.fn(() => Promise.resolve([])),
+        getUsers: jest.fn(() => Promise.resolve([])),
+    };
+}
+
 // View component with its wrappers for context
-const WrappedComponent = () => (
+const WrappedComponent = ({ client }: { client: ItemsClient }) => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <ItemsProvider>
+            <ItemsProvider client={client}>
                 <FilesView />
             </ItemsProvider>
         </NotificationsWrapper>
@@ -93,11 +101,10 @@ describe("FilesView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(files);
+        const client = createItemsClient(files);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const fileCards = await screen.findAllByTestId("file-card");
@@ -109,31 +116,31 @@ describe("FilesView", () => {
         const button = screen.getByText("Subir archivo");
         expect(button).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(1);
+        // Assert calls to port client
+        expect(client.getFiles).toHaveBeenCalledTimes(1);
     });
 
     it("renders the load screen before authenticating", async () => {
         // Mock authentication hook
         mockedAuth.mockReturnValue(false);
+        const client = createItemsClient(files);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
         expect(loader).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(0);
+        // Assert calls to port client
+        expect(client.getFiles).toHaveBeenCalledTimes(0);
     });
 
     it("renders the view with no files", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce([]);
+        const client = createItemsClient([]);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const fileCards = screen.queryAllByTestId("file-card");
@@ -147,11 +154,10 @@ describe("FilesView", () => {
     });
 
     it("notifies error querying files from API", async () => {
-        // Mock API calls
-        mockedApiRequest.mockRejectedValueOnce(new Error("Error retornando archivos"));
+        const client = createItemsClient(new Error("Error retornando archivos"));
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -169,11 +175,10 @@ describe("FilesView", () => {
     });
 
     it("opens the form to upload a new file", async () => {
-        // Mock API calls
-        mockedApiRequest.mockResolvedValueOnce(files);
+        const client = createItemsClient(files);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const button = screen.getByText("Subir archivo");
@@ -194,7 +199,7 @@ describe("FilesView", () => {
         // Assert form is gone
         expect(form).not.toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(1);
+        // Assert calls to port client
+        expect(client.getFiles).toHaveBeenCalledTimes(1);
     });
 });

@@ -1,18 +1,15 @@
 "use client";
 
-import apiRequest from "@/services/apiService";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { WorkerStatus, WorkerStatusClient } from "@/application/worker/workerStatusClient";
+import { createWorkerStatusClient } from "@/infrastructure/clients/workerStatusClient";
 import { useNotification } from "./notificationContext";
 
 interface WorkerStatusContextProps {
-    workerStatus: {
-        enabled: boolean;
-        running: boolean;
-        available: boolean;
-    };
+    workerStatus: WorkerStatus;
 }
 
-const INITIAL_STATUS = {
+const INITIAL_STATUS: WorkerStatus = {
     enabled: false,
     running: false,
     available: false,
@@ -20,7 +17,14 @@ const INITIAL_STATUS = {
 
 const WorkerStatusContext = createContext<WorkerStatusContextProps | undefined>(undefined);
 
-export function WorkerStatusProvider({ children }: { children: ReactNode }) {
+interface WorkerStatusProviderProps {
+    children: ReactNode;
+    client?: WorkerStatusClient;
+}
+
+const defaultClient = createWorkerStatusClient();
+
+export function WorkerStatusProvider({ children, client = defaultClient }: WorkerStatusProviderProps) {
     const [workerStatus, setWorkerStatus] = useState(INITIAL_STATUS);
 
     // Context
@@ -28,7 +32,8 @@ export function WorkerStatusProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const request_status = () => {
-            apiRequest("worker/check/available", "GET")
+            client
+                .checkStatus()
                 .then((response) => setWorkerStatus(response))
                 .catch((error) => {
                     setWorkerStatus(INITIAL_STATUS);
@@ -39,7 +44,7 @@ export function WorkerStatusProvider({ children }: { children: ReactNode }) {
         const id = setInterval(request_status, 1000);
 
         return () => clearInterval(id);
-    }, [showErrorDialog]);
+    }, [client, showErrorDialog]);
 
     return (
         <WorkerStatusContext.Provider value={{ workerStatus }}>

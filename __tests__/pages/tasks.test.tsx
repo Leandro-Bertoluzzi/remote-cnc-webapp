@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import TasksView from "@/app/(authenticated)/tasks/page";
-import apiRequest from "@/services/apiService";
+import { ItemsClient } from "@/application/items/itemsClient";
 import Task from "@/types/Task";
 import { TaskCardProps } from "@/components/cards/taskCard";
 import { TaskFormProps } from "@/components/forms/taskForm";
@@ -14,10 +14,6 @@ import useAuth from "@/hooks/useauth";
 // Mock authentication
 jest.mock("@/hooks/useauth");
 const mockedAuth = jest.mocked(useAuth);
-
-// Mock apiRequest import
-jest.mock("@/services/apiService");
-const mockedApiRequest = jest.mocked(apiRequest);
 
 // Mock response from API
 const tasks: Task[] = [
@@ -116,11 +112,33 @@ jest.mock("@/components/dialogs/messageDialog", () =>
     )
 );
 
+function createItemsClient(
+    filesToReturn: unknown,
+    materialsToReturn: unknown,
+    toolsToReturn: unknown,
+    tasksToReturn: unknown
+): ItemsClient {
+    const resolveOrReject = (value: unknown) => {
+        if (value instanceof Error) {
+            return Promise.reject(value);
+        }
+        return Promise.resolve(value);
+    };
+
+    return {
+        getFiles: jest.fn(() => resolveOrReject(filesToReturn) as Promise<never>),
+        getMaterials: jest.fn(() => resolveOrReject(materialsToReturn) as Promise<never>),
+        getTasks: jest.fn(() => resolveOrReject(tasksToReturn) as Promise<never>),
+        getTools: jest.fn(() => resolveOrReject(toolsToReturn) as Promise<never>),
+        getUsers: jest.fn(() => Promise.resolve([])),
+    };
+}
+
 // View component with its wrappers for context
-const WrappedComponent = () => (
+const WrappedComponent = ({ client }: { client: ItemsClient }) => (
     <NotificationProvider>
         <NotificationsWrapper>
-            <ItemsProvider>
+            <ItemsProvider client={client}>
                 <TasksView />
             </ItemsProvider>
         </NotificationsWrapper>
@@ -137,15 +155,10 @@ describe("TasksView", () => {
     });
 
     it("renders the view after successful login", async () => {
-        // Mock API calls
-        mockedApiRequest
-            .mockResolvedValueOnce([]) // files
-            .mockResolvedValueOnce([]) // materials
-            .mockResolvedValueOnce([]) // tools
-            .mockResolvedValueOnce(tasks);
+        const client = createItemsClient([], [], [], tasks);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");
@@ -157,35 +170,37 @@ describe("TasksView", () => {
         const button = screen.getByText("Crear tarea");
         expect(button).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(4);
+        // Assert calls to port client
+        expect(client.getFiles).toHaveBeenCalledTimes(1);
+        expect(client.getMaterials).toHaveBeenCalledTimes(1);
+        expect(client.getTools).toHaveBeenCalledTimes(1);
+        expect(client.getTasks).toHaveBeenCalledTimes(1);
     });
 
     it("renders the load screen before authenticating", async () => {
         // Mock authentication hook
         mockedAuth.mockReturnValue(false);
+        const client = createItemsClient([], [], [], tasks);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const loader = screen.queryByTestId("loader");
         expect(loader).toBeInTheDocument();
 
-        // Assert calls to API
-        expect(apiRequest).toHaveBeenCalledTimes(0);
+        // Assert calls to port client
+        expect(client.getFiles).toHaveBeenCalledTimes(0);
+        expect(client.getMaterials).toHaveBeenCalledTimes(0);
+        expect(client.getTools).toHaveBeenCalledTimes(0);
+        expect(client.getTasks).toHaveBeenCalledTimes(0);
     });
 
     it("renders the view with no tasks", async () => {
-        // Mock API calls
-        mockedApiRequest
-            .mockResolvedValueOnce([]) // files
-            .mockResolvedValueOnce([]) // materials
-            .mockResolvedValueOnce([]) // tools
-            .mockResolvedValueOnce([]); // tasks
+        const client = createItemsClient([], [], [], []);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const taskCards = screen.queryAllByTestId("task-card");
@@ -199,11 +214,15 @@ describe("TasksView", () => {
     });
 
     it("notifies error querying items from API", async () => {
-        // Mock API calls
-        mockedApiRequest.mockRejectedValue(new Error("Error en comunicación con API"));
+        const client = createItemsClient(
+            [],
+            [],
+            [],
+            new Error("Error en comunicación con API")
+        );
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert notification popup appeared
         const notification = await screen.findByTestId("message-dialog");
@@ -221,15 +240,10 @@ describe("TasksView", () => {
     });
 
     it("opens the form to upload a new task", async () => {
-        // Mock API calls
-        mockedApiRequest
-            .mockResolvedValueOnce([]) // files
-            .mockResolvedValueOnce([]) // materials
-            .mockResolvedValueOnce([]) // tools
-            .mockResolvedValueOnce(tasks);
+        const client = createItemsClient([], [], [], tasks);
 
         // Instantiate widget under test
-        render(<WrappedComponent />);
+        render(<WrappedComponent client={client} />);
 
         // Assert components in widget
         const taskCards = await screen.findAllByTestId("task-card");

@@ -1,7 +1,14 @@
 import apiRequest from "@/services/apiService";
+import { resolveAccess } from "@/application/auth/resolveAccess";
 import { getJwtToken } from "@/services/storage";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+
+type AuthResponse = {
+    data?: {
+        role?: string;
+    };
+};
 
 export default function useAuth(admin = false) {
     const [authorized, setAuthorized] = useState<boolean>(false);
@@ -15,15 +22,29 @@ export default function useAuth(admin = false) {
         const callbackUrl = path.substring(1) || "";
         const token = getJwtToken();
 
-        if (!token) {
-            router.push(`/login?callbackUrl=${callbackUrl}`);
+        const accessDecision = resolveAccess({
+            hasToken: Boolean(token),
+            isAdmin: admin,
+            callbackUrl,
+        });
+
+        if (accessDecision.redirectTo) {
+            router.push(accessDecision.redirectTo);
             return;
         }
 
         apiRequest("users/auth", "GET")
             .then((response) => {
-                if (admin && response.data.role != "admin") {
-                    router.push("/");
+                const authResponse = response as AuthResponse;
+                const decision = resolveAccess({
+                    hasToken: true,
+                    isAdmin: admin,
+                    role: authResponse.data?.role,
+                    callbackUrl,
+                });
+
+                if (decision.redirectTo) {
+                    router.push(decision.redirectTo);
                     return;
                 }
                 setAuthorized(true);
