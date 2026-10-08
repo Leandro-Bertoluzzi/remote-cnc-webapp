@@ -5,28 +5,33 @@ import {
     TaskPayload,
     TaskStatusPayload,
 } from "@/application/tasks/taskClient";
-import apiRequest from "@/services/apiService";
+import { createApiClient } from "@/infrastructure/clients/apiClient";
+import { createSessionStorageClient } from "@/infrastructure/clients/sessionStorageClient";
+
+const apiClient = createApiClient(createSessionStorageClient());
 
 export function createTaskClient(): TaskClient {
     return {
         createTask: (payload: TaskPayload) =>
-            apiRequest("tasks", "POST", payload, true) as Promise<TaskActionResponse>,
-        removeTask: (taskId: number) => apiRequest(`tasks/${taskId}`, "DELETE") as Promise<TaskActionResponse>,
-        runTask: (taskId: number) => apiRequest(`worker/task/${taskId}`, "POST") as Promise<TaskActionResponse>,
+            apiClient.request("tasks", "POST", { body: payload, json: true }) as Promise<TaskActionResponse>,
+        removeTask: (taskId: number) => apiClient.request(`tasks/${taskId}`, "DELETE") as Promise<TaskActionResponse>,
+        runTask: (taskId: number) => apiClient.request(`worker/task/${taskId}`, "POST") as Promise<TaskActionResponse>,
         updateTask: (taskId: number, payload: TaskPayload) =>
-            apiRequest(`tasks/${taskId}`, "PUT", payload, true) as Promise<TaskActionResponse>,
+            apiClient.request(`tasks/${taskId}`, "PUT", { body: payload, json: true }) as Promise<TaskActionResponse>,
         updateTaskStatus: (taskId: number, payload: TaskStatusPayload) =>
-            apiRequest(`tasks/${taskId}/status`, "PUT", payload, true) as Promise<TaskActionResponse>,
+            apiClient.request(`tasks/${taskId}/status`, "PUT", { body: payload, json: true }) as Promise<TaskActionResponse>,
         cancelTask: (taskId: number, cancellationReason: string) =>
-            apiRequest(
+            apiClient.request(
                 `tasks/${taskId}/status`,
                 "PUT",
-                { status: "cancelled", cancellation_reason: cancellationReason },
-                true
+                {
+                    body: { status: "cancelled", cancellation_reason: cancellationReason },
+                    json: true,
+                }
             ) as Promise<TaskActionResponse>,
         togglePause: async () => {
-            const response = (await apiRequest("worker/pause", "GET")) as TaskPauseResponse;
-            return (await apiRequest(`worker/pause/${response.paused ? 0 : 1}`, "PUT")) as TaskActionResponse;
+            const response = (await apiClient.request("worker/pause", "GET")) as TaskPauseResponse;
+            return (await apiClient.request(`worker/pause/${response.paused ? 0 : 1}`, "PUT")) as TaskActionResponse;
         },
     };
 }

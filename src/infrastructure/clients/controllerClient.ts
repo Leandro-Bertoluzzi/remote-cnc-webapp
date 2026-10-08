@@ -6,12 +6,15 @@ import {
 } from "@/application/controller/controllerClient";
 import GrblMessage from "@/types/GrblMessage";
 import GrblStatus from "@/types/GrblStatus";
-import apiRequest, { getEventSource } from "@/services/apiService";
+import { createApiClient } from "@/infrastructure/clients/apiClient";
+import { createSessionStorageClient } from "@/infrastructure/clients/sessionStorageClient";
+
+const apiClient = createApiClient(createSessionStorageClient());
 
 export function createControllerClient(): ControllerClient {
     return {
         subscribeStatus: (channel: string, onStatus: (status: GrblStatus) => void) => {
-            const es = getEventSource(channel);
+            const es = apiClient.stream(channel);
 
             es.onopen = () => console.log(">>> Connection opened!");
             es.onerror = (e) => console.log("ERROR!", e);
@@ -25,7 +28,7 @@ export function createControllerClient(): ControllerClient {
         },
 
         subscribeMessages: (channel: string, onMessage: (message: GrblMessage) => void) => {
-            const es = getEventSource(channel);
+            const es = apiClient.stream(channel);
 
             es.onopen = () => console.log(">>> Connection opened!");
             es.onerror = (e) => console.log("ERROR!", e);
@@ -39,27 +42,27 @@ export function createControllerClient(): ControllerClient {
         },
 
         sendCommand: (command: string) =>
-            apiRequest("cnc/command", "POST", { command }, true) as Promise<ControllerActionResponse>,
+            apiClient.request("cnc/command", "POST", { body: { command }, json: true }) as Promise<ControllerActionResponse>,
 
         jog: (payload: JogPayload) =>
-            apiRequest("cnc/jog", "POST", payload, true) as Promise<ControllerActionResponse>,
+            apiClient.request("cnc/jog", "POST", { body: payload, json: true }) as Promise<ControllerActionResponse>,
 
         connectServer: async () => {
-            await apiRequest("cnc/server", "POST");
+            await apiClient.request("cnc/server", "POST");
         },
 
         disconnectServer: async () => {
-            await apiRequest("cnc/server", "DELETE");
+            await apiClient.request("cnc/server", "DELETE");
         },
 
         togglePause: async () => {
-            const response = (await apiRequest("worker/pause", "GET")) as { paused: boolean };
-            await apiRequest(`worker/pause/${response.paused ? 0 : 1}`, "PUT");
+            const response = (await apiClient.request("worker/pause", "GET")) as { paused: boolean };
+            await apiClient.request(`worker/pause/${response.paused ? 0 : 1}`, "PUT");
             return { paused: !response.paused } as PauseStateResponse;
         },
 
         getToolName: async (toolIndex: number) => {
-            return (await apiRequest(`tools/${toolIndex}`, "GET")) as { name: string };
+            return (await apiClient.request(`tools/${toolIndex}`, "GET")) as { name: string };
         },
     };
 }
