@@ -1,8 +1,7 @@
 import "@testing-library/jest-dom";
-import apiRequest from "@/services/apiService";
-import { getJwtToken } from "@/services/storage";
 import { renderHook, cleanup, waitFor } from "@testing-library/react";
-import useAuth from "@/hooks/useauth";
+import { createAuthClient } from "@/infrastructure/clients/authClient";
+import { createSessionStorageClient } from "@/infrastructure/clients/sessionStorageClient";
 
 // Mock navigation hooks
 const mockRouterPush = jest.fn();
@@ -19,16 +18,31 @@ jest.mock("next/navigation", () => {
     };
 });
 
-// Mock apiRequest import
-jest.mock("@/services/apiService");
-const mockedApiRequest = jest.mocked(apiRequest);
+// Mock auth/session clients
+jest.mock("@/infrastructure/clients/authClient");
+jest.mock("@/infrastructure/clients/sessionStorageClient");
 
-// Mock local storage methods
-jest.mock("@/services/storage");
-const mockedGetJwtToken = jest.mocked(getJwtToken);
+const mockedVerify = jest.fn();
+const mockedGetToken = jest.fn();
+
+jest.mocked(createAuthClient).mockReturnValue({
+    login: jest.fn(),
+    verify: mockedVerify,
+});
+
+jest.mocked(createSessionStorageClient).mockReturnValue({
+    getToken: mockedGetToken,
+    setToken: jest.fn(),
+});
+
+const useAuth = require("@/hooks/useauth").default;
 
 describe("use auth hook", () => {
     afterEach(() => {
+        mockedVerify.mockReset();
+        mockedGetToken.mockReset();
+        mockRouterPush.mockReset();
+        mockPathName.mockReset();
         cleanup();
     });
 
@@ -36,7 +50,7 @@ describe("use auth hook", () => {
         "redirects to login because of no token, with callback URL %p",
         async (callbackUrl) => {
             // Mock dependencies
-            mockedGetJwtToken.mockReturnValue("");
+            mockedGetToken.mockReturnValue("");
             mockPathName.mockReturnValue("/" + callbackUrl);
 
             // Use hook under test
@@ -48,7 +62,7 @@ describe("use auth hook", () => {
             });
 
             // Assert calls to API
-            expect(apiRequest).not.toHaveBeenCalled();
+            expect(mockedVerify).not.toHaveBeenCalled();
 
             // Assert navigation
             const loginUrl = `/login?callbackUrl=${callbackUrl}`;
@@ -60,8 +74,8 @@ describe("use auth hook", () => {
         "redirects to login because of auth fails, with callback URL %p",
         async (callbackUrl) => {
             // Mock dependencies
-            mockedApiRequest.mockRejectedValue(new Error("Token inválido, vuelva a loguearse"));
-            mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
+            mockedVerify.mockRejectedValue(new Error("Token inválido, vuelva a loguearse"));
+            mockedGetToken.mockReturnValue("VALID_TOKEN");
             mockPathName.mockReturnValue("/" + callbackUrl);
 
             // Use hook under test
@@ -73,7 +87,7 @@ describe("use auth hook", () => {
             });
 
             // Assert calls to API
-            expect(apiRequest).toHaveBeenCalled();
+            expect(mockedVerify).toHaveBeenCalled();
 
             // Assert navigation
             const loginUrl = `/login?callbackUrl=${callbackUrl}`;
@@ -83,7 +97,7 @@ describe("use auth hook", () => {
 
     it("redirects to index due to lack of permissions", async () => {
         // Mock dependencies
-        mockedApiRequest.mockResolvedValue({
+        mockedVerify.mockResolvedValue({
             message: "Mocked response from the API",
             data: {
                 id: 1,
@@ -92,7 +106,7 @@ describe("use auth hook", () => {
                 role: "user",
             },
         });
-        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
+        mockedGetToken.mockReturnValue("VALID_TOKEN");
         mockPathName.mockReturnValue("");
 
         // Use hook under test
@@ -104,7 +118,7 @@ describe("use auth hook", () => {
         });
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalled();
+        expect(mockedVerify).toHaveBeenCalled();
 
         // Assert navigation
         expect(mockRouterPush).toHaveBeenCalledWith("/");
@@ -112,7 +126,7 @@ describe("use auth hook", () => {
 
     test.each([false, true])("successfull authentication", async (admin) => {
         // Mock dependencies
-        mockedApiRequest.mockResolvedValue({
+        mockedVerify.mockResolvedValue({
             message: "Mocked response from the API",
             data: {
                 id: 2,
@@ -121,7 +135,7 @@ describe("use auth hook", () => {
                 role: "admin",
             },
         });
-        mockedGetJwtToken.mockReturnValue("VALID_TOKEN");
+        mockedGetToken.mockReturnValue("VALID_TOKEN");
         mockPathName.mockReturnValue("");
 
         // Use hook under test
@@ -133,7 +147,7 @@ describe("use auth hook", () => {
         });
 
         // Assert calls to API
-        expect(apiRequest).toHaveBeenCalled();
+        expect(mockedVerify).toHaveBeenCalled();
 
         // Assert navigation
         expect(mockRouterPush).not.toHaveBeenCalled();

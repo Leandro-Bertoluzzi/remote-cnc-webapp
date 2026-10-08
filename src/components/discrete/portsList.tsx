@@ -1,6 +1,6 @@
-import apiRequest from "@/services/apiService";
 import { Button, Dropdown } from "flowbite-react";
 import { TbPlug, TbPlugX } from "react-icons/tb";
+import { useAppClients } from "@/contexts/appClientsContext";
 import { useConnection } from "@/contexts/connectionContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ export default function PortsList() {
     const { showErrorDialog } = useNotification();
     const { workerStatus } = useWorkerStatus();
     const { connected, updateConnected } = useConnection();
+    const { controllerClient } = useAppClients();
 
     // Calculated values
     const ports = ["/dev/ttyUSB0", "/dev/example", "/dev/invalid"];
@@ -27,14 +28,16 @@ export default function PortsList() {
         setWaiting(true);
 
         if (connected) {
-            apiRequest("cnc/server", "DELETE")
+            controllerClient
+                .disconnectServer()
                 .then(() => updateConnected(false))
                 .catch((error) => showErrorDialog(error.message))
                 .finally(() => setWaiting(false));
             return;
         }
 
-        apiRequest("cnc/server", "POST")
+        controllerClient
+            .connectServer()
             .then(() => updateConnected(true))
             .catch((error) => showErrorDialog(error.message))
             .finally(() => setWaiting(false));

@@ -1,13 +1,13 @@
-import apiRequest from "@/services/apiService";
 import { Button, TextInput } from "flowbite-react";
 import React, { FormEvent, ChangeEvent, useState } from "react";
-import { setJwtToken } from "@/services/storage";
 import { useNotification } from "@/contexts/notificationContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
     // Context
     const { showErrorDialog } = useNotification();
+    const { authClient, sessionStorageClient } = useAppClients();
 
     // Hooks for state variables
     const [email, setEmail] = useState<string>("");
@@ -27,19 +27,16 @@ export default function LoginForm() {
 
     const handleLogin = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = {
-            email,
-            password,
-        };
 
-        apiRequest("users/login", "POST", data, true)
+        authClient
+            .login(email, password)
             .then((response) => {
                 const callbackUrlParam = searchParams.get("callbackUrl");
                 const callbackUrl =
                     typeof callbackUrlParam === "string" && callbackUrlParam.trim().length > 0
                         ? callbackUrlParam
                         : "/";
-                setJwtToken(response.data.token);
+                sessionStorageClient.setToken(response.data.token);
                 router.push(callbackUrl);
             })
             .catch((error) => showErrorDialog(error.message));

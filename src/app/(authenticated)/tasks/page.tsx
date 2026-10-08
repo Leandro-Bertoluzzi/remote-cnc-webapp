@@ -87,8 +87,9 @@ function TasksView() {
     };
 
     const updateTaskStatus = (status: string, task: Task) => {
+        const data = { status };
         taskClient
-            .updateTaskStatus(task.id, status)
+            .updateTaskStatus(task.id, data)
             .then((response) => {
                 showNotification(response.success);
                 fetchTasks();

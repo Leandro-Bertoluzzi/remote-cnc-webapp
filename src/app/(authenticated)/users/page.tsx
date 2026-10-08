@@ -1,6 +1,5 @@
 "use client";
 
-import apiRequest from "@/services/apiService";
 import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
 import User from "@/types/User";
@@ -9,6 +8,7 @@ import UserForm from "@/components/forms/userForm";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState, useEffect } from "react";
 import { useItems } from "@/contexts/itemsContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 import withAuthentication from "@/components/wrappers/withAuthentication";
 
 function UsersView() {
@@ -23,6 +23,7 @@ function UsersView() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { users, fetchUsers } = useItems();
+    const { managementClient } = useAppClients();
 
     // Event handlers
     const handleModalToggle = (
@@ -43,9 +44,8 @@ function UsersView() {
             return;
         }
 
-        const url = `users/${selectedUser.id}`;
-
-        apiRequest(url, "DELETE")
+        managementClient
+            .removeUser(selectedUser.id)
             .then((response) => {
                 showNotification(response.success);
                 fetchUsers();

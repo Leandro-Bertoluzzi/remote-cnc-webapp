@@ -1,14 +1,11 @@
-import apiRequest from "@/services/apiService";
+import { createAuthClient } from "@/infrastructure/clients/authClient";
+import { createSessionStorageClient } from "@/infrastructure/clients/sessionStorageClient";
 import { resolveAccess } from "@/application/auth/resolveAccess";
-import { getJwtToken } from "@/services/storage";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-type AuthResponse = {
-    data?: {
-        role?: string;
-    };
-};
+const authClient = createAuthClient();
+const sessionStorageClient = createSessionStorageClient();
 
 export default function useAuth(admin = false) {
     const [authorized, setAuthorized] = useState<boolean>(false);
@@ -20,7 +17,7 @@ export default function useAuth(admin = false) {
     useEffect(() => {
         // Get JWT token and the current URL without the initial slash (/)
         const callbackUrl = path.substring(1) || "";
-        const token = getJwtToken();
+        const token = sessionStorageClient.getToken();
 
         const accessDecision = resolveAccess({
             hasToken: Boolean(token),
@@ -33,13 +30,13 @@ export default function useAuth(admin = false) {
             return;
         }
 
-        apiRequest("users/auth", "GET")
+        authClient
+            .verify()
             .then((response) => {
-                const authResponse = response as AuthResponse;
                 const decision = resolveAccess({
                     hasToken: true,
                     isAdmin: admin,
-                    role: authResponse.data?.role,
+                    role: response.data?.role,
                     callbackUrl,
                 });
 
