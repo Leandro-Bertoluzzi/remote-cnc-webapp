@@ -1,6 +1,5 @@
 "use client";
 
-import apiRequest from "@/services/apiService";
 import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
 import EmptyCard from "@/components/cards/emptyCard";
@@ -12,6 +11,7 @@ import ToolCard from "@/components/cards/toolCard";
 import ToolForm from "@/components/forms/toolForm";
 import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 import { useState, useEffect } from "react";
 import withAuthentication from "@/components/wrappers/withAuthentication";
 
@@ -36,6 +36,7 @@ function InventoryView() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { materials, fetchMaterials, tools, fetchTools } = useItems();
+    const { managementClient } = useAppClients();
 
     // Event handlers
     const handleToolModalToggle = (
@@ -74,9 +75,8 @@ function InventoryView() {
             return;
         }
 
-        const url = `tools/${selectedTool.id}`;
-
-        apiRequest(url, "DELETE")
+        managementClient
+            .removeTool(selectedTool.id)
             .then((response) => {
                 showNotification(response.success);
                 fetchTools();
@@ -91,9 +91,8 @@ function InventoryView() {
             return;
         }
 
-        const url = `materials/${selectedMaterial.id}`;
-
-        apiRequest(url, "DELETE")
+        managementClient
+            .removeMaterial(selectedMaterial.id)
             .then((response) => {
                 showNotification(response.success);
                 fetchMaterials();

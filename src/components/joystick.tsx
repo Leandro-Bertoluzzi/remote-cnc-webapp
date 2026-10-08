@@ -1,7 +1,7 @@
-import apiRequest from "@/services/apiService";
 import { Button } from "flowbite-react";
 import { FaArrowAltCircleLeft, FaCircle } from "react-icons/fa";
 import LabeledNumberInput from "./discrete/labeledNumberInput";
+import { useAppClients } from "@/contexts/appClientsContext";
 import { useConnection } from "@/contexts/connectionContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState } from "react";
@@ -32,6 +32,7 @@ export default function Joystick() {
     // Context
     const { showErrorDialog } = useNotification();
     const { connected } = useConnection();
+    const { controllerClient } = useAppClients();
 
     // Handlers
     const handleStepXChange = (step_x: number) => {
@@ -71,7 +72,7 @@ export default function Joystick() {
             mode: "distance_incremental",
         };
 
-        apiRequest("cnc/jog", "POST", body, true).catch((error) => showErrorDialog(error.message));
+        controllerClient.jog(body).catch((error) => showErrorDialog(error.message));
     };
 
     return (

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import FileInfo from "@/types/FileInfo";
 import LabeledSelect from "../discrete/labeledSelect";
@@ -8,6 +7,7 @@ import LabeledTextInput from "../discrete/labeledTextInput";
 import Task from "@/types/Task";
 import { useNotification } from "@/contexts/notificationContext";
 import { useItems } from "@/contexts/itemsContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 export interface TaskFormProps {
     exitAction: () => void;
@@ -24,6 +24,7 @@ export default function TaskForm(props: TaskFormProps) {
     const { showErrorDialog, showNotification } = useNotification();
     const { files, fetchFiles, materials, fetchMaterials, fetchTasks, tools, fetchTools } =
         useItems();
+    const { taskClient } = useAppClients();
 
     // Initialization
     const initialName = taskInfo ? taskInfo.name : "";
@@ -87,7 +88,8 @@ export default function TaskForm(props: TaskFormProps) {
             file_id: taskFile,
         };
 
-        apiRequest("tasks", "POST", data, true)
+        taskClient
+            .createTask(data)
             .then((response) => {
                 showNotification(response.success);
                 fetchTasks();
@@ -100,6 +102,7 @@ export default function TaskForm(props: TaskFormProps) {
     const handleUpdateClick = () => {
         if (!taskInfo) {
             exitAction();
+            return;
         }
 
         const dataUpdateTask = {
@@ -112,13 +115,11 @@ export default function TaskForm(props: TaskFormProps) {
         const dataUpdateStatus = {
             status: "pending_approval",
         };
-        const urlUpdateTask = `tasks/${taskInfo?.id}`;
-        const urlUpdateStatus = `tasks/${taskInfo?.id}/status`;
-
         // We update the task and then we ask for approval again,
         // since we made changes to the task
-        apiRequest(urlUpdateTask, "PUT", dataUpdateTask, true)
-            .then(() => apiRequest(urlUpdateStatus, "PUT", dataUpdateStatus, true))
+        taskClient
+            .updateTask(taskInfo.id, dataUpdateTask)
+            .then(() => taskClient.updateTaskStatus(taskInfo.id, dataUpdateStatus))
             .then((response) => {
                 showNotification(response.success);
                 fetchTasks();

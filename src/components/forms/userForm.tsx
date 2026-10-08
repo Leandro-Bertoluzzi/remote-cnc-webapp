@@ -1,11 +1,11 @@
 import { useState } from "react";
-import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import User from "@/types/User";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledSelect from "../discrete/labeledSelect";
 import { useNotification } from "@/contexts/notificationContext";
 import { useItems } from "@/contexts/itemsContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 export interface UserFormProps {
     exitAction: () => void;
@@ -27,6 +27,7 @@ export default function UserForm(props: UserFormProps) {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { fetchUsers } = useItems();
+    const { managementClient } = useAppClients();
 
     // Hooks for state variables
     const [userName, setUserName] = useState<string>(userInfo.name);
@@ -58,7 +59,8 @@ export default function UserForm(props: UserFormProps) {
             role: userRole,
         };
 
-        apiRequest("users", "POST", data, true)
+        managementClient
+            .createUser(data)
             .then((response) => {
                 showNotification(response.success);
                 fetchUsers();
@@ -74,9 +76,8 @@ export default function UserForm(props: UserFormProps) {
             email: userEmail,
             role: userRole,
         };
-        const url = `users/${userInfo.id}`;
-
-        apiRequest(url, "PUT", data, true)
+        managementClient
+            .updateUser(userInfo.id, data)
             .then((response) => {
                 showNotification(response.success);
                 fetchUsers();

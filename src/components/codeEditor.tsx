@@ -11,7 +11,7 @@ import {
 import { RiUploadCloud2Line, RiDownloadCloud2Line } from "react-icons/ri";
 import ToolBar from "./containers/toolBar";
 import { useRef, useState, ChangeEvent } from "react";
-import apiRequest from "@/services/apiService";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 // Type definitions
 interface CodeEditorToolBarProps {
@@ -22,6 +22,7 @@ interface CodeEditorToolBarProps {
 
 function CodeEditorToolBar(props: CodeEditorToolBarProps) {
     const { updateContent, setContentLocked, content } = props;
+    const { controllerClient } = useAppClients();
 
     // State
     const [paused, setPaused] = useState<boolean>(false);
@@ -46,7 +47,7 @@ function CodeEditorToolBar(props: CodeEditorToolBarProps) {
     // Auxiliary methods
     const runFile = async () => {
         for (const line of content.split(/\r?\n/)) {
-            await apiRequest("cnc/command", "POST", { command: line }, true);
+            await controllerClient.sendCommand(line);
         }
     };
 

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import Tool from "@/types/Tool";
 import LabeledTextInput from "../discrete/labeledTextInput";
 import { useNotification } from "@/contexts/notificationContext";
 import { useItems } from "@/contexts/itemsContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 export interface ToolFormProps {
     exitAction: () => void;
@@ -25,6 +25,7 @@ export default function ToolForm(props: ToolFormProps) {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { fetchTools } = useItems();
+    const { managementClient } = useAppClients();
 
     // Hooks for state variables
     const [toolName, setToolName] = useState<string>(toolInfo.name);
@@ -44,7 +45,8 @@ export default function ToolForm(props: ToolFormProps) {
             description: toolDescription,
         };
 
-        apiRequest("tools", "POST", data, true)
+        managementClient
+            .createTool(data)
             .then((response) => {
                 showNotification(response.success);
                 fetchTools();
@@ -59,9 +61,8 @@ export default function ToolForm(props: ToolFormProps) {
             name: toolName,
             description: toolDescription,
         };
-        const url = `tools/${toolInfo.id}`;
-
-        apiRequest(url, "PUT", data, true)
+        managementClient
+            .updateTool(toolInfo.id, data)
             .then((response) => {
                 showNotification(response.success);
                 fetchTools();

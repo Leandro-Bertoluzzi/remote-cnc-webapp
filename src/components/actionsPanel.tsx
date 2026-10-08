@@ -1,5 +1,5 @@
-import apiRequest from "@/services/apiService";
 import ButtonGrid from "@/components/containers/buttonGrid";
+import { useAppClients } from "@/contexts/appClientsContext";
 import { useConnection } from "@/contexts/connectionContext";
 import { useNotification } from "@/contexts/notificationContext";
 import { useState } from "react";
@@ -10,12 +10,14 @@ export default function ActionsPanel() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { connected } = useConnection();
+    const { controllerClient } = useAppClients();
 
     /*  Function: sendCommand
      *   Description: Requests the API to execute a command
      */
     const sendCommand = (command: string) => {
-        apiRequest("cnc/command", "POST", { command }, true)
+        controllerClient
+            .sendCommand(command)
             .then((response) => showNotification(response.success))
             .catch((error) => showErrorDialog(error.message));
     };
@@ -24,8 +26,8 @@ export default function ActionsPanel() {
      *   Description: Requests the API to pause or resume the execution
      */
     async function togglePausedTask() {
-        apiRequest("worker/pause", "GET")
-            .then((response) => apiRequest(`worker/pause/${response.paused ? 0 : 1}`, "PUT"))
+        controllerClient
+            .togglePause()
             .then((response) => setPausedText(response.paused ? "Retomar" : "Pausar"))
             .catch((error) => showErrorDialog(error.message));
     }

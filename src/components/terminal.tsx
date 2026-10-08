@@ -1,8 +1,7 @@
-import apiRequest from "@/services/apiService";
-import { getEventSource } from "@/services/apiService";
 import GrblMessage from "@/types/GrblMessage";
 import { VscSend } from "react-icons/vsc";
 import { TextInput, Button } from "flowbite-react";
+import { useAppClients } from "@/contexts/appClientsContext";
 import { useConnection } from "@/contexts/connectionContext";
 import { useState, useEffect, useRef, useCallback } from "react";
 
@@ -22,6 +21,7 @@ export default function Terminal(props: TerminalProps) {
 
     // Context
     const { connected } = useConnection();
+    const { controllerClient } = useAppClients();
 
     // Actions
     const updateMessages = useCallback((data: GrblMessage) => {
@@ -33,25 +33,15 @@ export default function Terminal(props: TerminalProps) {
 
     // State hooks
     useEffect(() => {
-        const es = getEventSource("grbl_messages");
-
-        es.onopen = () => console.log(">>> Connection opened!");
-        es.onerror = (e) => console.log("ERROR!", e);
-
-        es.addEventListener("grbl_messages", (event) => {
-            if (event.data) {
-                updateMessages(JSON.parse(event.data));
-            }
-        });
-
-        return () => es.close();
-    }, [updateMessages]);
+        return controllerClient.subscribeMessages("grbl_messages", updateMessages);
+    }, [controllerClient, updateMessages]);
 
     /*  Function: sendCommand
      *   Description: Requests the API to execute the command
      */
     const sendCommand = () => {
-        apiRequest("cnc/command", "POST", { command: text }, true)
+        controllerClient
+            .sendCommand(text)
             .then((response) => console.log("SUCCESS: ", response))
             .catch((error) => console.log("ERROR: ", error));
         setText("");

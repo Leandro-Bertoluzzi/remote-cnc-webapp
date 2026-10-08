@@ -1,5 +1,4 @@
 import { useState } from "react";
-import apiRequest from "@/services/apiService";
 import BaseForm from "./baseForm";
 import { voidActionType } from "@/types/Actions";
 import FileInfo from "@/types/FileInfo";
@@ -7,6 +6,7 @@ import LabeledTextInput from "../discrete/labeledTextInput";
 import LabeledFileInput from "../discrete/labeledFileInput";
 import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 export interface FileFormProps {
     exitAction: voidActionType;
@@ -27,6 +27,7 @@ export default function FileForm(props: FileFormProps) {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { fetchFiles } = useItems();
+    const { managementClient } = useAppClients();
 
     // Hooks for state variables
     const [file, setFile] = useState<File>();
@@ -56,7 +57,8 @@ export default function FileForm(props: FileFormProps) {
         const formData = new FormData();
         formData.append("file", file, fileName);
 
-        apiRequest("files", "POST", formData)
+        managementClient
+            .uploadFile(formData)
             .then((response) => {
                 showNotification(response.success);
                 fetchFiles();
@@ -67,12 +69,8 @@ export default function FileForm(props: FileFormProps) {
     };
 
     const handleUpdateClick = () => {
-        const data = {
-            file_name: fileName,
-        };
-        const url = `files/${fileInfo.id}`;
-
-        apiRequest(url, "PUT", data, true)
+        managementClient
+            .updateFile(fileInfo.id, fileName)
             .then((response) => {
                 showNotification(response.success);
                 fetchFiles();

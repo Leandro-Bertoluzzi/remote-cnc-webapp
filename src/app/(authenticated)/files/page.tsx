@@ -1,6 +1,5 @@
 "use client";
 
-import apiRequest from "@/services/apiService";
 import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
 import EmptyCard from "@/components/cards/emptyCard";
@@ -9,6 +8,7 @@ import FileForm from "@/components/forms/fileForm";
 import FileInfo from "@/types/FileInfo";
 import { useItems } from "@/contexts/itemsContext";
 import { useNotification } from "@/contexts/notificationContext";
+import { useAppClients } from "@/contexts/appClientsContext";
 import { useState, useEffect } from "react";
 import withAuthentication from "@/components/wrappers/withAuthentication";
 import TaskForm from "@/components/forms/taskForm";
@@ -26,6 +26,7 @@ function FilesView() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { files, fetchFiles } = useItems();
+    const { managementClient } = useAppClients();
 
     // Event handlers
     const handleModalToggle = (
@@ -46,9 +47,8 @@ function FilesView() {
             return;
         }
 
-        const url = `files/${selectedFile.id}`;
-
-        apiRequest(url, "DELETE")
+        managementClient
+            .removeFile(selectedFile.id)
             .then((response) => {
                 showNotification(response.success);
                 fetchFiles();
