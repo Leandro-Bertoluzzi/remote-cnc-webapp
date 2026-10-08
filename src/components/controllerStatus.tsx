@@ -1,9 +1,9 @@
 import AxisValue from "./discrete/axisValue";
-import apiRequest, { getEventSource } from "@/services/apiService";
 import GrblStatus, { Coordinates, ModalState } from "@/types/GrblStatus";
 import { ModalStatus } from "./discrete/modalStatus";
 import { ProgressBar } from "./discrete/progressBar";
 import { useState, useEffect, useCallback } from "react";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 // Constants
 const DISCONNECTED = "DISCONNECTED";
@@ -32,6 +32,7 @@ export default function ControllerStatus() {
     const [totalLines, setTotalLines] = useState<number>(0);
     const [sentLines, setSentLines] = useState<number>(0);
     const [processedLines, setProcessedLines] = useState<number>(0);
+    const { controllerClient } = useAppClients();
 
     const updateTool = useCallback(
         (tool_index: number) => {
@@ -39,7 +40,8 @@ export default function ControllerStatus() {
                 return;
             }
 
-            apiRequest(`tools/${tool_index}`, "GET")
+            controllerClient
+                .getToolName(tool_index)
                 .then((data) => {
                     setTool(data.name);
                     setToolId(tool_index);
@@ -48,7 +50,7 @@ export default function ControllerStatus() {
                     console.log("ERROR!", error);
                 });
         },
-        [tool_id]
+        [controllerClient, tool_id]
     );
 
     const updateStatus = useCallback(
@@ -80,19 +82,8 @@ export default function ControllerStatus() {
     );
 
     useEffect(() => {
-        const es = getEventSource("grbl_status");
-
-        es.onopen = () => console.log(">>> Connection opened!");
-        es.onerror = (e) => console.log("ERROR!", e);
-
-        es.addEventListener("grbl_status", (event) => {
-            if (event.data) {
-                updateStatus(JSON.parse(event.data));
-            }
-        });
-
-        return () => es.close();
-    }, [updateStatus]);
+        return controllerClient.subscribeStatus("grbl_status", updateStatus);
+    }, [controllerClient, updateStatus]);
 
     return (
         <div className="justify-self-center">

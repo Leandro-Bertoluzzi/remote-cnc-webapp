@@ -1,6 +1,5 @@
 "use client";
 
-import apiRequest from "@/services/apiService";
 import CancelTaskForm from "@/components/forms/cancelTaskForm";
 import CardsList from "@/components/containers/cardsList";
 import ConfirmDialog from "@/components/dialogs/confirmDialog";
@@ -14,6 +13,7 @@ import { useState, useEffect } from "react";
 import { useItems } from "@/contexts/itemsContext";
 import { TASK_APPROVED_STATUS, TASK_INITIAL_STATUS } from "@/components/cards/taskCard";
 import withAuthentication from "@/components/wrappers/withAuthentication";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 const DEFAULT_TASK_TYPES = ["pending_approval", "on_hold", "in_progress"];
 
@@ -40,6 +40,7 @@ function TasksView() {
     // Context
     const { showErrorDialog, showNotification } = useNotification();
     const { tasks, fetchTasks } = useItems();
+    const { taskClient } = useAppClients();
 
     // Event handlers
     const toggleModal = (
@@ -66,9 +67,8 @@ function TasksView() {
 
     // API requests
     const removeTask = (task: Task) => {
-        const url = `tasks/${task.id}`;
-
-        apiRequest(url, "DELETE")
+        taskClient
+            .removeTask(task.id)
             .then((response) => {
                 showNotification(response.success);
                 fetchTasks();
@@ -77,9 +77,8 @@ function TasksView() {
     };
 
     const runTask = (task: Task) => {
-        const url = `worker/task/${task.id}`;
-
-        apiRequest(url, "POST")
+        taskClient
+            .runTask(task.id)
             .then((response) => {
                 showNotification(response.success);
                 fetchTasks();
@@ -88,10 +87,8 @@ function TasksView() {
     };
 
     const updateTaskStatus = (status: string, task: Task) => {
-        const data = { status };
-        const url = `tasks/${task.id}/status`;
-
-        apiRequest(url, "PUT", data, true)
+        taskClient
+            .updateTaskStatus(task.id, status)
             .then((response) => {
                 showNotification(response.success);
                 fetchTasks();
@@ -108,8 +105,8 @@ function TasksView() {
     };
 
     const togglePausedTask = () => {
-        apiRequest("worker/pause", "GET")
-            .then((response) => apiRequest(`worker/pause/${response.paused ? 0 : 1}`, "PUT"))
+        taskClient
+            .togglePause()
             .then((response) => showNotification(response.success))
             .catch((err) => showErrorDialog(err.message));
     };

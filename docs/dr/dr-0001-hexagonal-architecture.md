@@ -33,6 +33,12 @@ Además:
 - los tests del dominio usarán stubs o dobles de prueba in-memory en lugar de parchear funciones globales o módulos cuando sea posible
 - los tests E2E seguirán usando Playwright, pero la lógica de negocio deberá quedar fuera del alcance de esos tests
 
+La carpeta `src/services` pasa a considerarse una capa transitoria de compatibilidad. Durante la migración:
+
+- se evitará introducir nuevos consumidores directos de `src/services`
+- se migrarán consumidores existentes a puertos/casos de uso + clientes inyectados desde composición
+- al finalizar la transición, `src/services` deberá eliminarse
+
 ## Consecuencias
 
 ### Positivas
