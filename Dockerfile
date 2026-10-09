@@ -1,5 +1,5 @@
 # Based on: https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
-FROM node:18-alpine AS base
+FROM node:24-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -47,4 +47,4 @@ RUN npm run build
 FROM nginx:alpine AS production
 
 COPY --from=builder /app/out /usr/share/nginx/html
-COPY /nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
