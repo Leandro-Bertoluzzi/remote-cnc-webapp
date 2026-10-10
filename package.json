@@ -4,13 +4,15 @@
     "private": true,
     "description": "Admin for remote CNC",
     "packageManager": "npm@11.19.0",
-    "engines": { "node": "24.x" },
+    "engines": {
+        "node": "24.x"
+    },
     "scripts": {
         "dev": "next dev",
         "build": "next build",
         "start": "npx serve@latest out",
-        "lint:check": "next lint",
-        "lint:fix": "next lint --fix",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint . --fix",
         "format:check": "prettier --check .",
         "format:fix": "prettier --write .",
         "test:unit": "jest",
@@ -25,12 +27,12 @@
         "autoprefixer": "10.4.14",
         "flowbite": "^2.2.1",
         "flowbite-react": "^0.7.2",
-        "next": "^14.2.4",
+        "next": "^16.4.0",
         "postcss": "8.4.22",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "tailwindcss": "3.3.1",
-        "typescript": "5.0.4"
+        "typescript": "^5.9.3"
     },
     "author": "Leandro Bertoluzzi",
     "license": "MIT",
@@ -39,16 +41,21 @@
         "@playwright/test": "^1.41.1",
         "@testing-library/jest-dom": "^6.2.0",
         "@testing-library/react": "^14.1.2",
-        "@types/jest": "^29.5.11",
+        "@types/jest": "^30.0.0",
         "@types/node": "^24.0.0",
         "@typescript-eslint/eslint-plugin": "^8.71.1",
         "@typescript-eslint/parser": "^8.71.1",
-        "eslint": "^8.57.1",
-        "eslint-config-next": "^14.2.4",
+        "eslint": "^9.39.5",
+        "eslint-config-next": "^16.4.0",
         "eslint-config-prettier": "^9.1.0",
-        "jest": "^29.7.0",
-        "jest-environment-jsdom": "^29.7.0",
+        "jest": "^30.5.2",
+        "jest-environment-jsdom": "^30.5.2",
         "prettier": "3.2.4",
         "prettier-plugin-tailwindcss": "^0.5.11"
+    },
+    "overrides": {
+        "test-exclude": {
+            "glob": "^13.0.0"
+        }
     }
 }

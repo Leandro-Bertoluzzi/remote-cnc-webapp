@@ -43,12 +43,12 @@ function InventoryView() {
         show: boolean,
         tool: Tool | null = null
     ) => {
-        const newModalState = modalState;
-        newModalState["tools"][modalType] = show;
-
         setModalState((prevState) => ({
             ...prevState,
-            ...newModalState,
+            tools: {
+                ...prevState.tools,
+                [modalType]: show,
+            },
         }));
         setSelectedTool(tool);
     };
@@ -58,12 +58,12 @@ function InventoryView() {
         show: boolean,
         material: Material | null = null
     ) => {
-        const newModalState = modalState;
-        newModalState["materials"][modalType] = show;
-
         setModalState((prevState) => ({
             ...prevState,
-            ...newModalState,
+            materials: {
+                ...prevState.materials,
+                [modalType]: show,
+            },
         }));
         setSelectedMaterial(material);
     };
