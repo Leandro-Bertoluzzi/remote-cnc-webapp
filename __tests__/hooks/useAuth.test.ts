@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
 import { renderHook, cleanup, waitFor } from "@testing-library/react";
-import { createAuthClient } from "@/infrastructure/clients/authClient";
-import { createSessionStorageClient } from "@/infrastructure/clients/sessionStorageClient";
+import { useAppClients } from "@/contexts/appClientsContext";
 
 // Mock navigation hooks
 const mockRouterPush = jest.fn();
@@ -19,30 +18,36 @@ jest.mock("next/navigation", () => {
 });
 
 // Mock auth/session clients
-jest.mock("@/infrastructure/clients/authClient");
-jest.mock("@/infrastructure/clients/sessionStorageClient");
+jest.mock("@/contexts/appClientsContext");
 
 const mockedVerify = jest.fn();
 const mockedGetToken = jest.fn();
 
-jest.mocked(createAuthClient).mockReturnValue({
-    login: jest.fn(),
-    verify: mockedVerify,
-});
-
-jest.mocked(createSessionStorageClient).mockReturnValue({
-    getToken: mockedGetToken,
-    setToken: jest.fn(),
-});
+const mockedUseAppClients = jest.mocked(useAppClients);
 
 const useAuth = require("@/hooks/useauth").default;
 
 describe("use auth hook", () => {
+    beforeEach(() => {
+        mockedUseAppClients.mockReturnValue({
+            authClient: {
+                login: jest.fn(),
+                verify: mockedVerify,
+            },
+            sessionStorageClient: {
+                getToken: mockedGetToken,
+                setToken: jest.fn(),
+            },
+            // @ts-ignore
+            taskClient: {},
+            // @ts-ignore
+            controllerClient: {},
+            // @ts-ignore
+            managementClient: {},
+        });
+    });
+
     afterEach(() => {
-        mockedVerify.mockReset();
-        mockedGetToken.mockReset();
-        mockRouterPush.mockReset();
-        mockPathName.mockReset();
         cleanup();
     });
 

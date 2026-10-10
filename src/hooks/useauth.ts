@@ -1,13 +1,10 @@
-import { createAuthClient } from "@/infrastructure/clients/authClient";
-import { createSessionStorageClient } from "@/infrastructure/clients/sessionStorageClient";
 import { resolveAccess } from "@/application/auth/resolveAccess";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-
-const authClient = createAuthClient();
-const sessionStorageClient = createSessionStorageClient();
+import { useAppClients } from "@/contexts/appClientsContext";
 
 export default function useAuth(admin = false) {
+    const { authClient, sessionStorageClient } = useAppClients();
     const [authorized, setAuthorized] = useState<boolean>(false);
 
     // Navigation
