@@ -7,7 +7,7 @@ const apiClient = createApiClient(createSessionStorageClient());
 export function createAuthClient(): AuthClient {
     return {
         login: (email: string, password: string) =>
-            apiClient.request("users/login", "POST", {
+            apiClient.request("login", "POST", {
                 body: { email, password },
                 json: true,
             }) as Promise<LoginResponse>,

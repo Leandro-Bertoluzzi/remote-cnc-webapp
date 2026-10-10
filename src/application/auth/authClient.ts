@@ -1,7 +1,5 @@
 export interface LoginResponse {
-    data: {
-        token: string;
-    };
+    token: string;
 }
 
 export interface AuthResponse {

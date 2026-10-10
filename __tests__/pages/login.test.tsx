@@ -41,7 +41,7 @@ function createAuthClient(isError: boolean = false): AuthClient {
             if (isError) {
                 return Promise.reject(new Error("Error during login"));
             }
-            return Promise.resolve({ data: { token: "test-token" } });
+            return Promise.resolve({ token: "test-token" });
         }),
         verify: jest.fn(() => Promise.resolve({ data: { role: "user" } })),
     };
