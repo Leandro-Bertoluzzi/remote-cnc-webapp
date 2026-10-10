@@ -9,10 +9,8 @@ export default async function apiRequest(
     method: string,
     // The API request payload is intentionally flexible because this helper
     // is shared by many endpoints with different request bodies.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body?: any,
     json = false
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
     const { API_URL } = config;
 

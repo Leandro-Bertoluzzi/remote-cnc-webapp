@@ -4,7 +4,7 @@ import GrblMessage from "@/types/GrblMessage";
 import { VscSend } from "react-icons/vsc";
 import { TextInput, Button } from "flowbite-react";
 import { useConnection } from "@/contexts/connectionContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export interface TerminalProps {
     sender?: boolean;
@@ -23,6 +23,14 @@ export default function Terminal(props: TerminalProps) {
     // Context
     const { connected } = useConnection();
 
+    // Actions
+    const updateMessages = useCallback((data: GrblMessage) => {
+        setMessages((oldMessages) => [...oldMessages, data.message]);
+
+        // Scroll terminal up to last added element
+        messagesContainer.current?.scrollTo(0, messagesContainer.current?.scrollHeight);
+    }, []);
+
     // State hooks
     useEffect(() => {
         const es = getEventSource("grbl_messages");
@@ -37,15 +45,7 @@ export default function Terminal(props: TerminalProps) {
         });
 
         return () => es.close();
-    }, []);
-
-    // Actions
-    const updateMessages = (data: GrblMessage) => {
-        setMessages((oldMessages) => [...oldMessages, data.message]);
-
-        // Scroll terminal up to last added element
-        messagesContainer.current?.scrollTo(0, messagesContainer.current?.scrollHeight);
-    };
+    }, [updateMessages]);
 
     /*  Function: sendCommand
      *   Description: Requests the API to execute the command

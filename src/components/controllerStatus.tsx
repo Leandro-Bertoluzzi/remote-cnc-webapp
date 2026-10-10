@@ -3,7 +3,7 @@ import apiRequest, { getEventSource } from "@/services/apiService";
 import GrblStatus, { Coordinates, ModalState } from "@/types/GrblStatus";
 import { ModalStatus } from "./discrete/modalStatus";
 import { ProgressBar } from "./discrete/progressBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // Constants
 const DISCONNECTED = "DISCONNECTED";
@@ -33,6 +33,52 @@ export default function ControllerStatus() {
     const [sentLines, setSentLines] = useState<number>(0);
     const [processedLines, setProcessedLines] = useState<number>(0);
 
+    const updateTool = useCallback(
+        (tool_index: number) => {
+            if (tool_index === tool_id) {
+                return;
+            }
+
+            apiRequest(`tools/${tool_index}`, "GET")
+                .then((data) => {
+                    setTool(data.name);
+                    setToolId(tool_index);
+                })
+                .catch((error) => {
+                    console.log("ERROR!", error);
+                });
+        },
+        [tool_id]
+    );
+
+    const updateStatus = useCallback(
+        (data: GrblStatus) => {
+            if (data.status) {
+                setStatus(data.status.activeState);
+                setMpos(data.status.mpos);
+                setWpos(data.status.wpos);
+            }
+
+            if (data.sent_lines) {
+                setSentLines(data.sent_lines);
+            }
+            if (data.processed_lines) {
+                setProcessedLines(data.processed_lines);
+            }
+            if (data.total_lines) {
+                setTotalLines(data.total_lines);
+            }
+
+            if (data.parserstate) {
+                updateTool(data.parserstate.tool);
+                setModal(data.parserstate.modal);
+                setFeedrate(data.parserstate.feedrate);
+                setSpindle(data.parserstate.spindle);
+            }
+        },
+        [updateTool]
+    );
+
     useEffect(() => {
         const es = getEventSource("grbl_status");
 
@@ -46,47 +92,7 @@ export default function ControllerStatus() {
         });
 
         return () => es.close();
-    }, []);
-
-    const updateStatus = (data: GrblStatus) => {
-        if (data.status) {
-            setStatus(data.status.activeState);
-            setMpos(data.status.mpos);
-            setWpos(data.status.wpos);
-        }
-
-        if (data.sent_lines) {
-            setSentLines(data.sent_lines);
-        }
-        if (data.processed_lines) {
-            setProcessedLines(data.processed_lines);
-        }
-        if (data.total_lines) {
-            setTotalLines(data.total_lines);
-        }
-
-        if (data.parserstate) {
-            updateTool(data.parserstate.tool);
-            setModal(data.parserstate.modal);
-            setFeedrate(data.parserstate.feedrate);
-            setSpindle(data.parserstate.spindle);
-        }
-    };
-
-    const updateTool = (tool_index: number) => {
-        if (tool_index === tool_id) {
-            return;
-        }
-
-        apiRequest(`tools/${tool_index}`, "GET")
-            .then((data) => {
-                setTool(data.name);
-                setToolId(tool_index);
-            })
-            .catch((error) => {
-                console.log("ERROR!", error);
-            });
-    };
+    }, [updateStatus]);
 
     return (
         <div className="justify-self-center">

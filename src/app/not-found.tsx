@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Página no encontrada",
@@ -16,9 +17,9 @@ export default function NotFound() {
                                 Lo sentimos, esta página no se encuentra disponible!
                             </h2>
                             <p className="text-base text-gray-600">
-                                <a className="text-blue-900 hover:text-blue-400" href="/">
+                                <Link className="text-blue-900 hover:text-blue-400" href="/">
                                     Volver al inicio
-                                </a>
+                                </Link>
                             </p>
                         </div>
                     </div>
