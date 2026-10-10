@@ -36,7 +36,7 @@ export default function LoginForm() {
                     typeof callbackUrlParam === "string" && callbackUrlParam.trim().length > 0
                         ? callbackUrlParam
                         : "/";
-                sessionStorageClient.setToken(response.data.token);
+                sessionStorageClient.setToken(response.token);
                 router.push(callbackUrl);
             })
             .catch((error) => showErrorDialog(error.message));
